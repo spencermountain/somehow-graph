@@ -1,0 +1,25 @@
+{
+  "name": "said-path",
+  "version": "0.0.1",
+  "description": "generate svg paths directly",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "amble ./scratch.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spencermountain/said-path.git"
+  },
+  "author": "spencermountain@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/spencermountain/said-path/issues"
+  },
+  "homepage": "https://github.com/spencermountain/said-path#readme",
+  "dependencies": {
+    "amble": "0.0.6",
+    "d3-scale": "^2.1.0",
+    "d3-shape": "^1.2.0"
+  }
+}
