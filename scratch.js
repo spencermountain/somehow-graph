@@ -1,4 +1,6 @@
 const saidPath = require('./src')
 
 let data = [25, 40, 90, 75]
-console.log(saidPath.rect(200, 500).line(data))
+let world = saidPath.rect(200, 100)
+
+console.log(world.line(data))
