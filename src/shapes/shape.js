@@ -1,5 +1,4 @@
 const d3Shape = require('d3-shape')
-const maxmin = require('./lib/maxMin')
 const fns = require('./lib/fns')
 
 class Shape {
@@ -7,14 +6,12 @@ class Shape {
     this.data = this.preProcess(data)
     this.obj = obj || {}
     this.world = world
+    this.order = this.obj.order || 1
     this.defaults = {
       stroke: 'steelblue',
       "stroke-width": "4",
       fill: "none"
     }
-  }
-  maxMin() {
-    return maxmin(this.data)
   }
   preProcess(data) {
     if (fns.isObject(data)) {

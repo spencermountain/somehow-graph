@@ -7,10 +7,10 @@ class Text extends Shape {
     this.obj = obj || {}
     this.world = world
     this.defaults = {
-      "font-family": "sans-serif",
-      "font-size": "20px",
+      "font-family": "'avenir next', avenir, sans-serif",
+      "font-size": "8px",
       "text-anchor": "middle",
-      "fill": "red",
+      "fill": "#333",
     }
   }
   build() {
@@ -19,6 +19,7 @@ class Text extends Shape {
       x: world.x.scale(this.data[0].x),
       y: world.y.scale(this.data[0].y),
     }
+    console.log(point)
     let attrs = Object.assign({}, this.defaults, this.obj)
     let inside = Object.keys(attrs).map((k) => {
       return `${k}="${attrs[k]}"`

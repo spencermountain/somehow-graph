@@ -6319,14 +6319,13 @@ var makeWorld = function makeWorld(width, height) {
 
 module.exports = makeWorld;
 
-},{"./world":12}],12:[function(_dereq_,module,exports){
+},{"./world":20}],12:[function(_dereq_,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var d3Shape = _dereq_('d3-shape');
 var d3Scale = _dereq_('d3-scale');
 
 var Scale = function () {
@@ -6347,14 +6346,378 @@ var Scale = function () {
       return this;
     }
   }, {
-    key: 'val',
-    value: function val(n) {
-      return this.scale(n);
+    key: 'fit',
+    value: function fit(min, max) {
+      this.scale.domain([min, max]);
+      return this;
     }
   }]);
 
   return Scale;
 }();
+
+module.exports = Scale;
+
+},{"d3-scale":7}],13:[function(_dereq_,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Shape = _dereq_('./shape');
+var d3Shape = _dereq_('d3-shape');
+
+var Area = function (_Shape) {
+  _inherits(Area, _Shape);
+
+  function Area(data, obj, world) {
+    _classCallCheck(this, Area);
+
+    var _this = _possibleConstructorReturn(this, (Area.__proto__ || Object.getPrototypeOf(Area)).call(this, data, obj, world));
+
+    _this.defaults = {
+      fill: obj.stroke
+    };
+    return _this;
+  }
+
+  _createClass(Area, [{
+    key: 'makePath',
+    value: function makePath() {
+      var _this2 = this;
+
+      var points = this.data.map(function (o) {
+        return {
+          x: _this2.world.x.scale(o.x),
+          y: _this2.world.y.scale(o.y)
+        };
+      });
+      var zero = this.world.y.scale(0);
+      return d3Shape.area().x(function (d) {
+        return d.x;
+      }).y0(function (d) {
+        return d.y;
+      }).y1(zero).curve(d3Shape.curveMonotoneX)(points);
+    }
+  }]);
+
+  return Area;
+}(Shape);
+
+module.exports = Area;
+
+},{"./shape":17,"d3-shape":8}],14:[function(_dereq_,module,exports){
+'use strict';
+
+exports.isObject = function (o) {
+  return Object.prototype.toString.call(o) === '[object Object]';
+};
+
+},{}],15:[function(_dereq_,module,exports){
+'use strict';
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Shape = _dereq_('./shape');
+var d3Shape = _dereq_('d3-shape');
+
+var Line = function (_Shape) {
+  _inherits(Line, _Shape);
+
+  function Line(data, obj, world) {
+    _classCallCheck(this, Line);
+
+    return _possibleConstructorReturn(this, (Line.__proto__ || Object.getPrototypeOf(Line)).call(this, data, obj, world));
+  }
+
+  return Line;
+}(Shape);
+
+module.exports = Line;
+
+},{"./shape":17,"d3-shape":8}],16:[function(_dereq_,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Shape = _dereq_('./shape');
+var d3Shape = _dereq_('d3-shape');
+
+var Rect = function (_Shape) {
+  _inherits(Rect, _Shape);
+
+  function Rect(data, obj, world) {
+    _classCallCheck(this, Rect);
+
+    var _this = _possibleConstructorReturn(this, (Rect.__proto__ || Object.getPrototypeOf(Rect)).call(this, data, obj, world));
+
+    _this.defaults = {
+      fill: obj.fill || obj.stroke || 'steelblue'
+    };
+    return _this;
+  }
+
+  _createClass(Rect, [{
+    key: 'makePath',
+    value: function makePath() {
+      var point = this.data[0];
+      var world = this.world;
+      var w = world.x.scale(point.width) / 2;
+      var h = (100 - world.y.scale(point.height)) / 2; //height needs to be un-inverted
+      var mid = {
+        x: world.x.scale(point.x),
+        y: world.y.scale(point.y)
+      };
+      var points = [{ //top-left
+        x: mid.x - w,
+        y: mid.y - h
+      }, { //top-right
+        x: mid.x + w,
+        y: mid.y - h
+      }, { //bottom-right
+        x: mid.x + w,
+        y: mid.y + h
+      }, { //bottom-left
+        x: mid.x - w,
+        y: mid.y + h
+      }];
+      var path = d3Shape.area().x(function (d) {
+        return d.x;
+      }).y1(function (d) {
+        return d.y;
+      })(points);
+      return path;
+    }
+  }]);
+
+  return Rect;
+}(Shape);
+
+module.exports = Rect;
+
+},{"./shape":17,"d3-shape":8}],17:[function(_dereq_,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var d3Shape = _dereq_('d3-shape');
+var fns = _dereq_('./lib/fns');
+
+var Shape = function () {
+  function Shape(data, obj, world) {
+    _classCallCheck(this, Shape);
+
+    this.data = this.preProcess(data);
+    this.obj = obj || {};
+    this.world = world;
+    this.order = this.obj.order || 1;
+    this.defaults = {
+      stroke: 'steelblue',
+      "stroke-width": "4",
+      fill: "none"
+    };
+  }
+
+  _createClass(Shape, [{
+    key: 'preProcess',
+    value: function preProcess(data) {
+      if (fns.isObject(data)) {
+        data = [data];
+      }
+      return data.map(function (o, i) {
+        if (typeof o === 'number') {
+          return {
+            x: i,
+            y: o
+          };
+        }
+        return o;
+      });
+    }
+  }, {
+    key: 'makePath',
+    value: function makePath() {
+      var _this = this;
+
+      var points = this.data.map(function (o) {
+        return {
+          x: _this.world.x.scale(o.x),
+          y: _this.world.y.scale(o.y)
+        };
+      });
+      return d3Shape.line().x(function (d) {
+        return d.x;
+      }).y(function (d) {
+        return d.y;
+      }).curve(d3Shape.curveMonotoneX)(points);
+    }
+  }, {
+    key: 'build',
+    value: function build() {
+      var attrs = Object.assign({}, this.defaults, this.obj);
+      attrs.d = this.makePath();
+      var inside = Object.keys(attrs).map(function (k) {
+        return k + '="' + attrs[k] + '"';
+      }).join(' ');
+      return '<path ' + inside + '></path>';
+    }
+  }]);
+
+  return Shape;
+}();
+
+module.exports = Shape;
+
+},{"./lib/fns":14,"d3-shape":8}],18:[function(_dereq_,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Shape = _dereq_('./shape');
+var d3Shape = _dereq_('d3-shape');
+
+var Square = function (_Shape) {
+  _inherits(Square, _Shape);
+
+  function Square(data, obj, world) {
+    _classCallCheck(this, Square);
+
+    var _this = _possibleConstructorReturn(this, (Square.__proto__ || Object.getPrototypeOf(Square)).call(this, data, obj, world));
+
+    _this.defaults = {
+      fill: obj.fill || obj.stroke || 'steelblue'
+    };
+    return _this;
+  }
+
+  _createClass(Square, [{
+    key: 'makePath',
+    value: function makePath() {
+      var point = this.data[0];
+      var world = this.world;
+      var len = (100 - world.y.scale(point.size)) / 2;
+      var mid = {
+        x: world.x.scale(point.x),
+        y: world.y.scale(point.y)
+      };
+      var points = [{ //top-left
+        x: mid.x - len,
+        y: mid.y - len
+      }, { //top-right
+        x: mid.x + len,
+        y: mid.y - len
+      }, { //bottom-right
+        x: mid.x + len,
+        y: mid.y + len
+      }, { //bottom-left
+        x: mid.x - len,
+        y: mid.y + len
+      }];
+      var path = d3Shape.area().x(function (d) {
+        return d.x;
+      }).y1(function (d) {
+        return d.y;
+      })(points);
+      return path;
+    }
+  }]);
+
+  return Square;
+}(Shape);
+
+module.exports = Square;
+
+},{"./shape":17,"d3-shape":8}],19:[function(_dereq_,module,exports){
+"use strict";
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Shape = _dereq_('./shape');
+
+var Text = function (_Shape) {
+  _inherits(Text, _Shape);
+
+  function Text(text, data, obj, world) {
+    _classCallCheck(this, Text);
+
+    var _this = _possibleConstructorReturn(this, (Text.__proto__ || Object.getPrototypeOf(Text)).call(this, data, obj, world));
+
+    _this.text = text;
+    _this.obj = obj || {};
+    _this.world = world;
+    _this.defaults = {
+      "font-family": "'avenir next', avenir, sans-serif",
+      "font-size": "8px",
+      "text-anchor": "middle",
+      "fill": "#333"
+    };
+    return _this;
+  }
+
+  _createClass(Text, [{
+    key: "build",
+    value: function build() {
+      var world = this.world;
+      var point = {
+        x: world.x.scale(this.data[0].x),
+        y: world.y.scale(this.data[0].y)
+      };
+      console.log(point);
+      var attrs = Object.assign({}, this.defaults, this.obj);
+      var inside = Object.keys(attrs).map(function (k) {
+        return k + "=\"" + attrs[k] + "\"";
+      }).join(' ');
+      return "<text x=\"" + point.x + "\" y=\"" + point.y + "\" " + inside + ">" + this.text + "</path>";
+    }
+  }]);
+
+  return Text;
+}(Shape);
+
+module.exports = Text;
+
+},{"./shape":17}],20:[function(_dereq_,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Scale = _dereq_('./scale');
+var Line = _dereq_('./shapes/line');
+var Area = _dereq_('./shapes/area');
+var Text = _dereq_('./shapes/text');
+var Rect = _dereq_('./shapes/rect');
+var Square = _dereq_('./shapes/square');
 
 var World = function () {
   function World() {
@@ -6368,74 +6731,95 @@ var World = function () {
       max: 100,
       min: 0
     }).reverse();
-    this.objects = [];
+    this.shapes = [];
   }
 
   _createClass(World, [{
     key: 'build',
     value: function build() {
-      //draw each element
-      var elements = this.objects.map(function (o) {
-        var attrs = Object.keys(o.attributes).map(function (k) {
-          return k + '="' + o.attributes[k] + '"';
-        }).join(' ');
-        return '  <' + o.tag + ' ' + attrs + '></' + o.tag + '>';
+      var shapes = this.shapes.sort(function (a, b) {
+        if (a.order > b.order) {
+          return 1;
+        }
+        return -1;
+      });
+      var elements = shapes.map(function (shape) {
+        return shape.build();
       }).join('\n');
-      return '\n    <svg width="400" height="400" viewBox="0,0,100,100" style="border:1px solid lightgrey;">\n      ' + elements + '\n    </svg>\n    ';
+      return '\n      <svg width="400" height="400" viewBox="0,0,100,100" style="border:1px solid lightgrey; overflow:visible;">\n        ' + elements + '\n      </svg>\n    ';
     }
   }, {
-    key: 'makePoints',
-    value: function makePoints(data) {
-      var _this = this;
-
-      return data.map(function (o, i) {
-        if (typeof o === 'number') {
-          o = {
-            x: i,
-            y: o
-          };
-        }
-        return {
-          x: _this.x.scale(o.x),
-          y: _this.y.scale(o.y)
-        };
+    key: 'fit',
+    value: function fit() {
+      var max = {
+        x: 0,
+        y: 0
+      };
+      var min = {
+        x: 0,
+        y: 0
+      };
+      this.shapes.forEach(function (shape) {
+        shape.data.forEach(function (o) {
+          if (o.x > max.x) {
+            max.x = o.x;
+          } else if (o.x < min.x) {
+            min.x = o.x;
+          }
+          if (o.y > max.y) {
+            max.y = o.y;
+          } else if (o.y < min.y) {
+            min.y = o.y;
+          }
+        });
       });
+      this.x.fit(min.x, max.x);
+      this.y.fit(max.y, min.y);
     }
   }, {
     key: 'addLine',
     value: function addLine(data) {
       var obj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-      var points = this.makePoints(data);
-      var path = d3Shape.line().x(function (d) {
-        return d.x;
-      }).y(function (d) {
-        return d.y;
-      }).curve(d3Shape.curveMonotoneX)(points);
-      var attrs = {
-        d: path,
-        stroke: 'steelblue',
-        "stroke-width": "4",
-        fill: "none"
-      };
-      Object.keys(obj).forEach(function (k) {
-        return attrs[k] = obj[k];
-      });
-      this.objects.push({
-        tag: 'path',
-        attributes: attrs
-      });
+      var line = new Line(data, obj, this);
+      this.shapes.push(line);
       return this;
     }
   }, {
-    key: 'area',
-    value: function area(data) {
-      var zero = this.yScale(0);
-      return d3Shape.area().x(function (d) {
-        return d.x;
-      }).y0(function (d) {
-        return d.y;
-      }).y1(zero).curve(d3Shape.curveMonotoneX)(data);
+    key: 'addArea',
+    value: function addArea(data) {
+      var obj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      var line = new Area(data, obj, this);
+      this.shapes.push(line);
+      return this;
+    }
+  }, {
+    key: 'addText',
+    value: function addText(str, data) {
+      var obj = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+      var line = new Text(str, data, obj, this);
+      this.shapes.push(line);
+      return this;
+    }
+  }, {
+    key: 'addRect',
+    value: function addRect(data) {
+      var obj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      var line = new Rect(data, obj, this);
+      this.shapes.push(line);
+      return this;
+    }
+  }, {
+    key: 'addSquare',
+    value: function addSquare(data) {
+      var obj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      var line = new Square(data, obj, this);
+      this.shapes.push(line);
+      return this;
     }
   }]);
 
@@ -6444,5 +6828,5 @@ var World = function () {
 
 module.exports = World;
 
-},{"d3-scale":7,"d3-shape":8}]},{},[11])(11)
+},{"./scale":12,"./shapes/area":13,"./shapes/line":15,"./shapes/rect":16,"./shapes/square":18,"./shapes/text":19}]},{},[11])(11)
 });

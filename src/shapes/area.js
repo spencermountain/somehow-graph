@@ -4,6 +4,9 @@ const d3Shape = require('d3-shape')
 class Area extends Shape {
   constructor(data, obj, world) {
     super(data, obj, world);
+    this.defaults = {
+      fill: obj.stroke
+    }
   }
   makePath() {
     let points = this.data.map((o) => {
