@@ -1,6 +1,16 @@
-const saidPath = require('./src')
+const makeWorld = require('./src')
 
-let data = [25, 40, 90, 75]
-let world = saidPath.rect(200, 100)
 
-console.log(world.line(data))
+let world = makeWorld({
+  x: {
+    max: 100,
+    min: 0
+  },
+  y: {
+    max: 100,
+    min: 0
+  },
+})
+
+console.log(world.addLine([25, 40, 90, 75]))
+console.log(world.addLine([5, 90, 10, 75]))

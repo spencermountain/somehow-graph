@@ -1,9 +1,9 @@
-/* said-path v0.0.2
-   github.com/spencermountain/said-path
+/* makeWorld v0.0.3
+   github.com/spencermountain/makeWorld
    MIT
 */
 
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.saidPath = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(_dereq_,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.makeWorld = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(_dereq_,module,exports){
 // https://d3js.org/d3-array/ Version 1.2.1. Copyright 2017 Mike Bostock.
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
@@ -6309,32 +6309,17 @@ Object.defineProperty(exports, '__esModule', { value: true });
 },{}],11:[function(_dereq_,module,exports){
 'use strict';
 
-var Rect = _dereq_('./rect');
+var World = _dereq_('./world');
 
 // const saidPath = function() {}
-var saidPath = {
-  rect: function rect(width, height) {
-    return new Rect(width, height);
-  }
-  // Object.keys(methods).forEach((k) => saidPath.prototype[k] = methods[k])
-
-};module.exports = saidPath;
-
-},{"./rect":13}],12:[function(_dereq_,module,exports){
-"use strict";
-
-var max = function max(nums) {
-  var top = nums[0];
-  nums.forEach(function (n) {
-    if (n > top) {
-      top = n;
-    }
-  });
-  return top;
+var makeWorld = function makeWorld(width, height) {
+  return new World(width, height);
 };
-module.exports = max;
+// Object.keys(methods).forEach((k) => saidPath.prototype[k] = methods[k])
 
-},{}],13:[function(_dereq_,module,exports){
+module.exports = makeWorld;
+
+},{"./world":12}],12:[function(_dereq_,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6343,34 +6328,104 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var d3Shape = _dereq_('d3-shape');
 var d3Scale = _dereq_('d3-scale');
-var max = _dereq_('./lib/max');
 
-var Rect = function () {
-  function Rect(width, height) {
-    _classCallCheck(this, Rect);
+var Scale = function () {
+  function Scale(obj) {
+    _classCallCheck(this, Scale);
 
-    this.xScale = d3Scale.scaleLinear().range([0, width]).domain([0, 10]);
-    this.yScale = d3Scale.scaleLinear().range([0, height]).domain([100, 0]);
+    this.type = obj.type;
+    this.max = obj.max || 100;
+    this.min = obj.min || 0;
+    this.scale = d3Scale.scaleLinear().range([0, 100]).domain([obj.min, obj.max]);
   }
 
-  _createClass(Rect, [{
-    key: 'line',
-    value: function line(data) {
+  _createClass(Scale, [{
+    key: 'reverse',
+    value: function reverse() {
+      var arr = this.scale.domain();
+      this.scale = this.scale.domain([arr[1], arr[0]]);
+      return this;
+    }
+  }, {
+    key: 'val',
+    value: function val(n) {
+      return this.scale(n);
+    }
+  }]);
+
+  return Scale;
+}();
+
+var World = function () {
+  function World() {
+    _classCallCheck(this, World);
+
+    this.x = new Scale({
+      max: 10,
+      min: 0
+    });
+    this.y = new Scale({
+      max: 100,
+      min: 0
+    }).reverse();
+    this.objects = [];
+  }
+
+  _createClass(World, [{
+    key: 'build',
+    value: function build() {
+      var elements = this.objects.map(function (o) {
+        console.log(o.attributes);
+        var attrs = Object.keys(o.attributes).map(function (k) {
+          return k + '="' + o.attributes[k] + '"';
+        });
+        return '  <' + o.tag + ' ' + attrs.join(' ') + '></' + o.tag + '>';
+      });
+      return '\n    <svg width="500" height="200" viewBox="0,0,100,100" style="border:1px solid lightgrey;">\n      ' + elements + '\n    </svg>\n    ';
+    }
+  }, {
+    key: 'makePoints',
+    value: function makePoints(data) {
       var _this = this;
 
-      this.xScale.domain([0, data.length - 1]);
-      this.yScale.domain([max(data), 0]);
-      data = data.map(function (d, i) {
+      return data.map(function (o, i) {
+        if (typeof o === 'number') {
+          o = {
+            x: i,
+            y: o
+          };
+        }
         return {
-          x: _this.xScale(i),
-          y: _this.yScale(d)
+          x: _this.x.scale(o.x),
+          y: _this.y.scale(o.y)
         };
       });
-      return d3Shape.line().x(function (d) {
+    }
+  }, {
+    key: 'addLine',
+    value: function addLine(data) {
+      var obj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      var points = this.makePoints(data);
+      var path = d3Shape.line().x(function (d) {
         return d.x;
       }).y(function (d) {
         return d.y;
-      }).curve(d3Shape.curveMonotoneX)(data);
+      }).curve(d3Shape.curveMonotoneX)(points);
+      var attrs = {
+        d: path,
+        stroke: 'steelblue',
+        "stroke-width": "4",
+        fill: "none"
+      };
+      Object.keys(obj).forEach(function (k) {
+        return attrs[k] = obj[k];
+      });
+      this.objects.push({
+        tag: 'path',
+        attributes: attrs
+      });
+      return this;
     }
   }, {
     key: 'area',
@@ -6384,10 +6439,10 @@ var Rect = function () {
     }
   }]);
 
-  return Rect;
+  return World;
 }();
 
-module.exports = Rect;
+module.exports = World;
 
-},{"./lib/max":12,"d3-scale":7,"d3-shape":8}]},{},[11])(11)
+},{"d3-scale":7,"d3-shape":8}]},{},[11])(11)
 });
