@@ -6374,14 +6374,14 @@ var World = function () {
   _createClass(World, [{
     key: 'build',
     value: function build() {
+      //draw each element
       var elements = this.objects.map(function (o) {
-        console.log(o.attributes);
         var attrs = Object.keys(o.attributes).map(function (k) {
           return k + '="' + o.attributes[k] + '"';
-        });
-        return '  <' + o.tag + ' ' + attrs.join(' ') + '></' + o.tag + '>';
-      });
-      return '\n    <svg width="500" height="200" viewBox="0,0,100,100" style="border:1px solid lightgrey;">\n      ' + elements + '\n    </svg>\n    ';
+        }).join(' ');
+        return '  <' + o.tag + ' ' + attrs + '></' + o.tag + '>';
+      }).join('\n');
+      return '\n    <svg width="400" height="400" viewBox="0,0,100,100" style="border:1px solid lightgrey;">\n      ' + elements + '\n    </svg>\n    ';
     }
   }, {
     key: 'makePoints',

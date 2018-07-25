@@ -1,22 +1,7 @@
-const d3Shape = require('d3-shape')
-const d3Scale = require('d3-scale')
-
-class Scale {
-  constructor(obj) {
-    this.type = obj.type
-    this.max = obj.max || 100
-    this.min = obj.min || 0
-    this.scale = d3Scale.scaleLinear().range([0, 100]).domain([obj.min, obj.max])
-  }
-  reverse() {
-    let arr = this.scale.domain()
-    this.scale = this.scale.domain([arr[1], arr[0]])
-    return this
-  }
-  val(n) {
-    return this.scale(n)
-  }
-}
+const Scale = require('./scale')
+const Line = require('./shapes/line')
+const Area = require('./shapes/area')
+const Text = require('./shapes/text')
 
 class World {
   constructor() {
@@ -28,54 +13,61 @@ class World {
       max: 100,
       min: 0
     }).reverse()
-    this.objects = []
+    this.shapes = []
   }
   build() {
-    let elements = this.objects.map((o) => {
-      console.log(o.attributes)
-      let attrs = Object.keys(o.attributes).map((k) => `${k}="${o.attributes[k]}"`)
-      return `  <${o.tag} ${attrs.join(' ')}></${o.tag}>`
-    })
+    let elements = this.shapes.map((shape) => shape.build()).join('\n')
     return `
-    <svg width="500" height="200" viewBox="0,0,100,100" style="border:1px solid lightgrey;">
-      ${elements}
-    </svg>
+      <svg width="400" height="400" viewBox="0,0,100,100" style="border:1px solid lightgrey;">
+        ${elements}
+      </svg>
     `
   }
-  makePoints(data) {
-    return data.map((o, i) => {
-      if (typeof o === 'number') {
-        o = {
-          x: i,
-          y: o
-        }
-      }
-      return {
-        x: this.x.scale(o.x),
-        y: this.y.scale(o.y),
-      }
-    })
-  }
-  addLine(data, obj = {}) {
-    let points = this.makePoints(data)
-    let path = d3Shape.line().x(d => d.x).y(d => d.y).curve(d3Shape.curveMonotoneX)(points);
-    let attrs = {
-      d: path,
-      stroke: 'steelblue',
-      "stroke-width": "4",
-      fill: "none"
+
+  fit() {
+    let max = {
+      x: 0,
+      y: 0,
     }
-    Object.keys(obj).forEach((k) => attrs[k] = obj[k])
-    this.objects.push({
-      tag: 'path',
-      attributes: attrs
+    let min = {
+      x: 0,
+      y: 0,
+    }
+    this.shapes.forEach((shape) => {
+      shape.data.forEach((o) => {
+        if (o.x > max.x) {
+          max.x = o.x
+        } else if (o.x < min.x) {
+          min.x = o.x
+        }
+        if (o.y > max.y) {
+          max.y = o.y
+        } else if (o.y < min.y) {
+          min.y = o.y
+        }
+      })
     })
+    console.log(max, min)
+    this.x.fit(min.x, max.x)
+    this.y.fit(min.y, max.y)
+  }
+
+  addLine(data, obj = {}) {
+    let line = new Line(data, obj, this)
+    this.shapes.push(line)
     return this
   }
-  area(data) {
-    const zero = this.yScale(0)
-    return d3Shape.area().x(d => d.x).y0(d => d.y).y1(zero).curve(d3Shape.curveMonotoneX)(data);
+  addArea(data, obj = {}) {
+    let line = new Area(data, obj, this)
+    this.shapes.push(line)
+    return this
   }
+  addText(str, data, obj = {}) {
+    let line = new Text(str, data, obj, this)
+    this.shapes.push(line)
+    return this
+  }
+
 
 }
 module.exports = World
