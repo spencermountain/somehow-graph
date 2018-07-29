@@ -21,5 +21,12 @@ world.addRect({
   height: 50
 })
 
+world.addAxis({
+  type: 'x',
+  x: 0,
+  y: 30,
+  width: 5
+})
+
 var svg = world.build()
 console.log(svg)

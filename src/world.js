@@ -4,6 +4,8 @@ const Area = require('./shapes/area')
 const Text = require('./shapes/text')
 const Rect = require('./shapes/rect')
 const Square = require('./shapes/square')
+const XAxis = require('./shapes/xaxis')
+const YAxis = require('./shapes/yaxis')
 
 class World {
   constructor() {
@@ -26,7 +28,7 @@ class World {
     })
     let elements = shapes.map((shape) => shape.build()).join('\n')
     return `
-      <svg width="400" height="400" viewBox="0,0,100,100" style="border:1px solid lightgrey; overflow:visible;">
+      <svg width="800" height="400" viewBox="0,0,100,100" preserveAspectRatio="xMidYMid meet" style="border:1px solid lightgrey; overflow:visible;">
         ${elements}
       </svg>
     `
@@ -60,28 +62,38 @@ class World {
   }
 
   addLine(data, obj = {}) {
-    let line = new Line(data, obj, this)
-    this.shapes.push(line)
+    let shape = new Line(data, obj, this)
+    this.shapes.push(shape)
     return this
   }
   addArea(data, obj = {}) {
-    let line = new Area(data, obj, this)
-    this.shapes.push(line)
+    let shape = new Area(data, obj, this)
+    this.shapes.push(shape)
     return this
   }
   addText(str, data, obj = {}) {
-    let line = new Text(str, data, obj, this)
-    this.shapes.push(line)
+    let shape = new Text(str, data, obj, this)
+    this.shapes.push(shape)
     return this
   }
   addRect(data, obj = {}) {
-    let line = new Rect(data, obj, this)
-    this.shapes.push(line)
+    let shape = new Rect(data, obj, this)
+    this.shapes.push(shape)
     return this
   }
   addSquare(data, obj = {}) {
-    let line = new Square(data, obj, this)
-    this.shapes.push(line)
+    let shape = new Square(data, obj, this)
+    this.shapes.push(shape)
+    return this
+  }
+  addXAxis(data, obj = {}) {
+    let shape = new XAxis(data, obj, this)
+    this.shapes.push(shape)
+    return this
+  }
+  addYAxis(data, obj = {}) {
+    let shape = new YAxis(data, obj, this)
+    this.shapes.push(shape)
     return this
   }
 

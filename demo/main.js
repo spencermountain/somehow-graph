@@ -13,22 +13,29 @@ world.addLine([5, 10, 90, 55, 55, 45], {
 //   x: 5,
 //   y: 50
 // })
-world.addSquare({
-  x: 7,
-  y: 50,
-  size: 10 //y-axis?
-}, {
-  fill: 'green',
-  order: 4
+// world.addSquare({
+//   x: 7,
+//   y: 50,
+//   size: 10 //y-axis?
+// }, {
+//   fill: 'green',
+//   order: 4
+// })
+// world.addRect({
+//   x: 5,
+//   y: 50,
+//   width: 4,
+//   height: 20,
+// }, {
+//   rotate: 50,
+//   order: 2
+// })
+
+world.addXAxis({
+  y: 0,
 })
-world.addRect({
-  x: 5,
-  y: 50,
-  width: 4,
-  height: 20,
-}, {
-  rotate: 50,
-  order: 2
+world.addYAxis({
+  y: 0,
 })
 world.fit()
 let svg = world.build()

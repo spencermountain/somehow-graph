@@ -6319,7 +6319,7 @@ var makeWorld = function makeWorld(width, height) {
 
 module.exports = makeWorld;
 
-},{"./world":20}],12:[function(_dereq_,module,exports){
+},{"./world":22}],12:[function(_dereq_,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6428,7 +6428,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Shape = _dereq_('./shape');
-var d3Shape = _dereq_('d3-shape');
+// const d3Shape = require('d3-shape')
 
 var Line = function (_Shape) {
   _inherits(Line, _Shape);
@@ -6444,7 +6444,7 @@ var Line = function (_Shape) {
 
 module.exports = Line;
 
-},{"./shape":17,"d3-shape":8}],16:[function(_dereq_,module,exports){
+},{"./shape":17}],16:[function(_dereq_,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6712,12 +6712,168 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Shape = _dereq_('./shape');
+var d3Shape = _dereq_('d3-shape');
+
+var XAxis = function (_Shape) {
+  _inherits(XAxis, _Shape);
+
+  function XAxis(data, obj, world) {
+    _classCallCheck(this, XAxis);
+
+    var _this = _possibleConstructorReturn(this, (XAxis.__proto__ || Object.getPrototypeOf(XAxis)).call(this, data, obj, world));
+
+    _this.defaults = {
+      stroke: 'slategrey',
+      "stroke-width": "1",
+      fill: "none"
+    };
+    return _this;
+  }
+
+  _createClass(XAxis, [{
+    key: 'makeTick',
+    value: function makeTick(num) {
+      var x = this.world.x.scale(num);
+      var y = this.world.y.scale(this.data[0].y || 0);
+      var color = this.defaults.stroke;
+      return '\n    <g>\n      <line y1="' + y + '" x1="' + x + '" y2="' + (y + 2) + '" x2="' + x + '" stroke="' + color + '" stroke-width="0.5px"></line>\n      <text y="' + (y + 5.5) + '" x="' + x + '" style="fill:' + color + '; font-size:4px" text-anchor="middle" >' + num + '</text>\n    </g>\n  ';
+    }
+  }, {
+    key: 'makePath',
+    value: function makePath() {
+      var data = this.data[0];
+      var y = this.world.y.scale(data.y || 0);
+      var minMax = this.world.x.scale.range();
+      var points = [{
+        x: minMax[0],
+        y: y
+      }, {
+        x: minMax[1],
+        y: y
+      }];
+      return d3Shape.line().x(function (d) {
+        return d.x;
+      }).y(function (d) {
+        return d.y;
+      })(points);
+    }
+  }, {
+    key: 'build',
+    value: function build() {
+      var _this2 = this;
+
+      var path = this.makePath();
+      var ticks = this.world.x.scale.ticks(5);
+      ticks = ticks.map(function (t) {
+        return _this2.makeTick(t);
+      });
+      return '\n      <g>\n        <path d="' + path + '" stroke="' + this.defaults.stroke + '" stroke-width="0.5px" stroke-linecap="round"/>\n        ' + ticks + '\n      </g>\n  ';
+    }
+  }]);
+
+  return XAxis;
+}(Shape);
+
+module.exports = XAxis;
+
+},{"./shape":17,"d3-shape":8}],21:[function(_dereq_,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Shape = _dereq_('./shape');
+var d3Shape = _dereq_('d3-shape');
+
+var YAxis = function (_Shape) {
+  _inherits(YAxis, _Shape);
+
+  function YAxis(data, obj, world) {
+    _classCallCheck(this, YAxis);
+
+    var _this = _possibleConstructorReturn(this, (YAxis.__proto__ || Object.getPrototypeOf(YAxis)).call(this, data, obj, world));
+
+    _this.defaults = {
+      stroke: 'grey',
+      "stroke-width": "1",
+      fill: "none"
+    };
+    return _this;
+  }
+
+  _createClass(YAxis, [{
+    key: 'makeTick',
+    value: function makeTick(num) {
+      var y = this.world.y.scale(num);
+      console.log(num);
+      var x = this.world.x.scale(this.data[0].x || 0);
+      var color = this.defaults.stroke;
+      return '\n    <g>\n      <line y1="' + y + '" x1="' + x + '" y2="' + y + '" x2="' + (x - 2) + '" stroke="' + color + '" stroke-width="0.5px"></line>\n      <text y="' + (y + 1.5) + '" x="' + (x - 5) + '" style="fill:' + color + '; font-size:4px" text-anchor="middle" >' + num + '</text>\n    </g>\n  ';
+    }
+  }, {
+    key: 'makePath',
+    value: function makePath() {
+      var data = this.data[0];
+      var x = this.world.x.scale(data.x || 0);
+      var minMax = this.world.y.scale.range();
+      var points = [{
+        y: minMax[0],
+        x: x
+      }, {
+        y: minMax[1],
+        x: x
+      }];
+      return d3Shape.line().x(function (d) {
+        return d.x;
+      }).y(function (d) {
+        return d.y;
+      })(points);
+    }
+  }, {
+    key: 'build',
+    value: function build() {
+      var _this2 = this;
+
+      var path = this.makePath();
+      var ticks = this.world.y.scale.ticks(5);
+      console.log(ticks);
+      ticks = ticks.map(function (t) {
+        return _this2.makeTick(t);
+      });
+      return '\n      <g>\n        <path d="' + path + '" stroke="' + this.defaults.stroke + '" stroke-width="0.5px" stroke-linecap="round"/>\n        ' + ticks + '\n      </g>\n  ';
+    }
+  }]);
+
+  return YAxis;
+}(Shape);
+
+module.exports = YAxis;
+
+},{"./shape":17,"d3-shape":8}],22:[function(_dereq_,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 var Scale = _dereq_('./scale');
 var Line = _dereq_('./shapes/line');
 var Area = _dereq_('./shapes/area');
 var Text = _dereq_('./shapes/text');
 var Rect = _dereq_('./shapes/rect');
 var Square = _dereq_('./shapes/square');
+var XAxis = _dereq_('./shapes/xaxis');
+var YAxis = _dereq_('./shapes/yaxis');
 
 var World = function () {
   function World() {
@@ -6746,7 +6902,7 @@ var World = function () {
       var elements = shapes.map(function (shape) {
         return shape.build();
       }).join('\n');
-      return '\n      <svg width="400" height="400" viewBox="0,0,100,100" style="border:1px solid lightgrey; overflow:visible;">\n        ' + elements + '\n      </svg>\n    ';
+      return '\n      <svg width="800" height="400" viewBox="0,0,100,100" preserveAspectRatio="xMidYMid meet" style="border:1px solid lightgrey; overflow:visible;">\n        ' + elements + '\n      </svg>\n    ';
     }
   }, {
     key: 'fit',
@@ -6781,8 +6937,8 @@ var World = function () {
     value: function addLine(data) {
       var obj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-      var line = new Line(data, obj, this);
-      this.shapes.push(line);
+      var shape = new Line(data, obj, this);
+      this.shapes.push(shape);
       return this;
     }
   }, {
@@ -6790,8 +6946,8 @@ var World = function () {
     value: function addArea(data) {
       var obj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-      var line = new Area(data, obj, this);
-      this.shapes.push(line);
+      var shape = new Area(data, obj, this);
+      this.shapes.push(shape);
       return this;
     }
   }, {
@@ -6799,8 +6955,8 @@ var World = function () {
     value: function addText(str, data) {
       var obj = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-      var line = new Text(str, data, obj, this);
-      this.shapes.push(line);
+      var shape = new Text(str, data, obj, this);
+      this.shapes.push(shape);
       return this;
     }
   }, {
@@ -6808,8 +6964,8 @@ var World = function () {
     value: function addRect(data) {
       var obj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-      var line = new Rect(data, obj, this);
-      this.shapes.push(line);
+      var shape = new Rect(data, obj, this);
+      this.shapes.push(shape);
       return this;
     }
   }, {
@@ -6817,8 +6973,26 @@ var World = function () {
     value: function addSquare(data) {
       var obj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-      var line = new Square(data, obj, this);
-      this.shapes.push(line);
+      var shape = new Square(data, obj, this);
+      this.shapes.push(shape);
+      return this;
+    }
+  }, {
+    key: 'addXAxis',
+    value: function addXAxis(data) {
+      var obj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      var shape = new XAxis(data, obj, this);
+      this.shapes.push(shape);
+      return this;
+    }
+  }, {
+    key: 'addYAxis',
+    value: function addYAxis(data) {
+      var obj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      var shape = new YAxis(data, obj, this);
+      this.shapes.push(shape);
       return this;
     }
   }]);
@@ -6828,5 +7002,5 @@ var World = function () {
 
 module.exports = World;
 
-},{"./scale":12,"./shapes/area":13,"./shapes/line":15,"./shapes/rect":16,"./shapes/square":18,"./shapes/text":19}]},{},[11])(11)
+},{"./scale":12,"./shapes/area":13,"./shapes/line":15,"./shapes/rect":16,"./shapes/square":18,"./shapes/text":19,"./shapes/xaxis":20,"./shapes/yaxis":21}]},{},[11])(11)
 });
