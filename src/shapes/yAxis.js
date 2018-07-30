@@ -1,5 +1,6 @@
 const Shape = require('./shape')
 const d3Shape = require('d3-shape')
+const spacetime = require('spacetime')
 
 class YAxis extends Shape {
   constructor(data, obj, world) {
@@ -12,13 +13,16 @@ class YAxis extends Shape {
   }
   makeTick(num) {
     let y = this.world.y.scale(num)
-    console.log(num)
+    let text = String(num || '')
+    if (this.world.y.type === 'time') {
+      text = spacetime(num).format('day')
+    }
     let x = this.world.x.scale(this.data[0].x || 0)
     let color = this.defaults.stroke
     return `
     <g>
       <line y1="${y}" x1="${x}" y2="${y}" x2="${x - 2}" stroke="${color}" stroke-width="0.5px"></line>
-      <text y="${y + 1.5}" x="${x - 5}" style="fill:${color}; font-size:4px" text-anchor="middle" >${num}</text>
+      <text y="${y + 1.5}" x="${x - 5}" style="fill:${color}; font-size:4px" text-anchor="middle" >${text}</text>
     </g>
   `
   }
@@ -40,8 +44,7 @@ class YAxis extends Shape {
   }
   build() {
     let path = this.makePath()
-    let ticks = this.world.y.scale.ticks(5)
-    console.log(ticks)
+    let ticks = this.world.y.scale.ticks(6)
     ticks = ticks.map((t) => this.makeTick(t))
     return `
       <g>

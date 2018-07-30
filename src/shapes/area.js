@@ -5,7 +5,7 @@ class Area extends Shape {
   constructor(data, obj, world) {
     super(data, obj, world);
     this.defaults = {
-      fill: obj.stroke
+      fill: obj.stroke || this.world.colors[0]
     }
   }
   makePath() {

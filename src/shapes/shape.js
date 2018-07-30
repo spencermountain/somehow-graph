@@ -1,31 +1,40 @@
 const d3Shape = require('d3-shape')
 const fns = require('./lib/fns')
+const spacetime = require('spacetime')
 
 class Shape {
   constructor(data, obj, world) {
-    this.data = this.preProcess(data)
     this.obj = obj || {}
     this.world = world
     this.order = this.obj.order || 1
     this.defaults = {
       stroke: 'steelblue',
-      "stroke-width": "4",
-      fill: "none"
+      "stroke-width": "2",
+      fill: "none",
+      "stroke-linecap": "round" //"butt"
     }
+    this.data = this.preProcess(data)
   }
   preProcess(data) {
     if (fns.isObject(data)) {
       data = [data]
     }
-    return data.map((o, i) => {
+    data = data.map((o, i) => {
       if (typeof o === 'number') {
         return {
           x: i,
           y: o
         }
       }
+      if (this.world.x.type === 'time') {
+        o.x = spacetime(o.x).epoch
+      }
+      if (this.world.y.type === 'time') {
+        o.y = spacetime(o.y).epoch
+      }
       return o
     })
+    return data
   }
   makePath() {
     let points = this.data.map((o) => {
