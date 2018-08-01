@@ -1,8 +1,8 @@
 {
-  "name": "said-path",
-  "version": "0.0.3",
+  "name": "somehow",
+  "version": "0.0.1",
   "description": "generate svg paths directly",
-  "main": "./builds/said-path.js",
+  "main": "./builds/somehow.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "amble ./scripts/watch.js",

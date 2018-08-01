@@ -11,7 +11,7 @@ const build = function() {
 
   //final build locations
   var banner = '/* ' + name + ' v' + pkg.version + '\n   github.com/spencermountain/' + name + '\n   MIT\n*/\n';
-  var uncompressed = './builds/said-path.js';
+  var uncompressed = './builds/somehow.js';
 
   //cleanup. remove old builds
   exec('rm -rf ./builds && mkdir builds');
@@ -20,14 +20,14 @@ const build = function() {
   echo(banner).to(uncompressed);
 
   //browserify + derequire
-  var cmd = browserify + ' ./src/index.js --standalone makeWorld';
+  var cmd = browserify + ' ./src/index.js --standalone somehow';
   cmd += ' -t [ babelify --presets [ env ] ]';
   cmd += ' | ' + derequire;
   cmd += ' >> ' + uncompressed;
   exec(cmd);
 
   //print filesizes
-  var stats = fs.statSync('./builds/said-path.js');
+  var stats = fs.statSync('./builds/somehow.js');
   var fileSize = (stats['size'] / 1000.0).toFixed(2);
   console.log('\n\n main: ' + fileSize + 'kb');
 }

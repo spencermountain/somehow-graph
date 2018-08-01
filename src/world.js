@@ -1,4 +1,4 @@
-const Scale = require('./scale')
+const Scale = require('./scales/scale')
 const Line = require('./shapes/line')
 const Area = require('./shapes/area')
 const Text = require('./shapes/text')
@@ -9,11 +9,13 @@ const YAxis = require('./shapes/yaxis')
 const spacetime = require('spacetime')
 
 class World {
-  constructor() {
+  constructor(obj = {}) {
+    this.width = obj.width || 400
+    this.height = obj.height || 300
+    this.margin = obj.margin || 0
     this.x = new Scale({
-      type: 'time',
-      min: 'Jan 1st, 2018',
-      max: 'Jan 31st, 2018'
+      min: 0,
+      max: 100
     })
     this.y = new Scale({
       max: 100,
@@ -31,12 +33,18 @@ class World {
     })
     let elements = shapes.map((shape) => shape.build()).join('\n')
     return `
-      <svg width="800" height="400" viewBox="0,0,100,100" preserveAspectRatio="xMidYMid meet" style="padding:3rem; border:1px solid lightgrey; overflow:visible;">
+      <svg width="${this.width}" height="${this.height}" viewBox="0,0,100,100" preserveAspectRatio="xMidYMid meet" style="padding:${this.margin}; border:1px solid lightgrey; overflow:visible;">
         ${elements}
       </svg>
     `
   }
 
+  isTime(str) {
+    if (typeof str === 'string' && /[a-z]/i.test(str) && /[0-9]/i.test(str)) {
+      return true
+    }
+    return false
+  }
   fit() {
     let max = {
       x: null,
@@ -62,10 +70,20 @@ class World {
         }
       })
     })
+    if (this.isTime(this.shapes[0].data[0].x)) {
+      this.x.isTime(true)
+      max.x = spacetime(max.x).epoch
+      min.x = spacetime(min.x).epoch
+    }
+    if (this.isTime(this.shapes[0].data[0].y)) {
+      this.y.isTime(true)
+      max.y = spacetime(max.y).epoch
+      min.y = spacetime(min.y).epoch
+    }
     // max.x *= 1.10
     // max.y *= 1.10
     this.x.fit(min.x, max.x)
-    this.y.fit(max.y, min.y)
+    this.y.fit(min.y, max.y)
   }
 
   addLine(data, obj = {}) {

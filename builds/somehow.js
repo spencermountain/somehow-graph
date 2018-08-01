@@ -1,9 +1,9 @@
-/* makeWorld v0.0.3
+/* makeWorld v0.0.1
    github.com/spencermountain/makeWorld
    MIT
 */
 
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.makeWorld = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(_dereq_,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.somehow = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(_dereq_,module,exports){
 // https://d3js.org/d3-array/ Version 1.2.1. Copyright 2017 Mike Bostock.
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
@@ -6321,14 +6321,14 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var World = _dereq_('./world');
 
 // const saidPath = function() {}
-var makeWorld = function makeWorld(width, height) {
+var somehow = function somehow(width, height) {
   return new World(width, height);
 };
 // Object.keys(methods).forEach((k) => saidPath.prototype[k] = methods[k])
 
-module.exports = makeWorld;
+module.exports = somehow;
 
-},{"./world":23}],13:[function(_dereq_,module,exports){
+},{"./world":24}],13:[function(_dereq_,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6337,17 +6337,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var d3Scale = _dereq_('d3-scale');
 var spacetime = _dereq_('spacetime');
+var timeTicks = _dereq_('./time-ticks');
 
 var Scale = function () {
   function Scale(obj) {
     _classCallCheck(this, Scale);
 
-    this.type = obj.type;
+    this.type = obj.type || 'number';
     this.max = obj.max || 100;
     this.min = obj.min || 0;
+    this.inverted = false;
     if (this.type === 'time') {
-      this.max = spacetime(this.max).epoch;
-      this.min = spacetime(this.min).epoch;
+      this.isTime(true);
     }
     this.scale = d3Scale.scaleLinear().range([0, 100]).domain([this.min, this.max]);
   }
@@ -6357,13 +6358,73 @@ var Scale = function () {
     value: function reverse() {
       var arr = this.scale.domain();
       this.scale = this.scale.domain([arr[1], arr[0]]);
+      this.inverted = !this.inverted;
       return this;
+    }
+  }, {
+    key: 'rescale',
+    value: function rescale() {
+      if (!this.inverted) {
+        this.scale.domain([this.min, this.max]);
+      } else {
+        this.scale.domain([this.max, this.min]);
+      }
+    }
+  }, {
+    key: 'start',
+    value: function start(num) {
+      if (num !== undefined) {
+        this.min = num;
+        this.rescale();
+      }
+      if (this.inverted) {
+        return this.scale.range()[1];
+      }
+      return this.scale.range()[0];
+    }
+  }, {
+    key: 'end',
+    value: function end(num) {
+      if (num !== undefined) {
+        this.max = num;
+        this.rescale();
+      }
+      if (this.inverted) {
+        return this.scale.range()[0];
+      }
+      return this.scale.range()[1];
+    }
+  }, {
+    key: 'isTime',
+    value: function isTime(bool) {
+      if (bool) {
+        this.type = 'time';
+        this.max = spacetime(this.max).epoch;
+        this.min = spacetime(this.min).epoch;
+      } else {
+        this.type = 'number';
+      }
+    }
+  }, {
+    key: 'ticks',
+    value: function ticks(num) {
+      if (this.type !== 'time') {
+        return this.scale.ticks(num).map(function (n) {
+          return {
+            val: n,
+            text: String(n)
+          };
+        });
+      } else {
+        return timeTicks(spacetime(this.min), spacetime(this.max));
+      }
     }
   }, {
     key: 'fit',
     value: function fit(min, max) {
-      console.log(min, max);
-      this.scale.domain([min, max]);
+      this.min = min || this.min;
+      this.max = max || this.max;
+      this.rescale();
       return this;
     }
   }]);
@@ -6373,7 +6434,89 @@ var Scale = function () {
 
 module.exports = Scale;
 
-},{"d3-scale":7,"spacetime":11}],14:[function(_dereq_,module,exports){
+},{"./time-ticks":14,"d3-scale":7,"spacetime":11}],14:[function(_dereq_,module,exports){
+'use strict';
+
+var spacetime = _dereq_('spacetime');
+var max = 7;
+// const min = 3
+
+var getAll = function getAll(unit, start, end) {
+  var ticks = [start.epoch];
+  start = start.add(1, unit);
+  var d = start.startOf(unit);
+  while (d.isBefore(end)) {
+    ticks.push(d.epoch);
+    d.add(1, unit);
+  }
+  return ticks;
+};
+
+//remove odd-numbers of ticks, until size is right
+var shrinkIt = function shrinkIt(ticks) {
+  while (ticks.length > max) {
+    console.log(ticks.length);
+    ticks = ticks.filter(function (t, i) {
+      return i % 2 === 0;
+    });
+  }
+  return ticks;
+};
+
+var formatTicks = function formatTicks(ticks, format) {
+  var fmts = {
+    years: function years(d) {
+      return d.format('year');
+    },
+    months: function months(d) {
+      return d.format('month');
+    },
+    days: function days(d) {
+      return d.format('month-short') + ' ' + d.format('date');
+    },
+    hours: function hours(d) {
+      return d.format('hour');
+    },
+    minutes: function minutes(d) {
+      return d.format('time');
+    }
+  };
+  return ticks.map(function (n) {
+    return {
+      val: n,
+      text: fmts[format](spacetime(n))
+    };
+  });
+};
+
+//
+var timeTicks = function timeTicks(start, end) {
+  var ticks = [];
+  var diff = start.diff(end);
+  var format = null;
+  if (diff.years > 2) {
+    format = 'years';
+    ticks = getAll(format, start, end);
+  } else if (diff.months > 2) {
+    format = 'months';
+    ticks = getAll(format, start, end);
+  } else if (diff.days > 2) {
+    format = 'days';
+    ticks = getAll(format, start, end);
+  } else if (diff.hours > 2) {
+    format = 'hours';
+    ticks = getAll(format, start, end);
+  } else if (diff.minutes > 2) {
+    format = 'minutes';
+    ticks = getAll(format, start, end);
+  }
+  ticks = shrinkIt(ticks);
+  ticks = formatTicks(ticks, format);
+  return ticks;
+};
+module.exports = timeTicks;
+
+},{"spacetime":11}],15:[function(_dereq_,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6412,7 +6555,7 @@ var Area = function (_Shape) {
           y: _this2.world.y.scale(o.y)
         };
       });
-      var zero = this.world.y.scale(0);
+      var zero = this.world.y.start();
       return d3Shape.area().x(function (d) {
         return d.x;
       }).y0(function (d) {
@@ -6426,14 +6569,14 @@ var Area = function (_Shape) {
 
 module.exports = Area;
 
-},{"./shape":18,"d3-shape":8}],15:[function(_dereq_,module,exports){
+},{"./shape":19,"d3-shape":8}],16:[function(_dereq_,module,exports){
 'use strict';
 
 exports.isObject = function (o) {
   return Object.prototype.toString.call(o) === '[object Object]';
 };
 
-},{}],16:[function(_dereq_,module,exports){
+},{}],17:[function(_dereq_,module,exports){
 'use strict';
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -6459,7 +6602,7 @@ var Line = function (_Shape) {
 
 module.exports = Line;
 
-},{"./shape":18}],17:[function(_dereq_,module,exports){
+},{"./shape":19}],18:[function(_dereq_,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6525,7 +6668,7 @@ var Rect = function (_Shape) {
 
 module.exports = Rect;
 
-},{"./shape":18,"d3-shape":8}],18:[function(_dereq_,module,exports){
+},{"./shape":19,"d3-shape":8}],19:[function(_dereq_,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6611,7 +6754,7 @@ var Shape = function () {
 
 module.exports = Shape;
 
-},{"./lib/fns":15,"d3-shape":8,"spacetime":11}],19:[function(_dereq_,module,exports){
+},{"./lib/fns":16,"d3-shape":8,"spacetime":11}],20:[function(_dereq_,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6676,7 +6819,7 @@ var Square = function (_Shape) {
 
 module.exports = Square;
 
-},{"./shape":18,"d3-shape":8}],20:[function(_dereq_,module,exports){
+},{"./shape":19,"d3-shape":8}],21:[function(_dereq_,module,exports){
 "use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6731,7 +6874,7 @@ var Text = function (_Shape) {
 
 module.exports = Text;
 
-},{"./shape":18}],21:[function(_dereq_,module,exports){
+},{"./shape":19}],22:[function(_dereq_,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6744,7 +6887,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var Shape = _dereq_('./shape');
 var d3Shape = _dereq_('d3-shape');
-var spacetime = _dereq_('spacetime');
 
 var XAxis = function (_Shape) {
   _inherits(XAxis, _Shape);
@@ -6752,11 +6894,14 @@ var XAxis = function (_Shape) {
   function XAxis(data, obj, world) {
     _classCallCheck(this, XAxis);
 
-    //default x is left-side
-    data.x = data.x || world.x.scale.domain()[0];
-
     var _this = _possibleConstructorReturn(this, (XAxis.__proto__ || Object.getPrototypeOf(XAxis)).call(this, data, obj, world));
+    //default x is left-side
 
+
+    _this.bottom = _this.world.y.start();
+    if (data && data[0] && data[0].x !== undefined) {
+      _this.bottom = _this.world.y.scale(data[0].y);
+    }
     _this.defaults = {
       stroke: 'slategrey',
       "stroke-width": "1",
@@ -6766,37 +6911,24 @@ var XAxis = function (_Shape) {
   }
 
   _createClass(XAxis, [{
-    key: 'formatTime',
-    value: function formatTime(num) {
-      var s = spacetime(num);
-      return [s.format('month-short'), s.format('date-ordinal')];
-    }
-  }, {
     key: 'makeTick',
-    value: function makeTick(num) {
-      var x = this.world.x.scale(num);
-      var text = String(num || '');
-      if (this.world.x.type === 'time') {
-        text = this.formatTime(num);
-      } else {
-        text = [text, ''];
-      }
-      var y = this.world.y.scale(this.data[0].y || 0);
+    value: function makeTick(o) {
+      var x = this.world.x.scale(o.val);
+      var text = String(o.text || '');
+      var y = this.bottom;
       var color = this.defaults.stroke;
-      return '\n    <g>\n      <line y1="' + y + '" x1="' + x + '" y2="' + (y + 2) + '" x2="' + x + '" stroke="' + color + '" stroke-width="0.5px"></line>\n      <text y="' + (y + 5.5) + '" x="' + x + '" style="fill:' + color + '; font-size:4px" text-anchor="middle" >' + text[0] + '</text>\n      <text y="' + (y + 9) + '" x="' + x + '" style="fill:' + color + '; font-size:4px" text-anchor="middle" >' + text[1] + '</text>\n    </g>\n  ';
+      return '\n    <g>\n      <line y1="' + y + '" x1="' + x + '" y2="' + (y + 2) + '" x2="' + x + '" stroke="' + color + '" stroke-width="0.5px"></line>\n      <text y="' + (y + 5.5) + '" x="' + x + '" style="fill:' + color + '; font-size:4px" text-anchor="middle" >' + text + '</text>\n    </g>\n  ';
     }
   }, {
     key: 'makePath',
     value: function makePath() {
-      var data = this.data[0];
-      var y = this.world.y.scale(data.y || 0);
       var minMax = this.world.x.scale.range();
       var points = [{
         x: minMax[0],
-        y: y
+        y: this.bottom
       }, {
         x: minMax[1],
-        y: y
+        y: this.bottom
       }];
       return d3Shape.line().x(function (d) {
         return d.x;
@@ -6810,9 +6942,9 @@ var XAxis = function (_Shape) {
       var _this2 = this;
 
       var path = this.makePath();
-      var ticks = this.world.x.scale.ticks(5);
-      ticks = ticks.map(function (t) {
-        return _this2.makeTick(t);
+      var ticks = this.world.x.ticks(5);
+      ticks = ticks.map(function (o) {
+        return _this2.makeTick(o);
       });
       return '\n      <g>\n        <path d="' + path + '" stroke="' + this.defaults.stroke + '" stroke-width="0.5px" stroke-linecap="round"/>\n        ' + ticks + '\n      </g>\n  ';
     }
@@ -6823,7 +6955,7 @@ var XAxis = function (_Shape) {
 
 module.exports = XAxis;
 
-},{"./shape":18,"d3-shape":8,"spacetime":11}],22:[function(_dereq_,module,exports){
+},{"./shape":19,"d3-shape":8}],23:[function(_dereq_,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6836,7 +6968,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var Shape = _dereq_('./shape');
 var d3Shape = _dereq_('d3-shape');
-var spacetime = _dereq_('spacetime');
 
 var YAxis = function (_Shape) {
   _inherits(YAxis, _Shape);
@@ -6846,6 +6977,11 @@ var YAxis = function (_Shape) {
 
     var _this = _possibleConstructorReturn(this, (YAxis.__proto__ || Object.getPrototypeOf(YAxis)).call(this, data, obj, world));
 
+    var zero = _this.world.x.start();
+    if (data && data[0]) {
+      zero = data[0].x || zero;
+    }
+    _this.left = _this.world.x.scale(zero);
     _this.defaults = {
       stroke: 'grey',
       "stroke-width": "1",
@@ -6856,28 +6992,23 @@ var YAxis = function (_Shape) {
 
   _createClass(YAxis, [{
     key: 'makeTick',
-    value: function makeTick(num) {
-      var y = this.world.y.scale(num);
-      var text = String(num || '');
-      if (this.world.y.type === 'time') {
-        text = spacetime(num).format('day');
-      }
-      var x = this.world.x.scale(this.data[0].x || 0);
+    value: function makeTick(o) {
+      var y = this.world.y.scale(o.val);
+      var text = String(o.text || '');
+      var x = this.left;
       var color = this.defaults.stroke;
       return '\n    <g>\n      <line y1="' + y + '" x1="' + x + '" y2="' + y + '" x2="' + (x - 2) + '" stroke="' + color + '" stroke-width="0.5px"></line>\n      <text y="' + (y + 1.5) + '" x="' + (x - 5) + '" style="fill:' + color + '; font-size:4px" text-anchor="middle" >' + text + '</text>\n    </g>\n  ';
     }
   }, {
     key: 'makePath',
     value: function makePath() {
-      var data = this.data[0];
-      var x = this.world.x.scale(data.x || 0);
       var minMax = this.world.y.scale.range();
       var points = [{
         y: minMax[0],
-        x: x
+        x: this.left
       }, {
         y: minMax[1],
-        x: x
+        x: this.left
       }];
       return d3Shape.line().x(function (d) {
         return d.x;
@@ -6891,9 +7022,9 @@ var YAxis = function (_Shape) {
       var _this2 = this;
 
       var path = this.makePath();
-      var ticks = this.world.y.scale.ticks(6);
-      ticks = ticks.map(function (t) {
-        return _this2.makeTick(t);
+      var ticks = this.world.y.ticks(6);
+      ticks = ticks.map(function (o) {
+        return _this2.makeTick(o);
       });
       return '\n      <g>\n        <path d="' + path + '" stroke="' + this.defaults.stroke + '" stroke-width="0.5px" stroke-linecap="round"/>\n        ' + ticks + '\n      </g>\n  ';
     }
@@ -6904,14 +7035,14 @@ var YAxis = function (_Shape) {
 
 module.exports = YAxis;
 
-},{"./shape":18,"d3-shape":8,"spacetime":11}],23:[function(_dereq_,module,exports){
+},{"./shape":19,"d3-shape":8}],24:[function(_dereq_,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Scale = _dereq_('./scale');
+var Scale = _dereq_('./scales/scale');
 var Line = _dereq_('./shapes/line');
 var Area = _dereq_('./shapes/area');
 var Text = _dereq_('./shapes/text');
@@ -6923,12 +7054,16 @@ var spacetime = _dereq_('spacetime');
 
 var World = function () {
   function World() {
+    var obj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
     _classCallCheck(this, World);
 
+    this.width = obj.width || 400;
+    this.height = obj.height || 300;
+    this.margin = obj.margin || 0;
     this.x = new Scale({
-      type: 'time',
-      min: 'Jan 1st, 2018',
-      max: 'Jan 31st, 2018'
+      min: 0,
+      max: 100
     });
     this.y = new Scale({
       max: 100,
@@ -6950,7 +7085,15 @@ var World = function () {
       var elements = shapes.map(function (shape) {
         return shape.build();
       }).join('\n');
-      return '\n      <svg width="800" height="400" viewBox="0,0,100,100" preserveAspectRatio="xMidYMid meet" style="padding:3rem; border:1px solid lightgrey; overflow:visible;">\n        ' + elements + '\n      </svg>\n    ';
+      return '\n      <svg width="' + this.width + '" height="' + this.height + '" viewBox="0,0,100,100" preserveAspectRatio="xMidYMid meet" style="padding:' + this.margin + '; border:1px solid lightgrey; overflow:visible;">\n        ' + elements + '\n      </svg>\n    ';
+    }
+  }, {
+    key: 'isTime',
+    value: function isTime(str) {
+      if (typeof str === 'string' && /[a-z]/i.test(str) && /[0-9]/i.test(str)) {
+        return true;
+      }
+      return false;
     }
   }, {
     key: 'fit',
@@ -6979,10 +7122,20 @@ var World = function () {
           }
         });
       });
+      if (this.isTime(this.shapes[0].data[0].x)) {
+        this.x.isTime(true);
+        max.x = spacetime(max.x).epoch;
+        min.x = spacetime(min.x).epoch;
+      }
+      if (this.isTime(this.shapes[0].data[0].y)) {
+        this.y.isTime(true);
+        max.y = spacetime(max.y).epoch;
+        min.y = spacetime(min.y).epoch;
+      }
       // max.x *= 1.10
       // max.y *= 1.10
       this.x.fit(min.x, max.x);
-      this.y.fit(max.y, min.y);
+      this.y.fit(min.y, max.y);
     }
   }, {
     key: 'addLine',
@@ -7054,5 +7207,5 @@ var World = function () {
 
 module.exports = World;
 
-},{"./scale":13,"./shapes/area":14,"./shapes/line":16,"./shapes/rect":17,"./shapes/square":19,"./shapes/text":20,"./shapes/xaxis":21,"./shapes/yaxis":22,"spacetime":11}]},{},[12])(12)
+},{"./scales/scale":13,"./shapes/area":15,"./shapes/line":17,"./shapes/rect":18,"./shapes/square":20,"./shapes/text":21,"./shapes/xaxis":22,"./shapes/yaxis":23,"spacetime":11}]},{},[12])(12)
 });

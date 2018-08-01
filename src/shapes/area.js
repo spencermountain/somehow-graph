@@ -15,7 +15,7 @@ class Area extends Shape {
         y: this.world.y.scale(o.y),
       }
     })
-    const zero = this.world.y.scale(0)
+    const zero = this.world.y.start()
     return d3Shape.area().x(d => d.x).y0(d => d.y).y1(zero).curve(d3Shape.curveMonotoneX)(points);
   }
 }
