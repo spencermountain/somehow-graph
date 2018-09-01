@@ -7,9 +7,7 @@ world.addLine([25, 40, 90, 75, 55, 65])
 // world.addLine([5, 10, 90, 55, 55, 45], {
 //   stroke: 'red'
 // })
-world.addArea([5, 5, 10, 33, 10, 15], {
-  stroke: 'red'
-})
+world.addArea([5, 5, 10, 33, 10, 15], )
 // world.addText('go Jays!', {
 //   x: 5,
 //   y: 50
@@ -19,6 +17,8 @@ world.addRect({
   y: 50,
   width: 5,
   height: 50
+},{
+  stroke: 'red'
 })
 
 world.addAxis({

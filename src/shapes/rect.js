@@ -7,6 +7,7 @@ class Rect extends Shape {
     this.defaults = {
       fill: obj.fill || obj.stroke || 'steelblue'
     }
+    this.shape='Rect'
   }
   makePath() {
     let point = this.data[0]
@@ -35,7 +36,7 @@ class Rect extends Shape {
         y: mid.y + h
       },
     ]
-    let path = d3Shape.area().x(d => d.x).y1(d => d.y)(points);
+    let path = d3Shape.area().x(d => d.x).y1(d => d.y)(points)
     return path
   }
 }

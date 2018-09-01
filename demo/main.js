@@ -1,11 +1,19 @@
 let world = window.somehow({
   width: 400,
-  height: 400,
-})
+  height: 400
+});
 
 // let world = somehow.makeWorld()
-
-world.addLine([25, 40, 90, 75, 55, 65])
+// world.addLine([25, 40, 90, 75, 55, 65])
+world.addRect(
+  {
+    y: 40,
+    height: 20,
+    x: 3,
+    width: 2
+  },
+  { fill: "blue" }
+);
 
 // let points = [
 //   {
@@ -23,19 +31,19 @@ world.addLine([25, 40, 90, 75, 55, 65])
 // ]
 // world.addArea(points)
 
-world.addXAxis({
-  // y: 30
-})
-world.addYAxis({
-  // x: 'March 1, 2018',
-})
-world.fit()
+// world.addXAxis({
+//   // y: 30
+// })
+// world.addYAxis({
+//   // x: 'March 1, 2018',
+// })
+world.fit(10, 100);
 // world.y.start(0)
 
 // world.x.start(5)
 // world.x.end(-2)
-let svg = world.build()
-document.getElementById('main').innerHTML = svg
+let svg = world.build();
+document.getElementById("main").innerHTML = svg;
 
 // setTimeout(() => {
 //   document.getElementById('main').innerHTML = world.build()

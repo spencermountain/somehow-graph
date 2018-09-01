@@ -24,15 +24,15 @@
 **somehow** creates SVG, using your data, that you can throw-into your webpage.
 
 ```js
-let world = somehow()
-world.addLine([25, 40, 90, 75, 55, 65])
+let world = require('somehow')
+world.line([25, 40, 90, 75, 55, 65])
 
-world.addText('go Jays!', {
+world.text('go Jays!', {
   y: 50,
   x: 5,
 })
-world.addXAxis()
-world.addYAxis()
+world.xAxis()
+world.yAxis()
 
 world.fit()
 let svg = world.build()

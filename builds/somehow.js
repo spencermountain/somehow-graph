@@ -6627,6 +6627,7 @@ var Rect = function (_Shape) {
     _this.defaults = {
       fill: obj.fill || obj.stroke || 'steelblue'
     };
+    _this.shape = 'Rect';
     return _this;
   }
 
@@ -7036,21 +7037,21 @@ var YAxis = function (_Shape) {
 module.exports = YAxis;
 
 },{"./shape":19,"d3-shape":8}],24:[function(_dereq_,module,exports){
-'use strict';
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Scale = _dereq_('./scales/scale');
-var Line = _dereq_('./shapes/line');
-var Area = _dereq_('./shapes/area');
-var Text = _dereq_('./shapes/text');
-var Rect = _dereq_('./shapes/rect');
-var Square = _dereq_('./shapes/square');
-var XAxis = _dereq_('./shapes/xaxis');
-var YAxis = _dereq_('./shapes/yaxis');
-var spacetime = _dereq_('spacetime');
+var Scale = _dereq_("./scales/scale");
+var Line = _dereq_("./shapes/line");
+var Area = _dereq_("./shapes/area");
+var Text = _dereq_("./shapes/text");
+var Rect = _dereq_("./shapes/rect");
+var Square = _dereq_("./shapes/square");
+var XAxis = _dereq_("./shapes/xAxis");
+var YAxis = _dereq_("./shapes/yAxis");
+var spacetime = _dereq_("spacetime");
 
 var World = function () {
   function World() {
@@ -7074,7 +7075,7 @@ var World = function () {
   }
 
   _createClass(World, [{
-    key: 'build',
+    key: "build",
     value: function build() {
       var shapes = this.shapes.sort(function (a, b) {
         if (a.order > b.order) {
@@ -7084,23 +7085,23 @@ var World = function () {
       });
       var elements = shapes.map(function (shape) {
         return shape.build();
-      }).join('\n');
-      return '\n      <svg width="' + this.width + '" height="' + this.height + '" viewBox="0,0,100,100" preserveAspectRatio="xMidYMid meet" style="padding:' + this.margin + '; border:1px solid lightgrey; overflow:visible;">\n        ' + elements + '\n      </svg>\n    ';
+      }).join("\n");
+      return "\n      <svg width=\"" + this.width + "\" height=\"" + this.height + "\" viewBox=\"0,0,100,100\" preserveAspectRatio=\"xMidYMid meet\" style=\"padding:" + this.margin + "; border:1px solid lightgrey; overflow:visible;\">\n        " + elements + "\n      </svg>\n    ";
     }
   }, {
-    key: 'isTime',
+    key: "isTime",
     value: function isTime(str) {
-      if (typeof str === 'string' && /[a-z]/i.test(str) && /[0-9]/i.test(str)) {
+      if (typeof str === "string" && /[a-z]/i.test(str) && /[0-9]/i.test(str)) {
         return true;
       }
       return false;
     }
   }, {
-    key: 'fit',
-    value: function fit() {
+    key: "fit",
+    value: function fit(a, b) {
       var max = {
-        x: null,
-        y: null
+        x: a || null,
+        y: b || null
       };
       var min = {
         x: null,
@@ -7108,6 +7109,14 @@ var World = function () {
       };
       this.shapes.forEach(function (shape) {
         shape.data.forEach(function (o) {
+          if (shape.shape === "Rect") {
+            if (o.x + o.width > max.x || max.x === null) {
+              max.x = o.x + o.width;
+            }
+            if (o.y + o.height > max.y || max.y === null) {
+              max.x = o.y + o.height;
+            }
+          }
           if (o.x > max.x || max.x === null) {
             max.x = o.x;
           }
@@ -7138,7 +7147,7 @@ var World = function () {
       this.y.fit(min.y, max.y);
     }
   }, {
-    key: 'addLine',
+    key: "addLine",
     value: function addLine(data) {
       var obj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
@@ -7147,7 +7156,7 @@ var World = function () {
       return this;
     }
   }, {
-    key: 'addArea',
+    key: "addArea",
     value: function addArea(data) {
       var obj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
@@ -7156,7 +7165,7 @@ var World = function () {
       return this;
     }
   }, {
-    key: 'addText',
+    key: "addText",
     value: function addText(str, data) {
       var obj = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
@@ -7165,7 +7174,7 @@ var World = function () {
       return this;
     }
   }, {
-    key: 'addRect',
+    key: "addRect",
     value: function addRect(data) {
       var obj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
@@ -7174,7 +7183,7 @@ var World = function () {
       return this;
     }
   }, {
-    key: 'addSquare',
+    key: "addSquare",
     value: function addSquare(data) {
       var obj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
@@ -7183,7 +7192,7 @@ var World = function () {
       return this;
     }
   }, {
-    key: 'addXAxis',
+    key: "addXAxis",
     value: function addXAxis(data) {
       var obj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
@@ -7192,7 +7201,7 @@ var World = function () {
       return this;
     }
   }, {
-    key: 'addYAxis',
+    key: "addYAxis",
     value: function addYAxis(data) {
       var obj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
@@ -7207,5 +7216,5 @@ var World = function () {
 
 module.exports = World;
 
-},{"./scales/scale":13,"./shapes/area":15,"./shapes/line":17,"./shapes/rect":18,"./shapes/square":20,"./shapes/text":21,"./shapes/xaxis":22,"./shapes/yaxis":23,"spacetime":11}]},{},[12])(12)
+},{"./scales/scale":13,"./shapes/area":15,"./shapes/line":17,"./shapes/rect":18,"./shapes/square":20,"./shapes/text":21,"./shapes/xAxis":22,"./shapes/yAxis":23,"spacetime":11}]},{},[12])(12)
 });
