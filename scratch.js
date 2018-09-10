@@ -1,32 +1,13 @@
 
-var makeWorld = require('./src')
-var world = makeWorld()
+var World = require('./src')
+var world = new World()
 
-world.addLine([25, 40, 90, 75, 55, 65])
+let rect = world.add('rect')
+// rect.height(20)
+// rect.width(20)
+// rect.center()
+// rect.from(50, 50).to(75, 75).color('green')
+console.log(rect)
 
-// world.addLine([5, 10, 90, 55, 55, 45], {
-//   stroke: 'red'
-// })
-world.addArea([5, 5, 10, 33, 10, 15], )
-// world.addText('go Jays!', {
-//   x: 5,
-//   y: 50
-// })
-world.addRect({
-  x: 5,
-  y: 50,
-  width: 5,
-  height: 50
-},{
-  stroke: 'red'
-})
-
-world.addAxis({
-  type: 'x',
-  x: 0,
-  y: 30,
-  width: 5
-})
-
-var svg = world.build()
+var svg = world.render()
 console.log(svg)

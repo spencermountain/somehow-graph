@@ -3,7 +3,7 @@ var gaze = require('gaze');
 var bs = require("browser-sync").create();
 
 
-gaze(['./demo/**', './src/**'], {}, function(err) {
+gaze(['./src/**'], {}, function(err) {
   if (err) {
     console.log(err);
   }
@@ -19,4 +19,4 @@ bs.init({
   server: "./"
 });
 // bs.reload("*.html");
-bs.watch("./builds/**").on("change", bs.reload);
+bs.watch(["./builds/**", './demo/main.js']).on("change", bs.reload);
