@@ -21,6 +21,19 @@ class Scale {
     let scale = d3Scale.scaleLinear().range([0, 100]).domain([state.start, state.end])
     return scale(num)
   }
+  fit(num) {
+    let state = this.state
+    if (num === undefined || num === null) {
+      return this
+    }
+    if (num < state.start) {
+      console.log('here')
+      state.start = num
+    } else if (num > state.end) {
+      state.end = num
+    }
+    return this
+  }
 }
 const aliases = {
   start: 'from',

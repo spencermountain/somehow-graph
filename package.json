@@ -4,7 +4,7 @@
   "description": "generate svg paths directly",
   "main": "./builds/somehow.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "tape \"./tests/**/*.test.js\" | tap-dancer",
     "watch": "amble ./scripts/watch.js",
     "console": "amble ./scratch.js",
     "start": "browser-sync start --server --files './demo' --index './demo/index.html'",
@@ -24,7 +24,9 @@
     "d3-axis": "^1.0.8",
     "d3-scale": "^2.1.0",
     "d3-shape": "^1.2.0",
-    "spacetime": "^4.3.0"
+    "spacetime": "^4.3.0",
+    "tap-dancer": "0.0.3",
+    "tape": "^4.9.1"
   },
   "devDependencies": {
     "derequire": "^2.0.6",

@@ -6373,6 +6373,47 @@ var World = function () {
       return this;
     }
   }, {
+    key: 'max',
+    value: function max() {
+      var x = -Infinity;
+      var y = -Infinity;
+      this.shapes.forEach(function (shape) {
+        var max = shape.max();
+        x = max.x > x ? max.x : x;
+        y = max.y > y ? max.y : y;
+      });
+      return {
+        x: x,
+        y: y
+      };
+    }
+  }, {
+    key: 'min',
+    value: function min() {
+      var x = Infinity;
+      var y = Infinity;
+      this.shapes.forEach(function (shape) {
+        var min = shape.min();
+        x = min.x < x ? min.x : x;
+        y = min.y < y ? min.y : y;
+      });
+      return {
+        x: x,
+        y: y
+      };
+    }
+  }, {
+    key: 'fit',
+    value: function fit(x, y) {
+      var max = this.max();
+      var min = this.min();
+      this.x.from(min.x).to(max.x);
+      this.y.from(min.y).to(max.y);
+      this.x.fit(x);
+      this.y.fit(y);
+      return this;
+    }
+  }, {
     key: 'render',
     value: function render() {
       var state = this.state;
@@ -6429,6 +6470,21 @@ var Scale = function () {
       var state = this.state;
       var scale = d3Scale.scaleLinear().range([0, 100]).domain([state.start, state.end]);
       return scale(num);
+    }
+  }, {
+    key: 'fit',
+    value: function fit(num) {
+      var state = this.state;
+      if (num === undefined || num === null) {
+        return this;
+      }
+      if (num < state.start) {
+        console.log('here');
+        state.start = num;
+      } else if (num > state.end) {
+        state.end = num;
+      }
+      return this;
     }
   }]);
 
@@ -6493,6 +6549,24 @@ var Rect = function () {
   }
 
   _createClass(Rect, [{
+    key: 'max',
+    value: function max() {
+      var state = this.state;
+      return {
+        x: state.x + state.width,
+        y: state.y + state.height
+      };
+    }
+  }, {
+    key: 'min',
+    value: function min() {
+      var state = this.state;
+      return {
+        x: state.x,
+        y: state.y
+      };
+    }
+  }, {
     key: 'from',
     value: function from(x, y) {
       this.state.x = x;

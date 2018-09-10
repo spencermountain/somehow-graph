@@ -42,6 +42,41 @@ class World {
     this.y.to(y)
     return this
   }
+  max() {
+    let x = -Infinity
+    let y = -Infinity
+    this.shapes.forEach((shape) => {
+      let max = shape.max()
+      x = max.x > x ? max.x : x
+      y = max.y > y ? max.y : y
+    })
+    return {
+      x: x,
+      y: y
+    }
+  }
+  min() {
+    let x = Infinity
+    let y = Infinity
+    this.shapes.forEach((shape) => {
+      let min = shape.min()
+      x = min.x < x ? min.x : x
+      y = min.y < y ? min.y : y
+    })
+    return {
+      x: x,
+      y: y
+    }
+  }
+  fit(x, y) {
+    let max = this.max()
+    let min = this.min()
+    this.x.from(min.x).to(max.x)
+    this.y.from(min.y).to(max.y)
+    this.x.fit(x)
+    this.y.fit(y)
+    return this
+  }
   render() {
     let state = this.state
     let shapes = this.shapes.sort((a, b) => a.order > b.order ? 1 : -1);

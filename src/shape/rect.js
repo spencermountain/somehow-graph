@@ -13,6 +13,20 @@ class Rect {
     }
     this.world = world
   }
+  max() {
+    let state = this.state
+    return {
+      x: state.x + state.width,
+      y: state.y + state.height
+    }
+  }
+  min() {
+    let state = this.state
+    return {
+      x: state.x,
+      y: state.y
+    }
+  }
   from(x, y) {
     this.state.x = x
     if (y !== undefined) {
