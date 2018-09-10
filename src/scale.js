@@ -6,6 +6,7 @@ class Scale {
       isTime: false,
       start: 0,
       end: 100,
+      invert: false
     }
   }
   from(start) {
@@ -16,9 +17,16 @@ class Scale {
     this.state.end = end
     return this
   }
+  invert() {
+    this.state.invert = !this.state.invert
+    return this
+  }
   set(num) {
     let state = this.state
     let scale = d3Scale.scaleLinear().range([0, 100]).domain([state.start, state.end])
+    if (state.invert === true) {
+      scale.domain([state.end, state.start])
+    }
     return scale(num)
   }
   fit(num) {
@@ -27,7 +35,6 @@ class Scale {
       return this
     }
     if (num < state.start) {
-      console.log('here')
       state.start = num
     } else if (num > state.end) {
       state.end = num

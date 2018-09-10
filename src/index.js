@@ -4,8 +4,8 @@ const makeShape = require('./shape')
 class World {
   constructor() {
     this.shapes = []
-    this.y = new Scale()
     this.x = new Scale()
+    this.y = new Scale().invert()
     this.state = {
       width: 200,
       height: 200
@@ -43,12 +43,12 @@ class World {
     return this
   }
   max() {
-    let x = -Infinity
-    let y = -Infinity
+    let x = null
+    let y = null
     this.shapes.forEach((shape) => {
       let max = shape.max()
-      x = max.x > x ? max.x : x
-      y = max.y > y ? max.y : y
+      x = x === null || max.x > x ? max.x : x
+      y = y === null || max.y > y ? max.y : y
     })
     return {
       x: x,
@@ -56,12 +56,12 @@ class World {
     }
   }
   min() {
-    let x = Infinity
-    let y = Infinity
+    let x = null
+    let y = null
     this.shapes.forEach((shape) => {
       let min = shape.min()
-      x = min.x < x ? min.x : x
-      y = min.y < y ? min.y : y
+      x = x === null || min.x < x ? min.x : x
+      y = y === null || min.y < y ? min.y : y
     })
     return {
       x: x,

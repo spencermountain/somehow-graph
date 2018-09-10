@@ -6321,8 +6321,8 @@ var World = function () {
     _classCallCheck(this, World);
 
     this.shapes = [];
-    this.y = new Scale();
     this.x = new Scale();
+    this.y = new Scale().invert();
     this.state = {
       width: 200,
       height: 200
@@ -6375,12 +6375,12 @@ var World = function () {
   }, {
     key: 'max',
     value: function max() {
-      var x = -Infinity;
-      var y = -Infinity;
+      var x = null;
+      var y = null;
       this.shapes.forEach(function (shape) {
         var max = shape.max();
-        x = max.x > x ? max.x : x;
-        y = max.y > y ? max.y : y;
+        x = x === null || max.x > x ? max.x : x;
+        y = y === null || max.y > y ? max.y : y;
       });
       return {
         x: x,
@@ -6390,12 +6390,12 @@ var World = function () {
   }, {
     key: 'min',
     value: function min() {
-      var x = Infinity;
-      var y = Infinity;
+      var x = null;
+      var y = null;
       this.shapes.forEach(function (shape) {
         var min = shape.min();
-        x = min.x < x ? min.x : x;
-        y = min.y < y ? min.y : y;
+        x = x === null || min.x < x ? min.x : x;
+        y = y === null || min.y < y ? min.y : y;
       });
       return {
         x: x,
@@ -6448,7 +6448,8 @@ var Scale = function () {
     this.state = {
       isTime: false,
       start: 0,
-      end: 100
+      end: 100,
+      invert: false
     };
   }
 
@@ -6465,10 +6466,19 @@ var Scale = function () {
       return this;
     }
   }, {
+    key: 'invert',
+    value: function invert() {
+      this.state.invert = !this.state.invert;
+      return this;
+    }
+  }, {
     key: 'set',
     value: function set(num) {
       var state = this.state;
       var scale = d3Scale.scaleLinear().range([0, 100]).domain([state.start, state.end]);
+      if (state.invert === true) {
+        scale.domain([state.end, state.start]);
+      }
       return scale(num);
     }
   }, {
@@ -6479,7 +6489,6 @@ var Scale = function () {
         return this;
       }
       if (num < state.start) {
-        console.log('here');
         state.start = num;
       } else if (num > state.end) {
         state.end = num;
@@ -6506,9 +6515,11 @@ module.exports = Scale;
 'use strict';
 
 var Rect = _dereq_('./rect');
+var Line = _dereq_('./line');
 
 var shapes = {
-  rect: Rect
+  rect: Rect,
+  line: Line
 };
 shapes.rectangle = shapes.rect;
 
@@ -6520,7 +6531,161 @@ var makeShape = function makeShape(str, obj, world) {
 };
 module.exports = makeShape;
 
-},{"./rect":14}],14:[function(_dereq_,module,exports){
+},{"./line":14,"./rect":15}],14:[function(_dereq_,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var d3Shape = _dereq_('d3-shape');
+
+var Line = function () {
+  function Line() {
+    var obj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var world = arguments[1];
+
+    _classCallCheck(this, Line);
+
+    this.state = {
+      points: [],
+      color: obj.color || 'slategrey',
+      'stroke-linecap': "round"
+    };
+    this.world = world;
+  }
+
+  _createClass(Line, [{
+    key: 'max',
+    value: function max() {
+      var keep = {
+        x: null,
+        y: null
+      };
+      this.state.points.forEach(function (o) {
+        if (keep.x === null || keep.x < o.x) {
+          keep.x = o.x;
+        }
+        if (keep.y === null || keep.y < o.y) {
+          keep.y = o.y;
+        }
+      });
+      console.log(keep);
+      return keep;
+    }
+  }, {
+    key: 'min',
+    value: function min() {
+      var keep = {
+        x: null,
+        y: null
+      };
+      this.state.points.forEach(function (o) {
+        if (keep.x === null || keep.x > o.x) {
+          keep.x = o.x;
+        }
+        if (keep.y === null || keep.y > o.y) {
+          keep.y = o.y;
+        }
+      });
+      return keep;
+    }
+    //set first point
+
+  }, {
+    key: 'from',
+    value: function from(x, y) {
+      this.state.points[0] = {
+        x: x,
+        y: y
+      };
+      return this;
+    }
+    //set last point
+
+  }, {
+    key: 'to',
+    value: function to(x, y) {
+      var state = this.state;
+      var last = 1;
+      if (state.points.length > 1) {
+        last = state.points.length - 1;
+      }
+      state.points[last] = {
+        x: x,
+        y: y
+      };
+      return this;
+    }
+  }, {
+    key: 'add',
+    value: function add(x, y) {
+      this.state.points.push({
+        x: x,
+        y: y
+      });
+      return this;
+    }
+  }, {
+    key: 'data',
+    value: function data(arr) {
+      if (arr && typeof arr[0] === 'number') {
+        arr = arr.map(function (num, i) {
+          return {
+            y: num,
+            x: i
+          };
+        });
+      }
+      this.state.points = arr;
+      return this;
+    }
+  }, {
+    key: 'color',
+    value: function color(str) {
+      this.state.color = str;
+      return this;
+    }
+  }, {
+    key: 'makePath',
+    value: function makePath() {
+      var state = this.state;
+      var world = this.world;
+      var points = state.points.map(function (o) {
+        return {
+          x: world.x.set(o.x),
+          y: world.y.set(o.y)
+        };
+      });
+      return d3Shape.line().x(function (d) {
+        return d.x;
+      }).y(function (d) {
+        return d.y;
+      }).curve(d3Shape.curveMonotoneX)(points); //
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var state = this.state;
+      var attrs = {
+        d: this.makePath(),
+        stroke: state.color,
+        fill: 'none',
+        'stroke-linecap': state['stroke-linecap']
+      };
+      attrs = Object.keys(attrs).reduce(function (str, k) {
+        return str + (' ' + k + '="' + attrs[k] + '"');
+      }, '');
+      return '<path' + attrs + '></path>';
+    }
+  }]);
+
+  return Line;
+}();
+
+module.exports = Line;
+
+},{"d3-shape":8}],15:[function(_dereq_,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6586,12 +6751,6 @@ var Rect = function () {
       return this;
     }
   }, {
-    key: 'color',
-    value: function color(str) {
-      this.state.color = str;
-      return this;
-    }
-  }, {
     key: 'width',
     value: function width(w) {
       this.state.width = w;
@@ -6601,6 +6760,12 @@ var Rect = function () {
     key: 'height',
     value: function height(h) {
       this.state.height = h;
+      return this;
+    }
+  }, {
+    key: 'color',
+    value: function color(str) {
+      this.state.color = str;
       return this;
     }
   }, {
@@ -6616,20 +6781,20 @@ var Rect = function () {
     value: function makePath() {
       var state = this.state;
       var world = this.world;
-      var points = [{ //top-left
-        x: state.x,
+      var points = [{
+        x: state.x, //top-left
         y: state.y
-      }, { //top-right
-        x: state.x + state.width,
+      }, {
+        x: state.x + state.width, //top-right
         y: state.y
-      }, { //bottom-right
-        x: state.x + state.width,
+      }, {
+        x: state.x + state.width, //bottom-right
         y: state.y + state.height
-      }, { //bottom-left
-        x: state.x,
+      }, {
+        x: state.x, //bottom-left
         y: state.y + state.height
-      }, { //top-left (again)
-        x: state.x,
+      }, {
+        x: state.x, //top-left (again)
         y: state.y
       }];
       points = points.map(function (o) {

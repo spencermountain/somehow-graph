@@ -1,7 +1,9 @@
 const Rect = require('./rect')
+const Line = require('./line')
 
 const shapes = {
   rect: Rect,
+  line: Line,
 }
 shapes.rectangle = shapes.rect
 

@@ -8,8 +8,7 @@ gaze(['./src/**'], {}, function(err) {
     console.log(err);
   }
   //On changed/added/deleted
-  this.on('changed', function(abs) {
-    console.log(abs)
+  this.on('changed', function() {
     build()
   });
 });

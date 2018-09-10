@@ -42,10 +42,6 @@ class Rect {
     }
     return this
   }
-  color(str) {
-    this.state.color = str
-    return this
-  }
   width(w) {
     this.state.width = w
     return this
@@ -54,35 +50,38 @@ class Rect {
     this.state.height = h
     return this
   }
+  color(str) {
+    this.state.color = str
+    return this
+  }
   center(x, y) {
     let state = this.state
     state.x = x - (state.width / 2)
     state.y = y - (state.height / 2)
     return this
   }
-
   makePath() {
     let state = this.state
     let world = this.world
     let points = [
-      { //top-left
-        x: state.x,
+      {
+        x: state.x, //top-left
         y: state.y
       },
-      { //top-right
-        x: state.x + state.width,
+      {
+        x: state.x + state.width, //top-right
         y: state.y
       },
-      { //bottom-right
-        x: state.x + state.width,
+      {
+        x: state.x + state.width, //bottom-right
         y: state.y + state.height
       },
-      { //bottom-left
-        x: state.x,
+      {
+        x: state.x, //bottom-left
         y: state.y + state.height
       },
-      { //top-left (again)
-        x: state.x,
+      {
+        x: state.x, //top-left (again)
         y: state.y
       },
     ]
