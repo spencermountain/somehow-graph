@@ -2,6 +2,7 @@ var exec = require('shelljs').exec
 var echo = require('shelljs').echo
 var fs = require('fs');
 var name = 'makeWorld'
+var uncompressed = './builds/somehow.js';
 
 const build = function() {
   //use paths, so libs don't need a -g
@@ -11,7 +12,6 @@ const build = function() {
 
   //final build locations
   var banner = '/* ' + name + ' v' + pkg.version + '\n   github.com/spencermountain/' + name + '\n   MIT\n*/\n';
-  var uncompressed = './builds/somehow.js';
 
   //cleanup. remove old builds
   exec('rm -rf ./builds && mkdir builds');
@@ -20,14 +20,14 @@ const build = function() {
   echo(banner).to(uncompressed);
 
   //browserify + derequire
-  var cmd = browserify + ' ./src/index.js --standalone somehow';
+  var cmd = browserify + ' ./src/index.js --standalone ' + name;
   cmd += ' -t [ babelify --presets [ env ] ]';
   cmd += ' | ' + derequire;
   cmd += ' >> ' + uncompressed;
   exec(cmd);
 
   //print filesizes
-  var stats = fs.statSync('./builds/somehow.js');
+  var stats = fs.statSync(uncompressed);
   var fileSize = (stats['size'] / 1000.0).toFixed(2);
   console.log('\n\n main: ' + fileSize + 'kb');
 }

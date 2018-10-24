@@ -1,5 +1,6 @@
 const Scale = require('./scale')
 const makeShape = require('./shape')
+const setAspectRatio = require('./aspect-ratio')
 
 class World {
   constructor() {
@@ -7,6 +8,7 @@ class World {
     this.x = new Scale()
     this.y = new Scale().invert()
     this.state = {
+      aspect: '3/2',
       width: 200,
       height: 200
     }
@@ -67,6 +69,10 @@ class World {
       x: x,
       y: y
     }
+  }
+  aspect(str) {
+    setAspectRatio(this, str)
+    return this
   }
   fit(x, y) {
     let max = this.max()

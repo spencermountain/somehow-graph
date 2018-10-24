@@ -3,7 +3,7 @@
    MIT
 */
 
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.somehow = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(_dereq_,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.makeWorld = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(_dereq_,module,exports){
 // https://d3js.org/d3-array/ Version 1.2.1. Copyright 2017 Mike Bostock.
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
@@ -6309,12 +6309,103 @@ Object.defineProperty(exports, '__esModule', { value: true });
 },{}],11:[function(_dereq_,module,exports){
 'use strict';
 
+var aspects = [{
+  title: 'square',
+  aliases: {},
+  description: '1:1',
+  ratio: 1,
+  color: '#e9967a'
+}, {
+  title: 'old tvs',
+  aliases: {
+    '4:3': true
+  },
+  description: '4:3',
+  ratio: 1.33,
+  color: '#E97AA8'
+}, {
+  title: 'a4',
+  aliases: {
+    paper: true
+  },
+  description: '√2:1 (Lichtenberg ratio)',
+  ratio: 1.41,
+  color: '#BB7AE9'
+}, {
+  title: 'photograph',
+  description: '3:2',
+  aliases: {
+    '3:2': true,
+    photo: true
+  },
+  ratio: 1.5,
+  color: '#7AE9BB'
+}, {
+  title: 'business card',
+  description: '85.60 × 53.98 mm',
+  aliases: {},
+  ratio: 1.58577,
+  color: '#7AA8E9'
+}, {
+  title: 'golden ratio',
+  description: '1.6180339...',
+  aliases: {
+    '1.618': true,
+    'golden': true
+  },
+  ratio: 1.6180,
+  color: '#7AE9BB'
+}, {
+  title: 'hdtv',
+  description: '16:9',
+  aliases: {},
+  ratio: 1.78,
+  color: '#E9837A'
+}, {
+  title: 'widescreen',
+  aliases: {},
+  description: 'fancy tv screens, movie-theatres',
+  ratio: 1.85,
+  color: '#E9837A'
+}, {
+  title: '1:2',
+  aliases: {},
+  description: 'some modern cellphones',
+  ratio: 2,
+  color: '#BCE97A'
+}, {
+  title: 'cinemascope',
+  aliases: {},
+  description: 'some modern movie-theatres',
+  ratio: 2.35,
+  color: '#E9BA7A'
+}];
+
+//
+var setAspectRatio = function setAspectRatio(world, str) {
+  str = str || '';
+  str = str.trim().toLowerCase();
+  var found = aspects.find(function (o) {
+    return o.title === str || o.aliases[str] === true;
+  });
+  found = found || aspects[0]; //default to square
+  var width = world.state.height * found.ratio;
+  //set height, as a ratio of the width
+  world.width(width);
+  return world;
+};
+module.exports = setAspectRatio;
+
+},{}],12:[function(_dereq_,module,exports){
+'use strict';
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Scale = _dereq_('./scale');
 var makeShape = _dereq_('./shape');
+var setAspectRatio = _dereq_('./aspect-ratio');
 
 var World = function () {
   function World() {
@@ -6324,6 +6415,7 @@ var World = function () {
     this.x = new Scale();
     this.y = new Scale().invert();
     this.state = {
+      aspect: '3/2',
       width: 200,
       height: 200
     };
@@ -6403,6 +6495,12 @@ var World = function () {
       };
     }
   }, {
+    key: 'aspect',
+    value: function aspect(str) {
+      setAspectRatio(this, str);
+      return this;
+    }
+  }, {
     key: 'fit',
     value: function fit(x, y) {
       var max = this.max();
@@ -6432,7 +6530,7 @@ var World = function () {
 
 module.exports = World;
 
-},{"./scale":12,"./shape":13}],12:[function(_dereq_,module,exports){
+},{"./aspect-ratio":11,"./scale":13,"./shape":14}],13:[function(_dereq_,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6511,7 +6609,7 @@ Object.keys(aliases).forEach(function (k) {
 });
 module.exports = Scale;
 
-},{"d3-scale":7}],13:[function(_dereq_,module,exports){
+},{"d3-scale":7}],14:[function(_dereq_,module,exports){
 'use strict';
 
 var Rect = _dereq_('./rect');
@@ -6531,7 +6629,7 @@ var makeShape = function makeShape(str, obj, world) {
 };
 module.exports = makeShape;
 
-},{"./line":14,"./rect":15}],14:[function(_dereq_,module,exports){
+},{"./line":15,"./rect":16}],15:[function(_dereq_,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6661,7 +6759,7 @@ var Line = function () {
         return d.x;
       }).y(function (d) {
         return d.y;
-      }).curve(d3Shape.curveMonotoneX)(points); //
+      }).curve(d3Shape.curveMonotoneX)(points) || '';
     }
   }, {
     key: 'render',
@@ -6670,6 +6768,7 @@ var Line = function () {
       var attrs = {
         d: this.makePath(),
         stroke: state.color,
+        'shape-rendering': 'geometricPrecision',
         fill: 'none',
         'stroke-linecap': state['stroke-linecap']
       };
@@ -6685,7 +6784,7 @@ var Line = function () {
 
 module.exports = Line;
 
-},{"d3-shape":8}],15:[function(_dereq_,module,exports){
+},{"d3-shape":8}],16:[function(_dereq_,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -6830,5 +6929,5 @@ var Rect = function () {
 
 module.exports = Rect;
 
-},{"d3-shape":8}]},{},[11])(11)
+},{"d3-shape":8}]},{},[12])(12)
 });

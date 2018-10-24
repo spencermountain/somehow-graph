@@ -18,4 +18,4 @@ bs.init({
   server: "./"
 });
 // bs.reload("*.html");
-bs.watch(["./builds/**", './demo/main.js']).on("change", bs.reload);
+bs.watch(["./builds/somehow.js", './demo/main.js']).on("change", bs.reload);

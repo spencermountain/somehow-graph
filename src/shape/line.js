@@ -93,13 +93,14 @@ class Line {
         y: world.y.set(o.y)
       }
     })
-    return d3Shape.line().x(d => d.x).y(d => d.y).curve(d3Shape.curveMonotoneX)(points); //
+    return d3Shape.line().x(d => d.x).y(d => d.y).curve(d3Shape.curveMonotoneX)(points) || ''
   }
   render() {
     let state = this.state
     let attrs = {
       d: this.makePath(),
       stroke: state.color,
+      'shape-rendering': 'geometricPrecision',
       fill: 'none',
       'stroke-linecap': state['stroke-linecap']
     }

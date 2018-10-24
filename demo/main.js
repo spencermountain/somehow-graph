@@ -1,18 +1,20 @@
 /* eslint-disable */
-var somehow = new window.somehow()
+var world = new window.makeWorld()
 
 // world.add('rect').from(50, 50).to(75, 75).color('green')
 
-somehow.width(500)
-somehow.height(500)
+world.height(500)
+// world.height(200)
+world.aspect('3:2')
 
-somehow.to(10, 100)
-somehow.add('rect').height(50).width(4).center(4, 50) //.color('steelblue')
-// somehow.add('rect').from(2, 20).to(6, 90) //.color('steelblue')
+let line = world.add('line')
+line.color('green')
+line.add(6, 2)
+line.add(16, 7)
+line.add(23, 17)
+line.add(45, 19)
+// world.add('line').data([12, 22, 20, 25, 80, 86, 100, 75]).color('red')
 
-somehow.add('line').data([22, 22, 22, 25, 80, 90, 100, 75]).color('green')
-
-somehow.fit()
-
-var svg = somehow.render()
+// world.fit()
+var svg = world.render()
 document.getElementById("main").innerHTML = svg;
