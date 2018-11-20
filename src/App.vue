@@ -1,9 +1,7 @@
 <template>
   <div id="app">
     <svg id="main" width="200" height="200" viewBox="0,0,10,10" preserveAspectRatio="xMidYMid meet" style="padding:20px; border:1px solid lightgrey; overflow:visible;">
-      <g v-for="shape in shapes">
-        <path v-bind:d="shape.makePath()" fill="red"></path>
-      </g>
+      <Shape v-for="info in shapes" v-bind:info="info"></Shape>
     </svg>
     <!-- <path id="path" fill="steelblue" d="M0.27639320225002106,1.4472135954999579L1,0L1.723606797749979,1.4472135954999579L2,2L0,2Z"></path> -->
   </div>
@@ -11,27 +9,26 @@
 
 <script>
 import * as spacetime from "spacetime"
-import Somehow from "./somehow"
+import Shape from "./Shape.vue"
 
 export default {
   name: 'app',
-  data:function(){
-    let s= new Somehow()
-    let line=s.line({data:[[1, 0], [2, 2], [0, 2]]})
-    console.log('done')
-    return {
-      shapes:[line]
-    }
+  components:{
+    Shape
   },
-  methods:{
-    move(){
-      console.log('hi')
-      // console.log(shapes)
+  data:function(){
+    return {
+      shapes:[
+        {data:[[1, 0], [2, 2], [0, 2]], color:'steelblue'},
+        {data:[[2, 0], [1, 2], [0, 3]], color:'lightsteelblue'},
+      ]
     }
   },
   mounted(){
-    console.log('mount')
-    this.shapes[0].animate([[0, 0], [2, 0], [2, 1], [1, 2], [0, 1]])
+    setTimeout(()=>{
+      this.shapes[0].data=[[0, 0], [2, 0], [2, 1], [1, 2], [0, 1]]
+      console.log('changed')
+    },1000)
   }
 }
 </script>
