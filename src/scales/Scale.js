@@ -7,6 +7,9 @@ class Scale {
 
     this.from = 0
     this.to = world.width
+    this.rescale()
+  }
+  rescale() {
     this.scale = scaleLinear().range([this.from, this.to]).domain([this.min, this.max])
   }
 

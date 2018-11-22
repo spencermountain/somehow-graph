@@ -5,9 +5,10 @@ class YScale extends Scale {
     super(data, world);
     //use height instead of width
     this.to = world.height
+    this.rescale()
+    this.invert()
   }
   invert() {
-    console.log(`~=~=~**here**~=~`)
     let arr = this.scale.domain()
     this.scale = this.scale.domain([arr[1], arr[0]])
     return this

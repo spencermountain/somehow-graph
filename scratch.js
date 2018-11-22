@@ -10,9 +10,8 @@ let w = somehow({
 })
 
 let l = w.line()
-l.from(20, 0)
-// l.add(25, 5)
+l.from(15, 10)
+l.add(25, 15)
 l.add(50, 50)
-console.log(l.data)
 
 w.build()

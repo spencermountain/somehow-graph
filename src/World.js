@@ -13,7 +13,6 @@ class World {
     let res = fitAspect(obj)
     this.width = res.width || 600
     this.height = res.height || 400
-    console.log(this.height)
     this.shapes = []
     this.xScale = new XScale(obj, this)
     this.yScale = new YScale(obj, this) //.invert()
@@ -33,13 +32,14 @@ class World {
   fit() {}
   build() {
     let shapes = this.shapes.sort((a, b) => a.order > b.order ? 1 : -1)
-    let elements = shapes.map(shape => shape.build())
+    let elements = []
     if (this.xAxis) {
       elements.push(this.xAxis.build())
     }
     if (this.yAxis) {
       elements.push(this.yAxis.build())
     }
+    elements = elements.concat(shapes.map(shape => shape.build()))
     elements = elements.join("\n");
     let attrs = {
       width: this.width,
