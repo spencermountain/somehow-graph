@@ -1,6 +1,9 @@
 const Shape = require('./shapes/Shape')
+const Line = require('./shapes/Line')
 const YScale = require('./scales/YScale')
 const XScale = require('./scales/Scale')
+const XAxis = require('./axis/XAxis')
+const YAxis = require('./axis/YAxis')
 const fitAspect = require('fit-aspect-ratio')
 
 class World {
@@ -10,19 +13,34 @@ class World {
     let res = fitAspect(obj)
     this.width = res.width || 600
     this.height = res.height || 400
+    console.log(this.height)
     this.shapes = []
-    this.xScale = new YScale(obj, this)
-    this.yScale = new XScale(obj, this)
+    this.xScale = new XScale(obj, this)
+    this.yScale = new YScale(obj, this) //.invert()
+    this.xAxis = new XAxis({}, this)
+    this.yAxis = new YAxis({}, this)
   }
   line(obj) {
-    let line = new Shape(obj)
+    let line = new Line(obj, this)
     this.shapes.push(line)
-    return this
+    return line
+  }
+  shape(obj) {
+    let shape = new Shape(obj, this)
+    this.shapes.push(shape)
+    return shape
   }
   fit() {}
   build() {
     let shapes = this.shapes.sort((a, b) => a.order > b.order ? 1 : -1)
-    let elements = shapes.map(shape => shape.build()).join("\n");
+    let elements = shapes.map(shape => shape.build())
+    if (this.xAxis) {
+      elements.push(this.xAxis.build())
+    }
+    if (this.yAxis) {
+      elements.push(this.yAxis.build())
+    }
+    elements = elements.join("\n");
     let attrs = {
       width: this.width,
       height: this.height,

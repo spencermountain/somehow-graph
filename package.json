@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "d3-scale": "^2.1.2",
+    "d3-shape": "^1.2.2",
     "fit-aspect-ratio": "^1.0.0",
     "flubber": "^0.4.2",
     "spacetime": "^4.5.1"
