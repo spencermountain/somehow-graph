@@ -1,29 +1,9 @@
+const Axis = require('./Axis')
 
-const defaults = {
-  stroke: '#d7d5d2',
-  'stroke-width': 1
-}
-
-class XAxis {
+class XAxis extends Axis {
   constructor(obj = {}, world) {
-    this.world = world
-    this.attrs = Object.assign({}, defaults, obj)
-  }
-  ticks(n = 6) {
-    n = n === 0 ? 0 : n - 1
-    let xscale = this.world.xScale
-    let scale = xscale.scale
-    let total = xscale.max - xscale.min
-    let ticks = []
-    for (let i = 0; i <= n; i += 1) {
-      let dec = i / n
-      let num = (dec * total) + xscale.min
-      ticks.push({
-        pos: scale(num),
-        label: parseInt(num, 10)
-      })
-    }
-    return ticks
+    super(obj, world)
+    this.scale = world.xScale
   }
   drawTicks(y) {
     return this.ticks().map((o) => {

@@ -24,19 +24,22 @@
 **somehow** creates SVG, using your data, that you can throw-into your webpage.
 
 ```js
-let world = require('somehow')
-world.line([25, 40, 90, 75, 55, 65])
-
-world.text('go Jays!', {
-  y: 50,
-  x: 5,
+let somehow = require('somehow')
+let world = somehow({
+  height: 300,
+  aspect: 'golden',
+  el: el
 })
-world.xAxis()
-world.yAxis()
+
+let l = world.line()
+l.add('june 5 2019', 10)
+l.add('july 7 2019', 15)
+l.add('july 7 2020', 18)
+l.add('aug 8 2023', 50)
 
 world.fit()
-let svg = world.build()
-document.body.innerHTML = svg
+
+document.body.innerHTML = world.build()
 ```
 
 

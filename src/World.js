@@ -48,7 +48,7 @@ class World {
       height: this.height,
       viewBox: `0,0,${this.width},${this.height}`,
       preserveAspectRatio: 'xMidYMid meet',
-      style: ' overflow:visible;' // border:1px solid lightgrey;
+      style: ' overflow:visible; margin: 10px 20px 25px 25px;' // border:1px solid lightgrey;
     }
     attrs = Object.keys(attrs).map((k) => {
       return `${k}="${attrs[k]}"`

@@ -24,10 +24,11 @@ class Shape {
   from(x, y) {
     x = parseX(x, this.world)
     y = parseY(y, this.world)
-    this.data[0] = {
+    this.data.unshift({
       x: x,
+      from: 'from',
       y: y
-    }
+    })
     return this
   }
   to(x, y) {
@@ -44,7 +45,7 @@ class Shape {
     }
     return this
   }
-  //..sort the point before adding it
+  //..sort the point by x-value before adding it
   add(x, y) {
     x = parseX(x, this.world)
     y = parseY(y, this.world)
@@ -52,11 +53,11 @@ class Shape {
       x: x,
       y: y
     }
-    for (let i = 0; i < this.data.length; i += 1) {
-      if (obj.x > this.data[i].x) {
-        this.data.splice(i, 0, obj)
-        break
-      }
+    let index = this.data.findIndex((d) => d.x > obj.x)
+    if (index === -1) {
+      this.data.push(obj)
+    } else {
+      this.data.splice(index, 0, obj)
     }
     return this
   }
@@ -73,11 +74,9 @@ class Shape {
   //x,y coordinates
   points() {
     let {xScale, yScale} = this.world
-    // console.log(xScale.scale.domain())
-    // console.log(xScale.scale.range())
-    // console.log(xScale.scale(350))
-    // return this.data.map((o) => [o.x, o.y])
-    return this.data.map((o) => [xScale.scale(o.x), yScale.scale(o.y)])
+    let points = this.data.map((o) => [xScale.scale(o.x), yScale.scale(o.y)])
+    // console.log(this.data)
+    return points
   }
   path() {
     return flubber.toPathString(this.points())

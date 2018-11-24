@@ -1,29 +1,10 @@
+const Axis = require('./Axis')
 
-const defaults = {
-  stroke: '#d7d5d2',
-  'stroke-width': 1
-}
 
-class YAxis {
+class YAxis extends Axis {
   constructor(obj = {}, world) {
-    this.world = world
-    this.attrs = Object.assign({}, defaults, obj)
-  }
-  ticks(n = 6) {
-    n = n === 0 ? 0 : n - 1
-    let yscale = this.world.yScale
-    let scale = yscale.scale
-    let total = yscale.max - yscale.min
-    let ticks = []
-    for (let i = 0; i <= n; i += 1) {
-      let dec = i / n
-      let num = (dec * total) + yscale.min
-      ticks.push({
-        pos: scale(num),
-        label: parseInt(num, 10)
-      })
-    }
-    return ticks
+    super(obj, world)
+    this.scale = world.yScale
   }
   drawTicks(x) {
     return this.ticks().map((o) => {
