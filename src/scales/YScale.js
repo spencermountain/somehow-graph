@@ -9,7 +9,7 @@ class YScale extends Scale {
     this.rescale()
   }
   rescale() {
-    let max = this.max * this.world.wiggle_room
+    let max = this.max //* this.world.wiggle_room
     this.scale = scaleLinear().range([this.from, this.to]).domain([max, this.min])
   }
 }

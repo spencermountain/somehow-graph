@@ -27,7 +27,7 @@ class YAxis {
   }
   drawTicks(x) {
     return this.ticks().map((o) => {
-      return `<text x="${x - 15}" y="${o.pos}" dy="5" fill="${this.attrs.stroke}" text-anchor="middle" style="font-size:12px;">
+      return `<text x="${x}" y="${o.pos}" dy="0" dx="-6" fill="${this.attrs.stroke}" text-anchor="end" style="font-size:12px;">
         ${o.label}
       </text>`
     })

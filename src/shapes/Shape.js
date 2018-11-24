@@ -1,5 +1,5 @@
 const flubber = require('flubber')
-const parse = require('./_parse')
+const {parseX, parseY} = require('../parse')
 const fns = require('../_fns')
 
 const defaults = {
@@ -22,8 +22,8 @@ class Shape {
     }
   }
   from(x, y) {
-    x = parse(x)
-    y = parse(y)
+    x = parseX(x, this.world)
+    y = parseY(y, this.world)
     this.data[0] = {
       x: x,
       y: y
@@ -31,8 +31,8 @@ class Shape {
     return this
   }
   to(x, y) {
-    x = parse(x)
-    y = parse(y)
+    x = parseX(x, this.world)
+    y = parseY(y, this.world)
     let last = this.data.length - 1
     //don't overwrite the first one
     if (last === 0) {
@@ -46,8 +46,8 @@ class Shape {
   }
   //..sort the point before adding it
   add(x, y) {
-    x = parse(x)
-    y = parse(y)
+    x = parseX(x, this.world)
+    y = parseY(y, this.world)
     let obj = {
       x: x,
       y: y
@@ -62,8 +62,8 @@ class Shape {
   }
   //add this to the end
   append(x, y) {
-    x = parse(x)
-    y = parse(y)
+    x = parseX(x, this.world)
+    y = parseY(y, this.world)
     this.data.push({
       x: x,
       y: y
