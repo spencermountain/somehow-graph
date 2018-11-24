@@ -11,12 +11,13 @@ class XAxis {
   }
   ticks(n = 6) {
     n = n === 0 ? 0 : n - 1
-    let scale = this.world.xScale.scale
-    let max = this.world.xScale.max
+    let xscale = this.world.xScale
+    let scale = xscale.scale
+    let total = xscale.max - xscale.min
     let ticks = []
     for (let i = 0; i <= n; i += 1) {
       let dec = i / n
-      let num = dec * max
+      let num = (dec * total) + xscale.min
       ticks.push({
         pos: scale(num),
         label: parseInt(num, 10)
@@ -33,7 +34,7 @@ class XAxis {
   }
   build() {
     let attrs = this.attrs
-    let range = this.world.xScale.scale.range()
+    let width = this.world.width
     let y = this.world.height
     attrs = Object.keys(attrs).map((k) => {
       return `${k}="${attrs[k]}"`
@@ -41,7 +42,7 @@ class XAxis {
     let ticks = this.drawTicks(y)
     return `<g>
       ${ticks}
-      <line x1="${range[0]}" y1="${y}" x2="${range[1]}" y2="${y}" ${attrs}/>
+      <line x1="${0}" y1="${y}" x2="${width}" y2="${y}" ${attrs}/>
     </g>`
   }
 }

@@ -14,4 +14,14 @@ l.from(15, 10)
 l.add(25, 15)
 l.add(50, 50)
 
+let l2 = w.line()
+l2.from(5, 10)
+l2.add(25, 25)
+l2.add(52, 60)
+
+// w.fit(-10, -200)
+// w.from(-50, -50)
+// w.to(150, 150)
+// w.fit()
+
 w.build()

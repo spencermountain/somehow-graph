@@ -5,6 +5,7 @@ const XScale = require('./scales/Scale')
 const XAxis = require('./axis/XAxis')
 const YAxis = require('./axis/YAxis')
 const fitAspect = require('fit-aspect-ratio')
+const methods = require('./methods')
 
 class World {
   constructor(obj = {}) {
@@ -14,8 +15,10 @@ class World {
     this.width = res.width || 600
     this.height = res.height || 400
     this.shapes = []
+    //give the points a little bit of space.
+    this.wiggle_room = 1.05
     this.xScale = new XScale(obj, this)
-    this.yScale = new YScale(obj, this) //.invert()
+    this.yScale = new YScale(obj, this)
     this.xAxis = new XAxis({}, this)
     this.yAxis = new YAxis({}, this)
   }
@@ -29,7 +32,6 @@ class World {
     this.shapes.push(shape)
     return shape
   }
-  fit() {}
   build() {
     let shapes = this.shapes.sort((a, b) => a.order > b.order ? 1 : -1)
     let elements = []
@@ -54,4 +56,7 @@ class World {
     this.el.innerHTML = `<svg ${attrs}>${elements}</svg>`;
   }
 }
+Object.keys(methods).forEach((k) => {
+  World.prototype[k] = methods[k]
+})
 module.exports = World

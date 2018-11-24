@@ -2,6 +2,7 @@ const scaleLinear = require('d3-scale').scaleLinear
 
 class Scale {
   constructor(data, world) {
+    this.world = world
     this.min = 0
     this.max = 100
 
@@ -10,7 +11,9 @@ class Scale {
     this.rescale()
   }
   rescale() {
-    this.scale = scaleLinear().range([this.from, this.to]).domain([this.min, this.max])
+    //give it a little bit of room..
+    let max = this.max * this.world.wiggle_room
+    this.scale = scaleLinear().range([this.from, this.to]).domain([this.min, max])
   }
 
 }

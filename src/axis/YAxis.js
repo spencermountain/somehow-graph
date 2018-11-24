@@ -11,12 +11,13 @@ class YAxis {
   }
   ticks(n = 6) {
     n = n === 0 ? 0 : n - 1
-    let scale = this.world.yScale.scale
-    let max = this.world.yScale.max
+    let yscale = this.world.yScale
+    let scale = yscale.scale
+    let total = yscale.max - yscale.min
     let ticks = []
     for (let i = 0; i <= n; i += 1) {
       let dec = i / n
-      let num = dec * max
+      let num = (dec * total) + yscale.min
       ticks.push({
         pos: scale(num),
         label: parseInt(num, 10)
@@ -26,15 +27,14 @@ class YAxis {
   }
   drawTicks(x) {
     return this.ticks().map((o) => {
-      return `<text x="${x - 15}" y="${o.pos}" fill="${this.attrs.stroke}" text-anchor="middle" style="font-size:12px;">
+      return `<text x="${x - 15}" y="${o.pos}" dy="5" fill="${this.attrs.stroke}" text-anchor="middle" style="font-size:12px;">
         ${o.label}
       </text>`
     })
   }
   build() {
     let attrs = this.attrs
-    let domain = this.world.xScale.scale.domain()
-    console.log(domain)
+    let height = this.world.height
     let x = 0
     attrs = Object.keys(attrs).map((k) => {
       return `${k}="${attrs[k]}"`
@@ -42,7 +42,7 @@ class YAxis {
     let ticks = this.drawTicks(x)
     return `<g>
       ${ticks}
-      <line x1="${x}" y1="${domain[0]}" x2="${x}" y2="${domain[1]}" ${attrs}/>
+      <line x1="${x}" y1="${0}" x2="${x}" y2="${height}" ${attrs}/>
     </g>`
   }
 }

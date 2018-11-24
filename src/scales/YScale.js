@@ -1,4 +1,5 @@
 const Scale = require('./Scale')
+const scaleLinear = require('d3-scale').scaleLinear
 
 class YScale extends Scale {
   constructor(data, world) {
@@ -6,12 +7,10 @@ class YScale extends Scale {
     //use height instead of width
     this.to = world.height
     this.rescale()
-    this.invert()
   }
-  invert() {
-    let arr = this.scale.domain()
-    this.scale = this.scale.domain([arr[1], arr[0]])
-    return this
+  rescale() {
+    let max = this.max * this.world.wiggle_room
+    this.scale = scaleLinear().range([this.from, this.to]).domain([max, this.min])
   }
 }
 module.exports = YScale
