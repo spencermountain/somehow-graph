@@ -1,32 +1,28 @@
+const somehow = require('./src')
+let el = document.querySelector('#stage')
+// el.innerHTML = '<h2>one.</h2>'
 
-var makeWorld = require('./src')
-var world = makeWorld()
-
-world.addLine([25, 40, 90, 75, 55, 65])
-
-// world.addLine([5, 10, 90, 55, 55, 45], {
-//   stroke: 'red'
-// })
-world.addArea([5, 5, 10, 33, 10, 15], )
-// world.addText('go Jays!', {
-//   x: 5,
-//   y: 50
-// })
-world.addRect({
-  x: 5,
-  y: 50,
-  width: 5,
-  height: 50
-},{
-  stroke: 'red'
+let w = somehow({
+  height: 300,
+  aspect: 'golden',
+  el: el
 })
 
-world.addAxis({
-  type: 'x',
-  x: 0,
-  y: 30,
-  width: 5
-})
+let l = w.line()
+l.add('june 5 2019', 10)
+l.add('july 7 2019', 15)
+l.add('july 7 2020', 18)
+l.add('aug 8 2017', 50)
+l.add('aug 8 2018', 52)
 
-var svg = world.build()
-console.log(svg)
+// let l2 = w.line()
+// l2.add(25, 25)
+// l2.add(52, 60)
+// l2.from(5, 10)
+// console.log(l2.data)
+// w.fit(-10, -200)
+// w.from(-50, -50)
+// w.to('sept 19 2028')
+w.fit()
+
+w.build()

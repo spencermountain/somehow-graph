@@ -1,10 +1,7 @@
-const World = require('./world')
+const World = require('./World')
 
-
-// const saidPath = function() {}
-const somehow = function(width, height) {
-  return new World(width, height)
+//
+const somehow = function(obj) {
+  return new World(obj)
 }
-// Object.keys(methods).forEach((k) => saidPath.prototype[k] = methods[k])
-
 module.exports = somehow
