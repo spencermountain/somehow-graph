@@ -9,12 +9,23 @@ let w = somehow({
 })
 
 let l = w.line()
+l.add('aug 8 2017', 50)
 l.add('june 5 2019', 10)
 l.add('july 7 2019', 15)
-l.add('july 7 2020', 18)
-l.add('aug 8 2017', 50)
-l.add('aug 8 2018', 52)
+l.add('july 8 2020', 18)
 
+let l2 = w.line()
+l2.color('red')
+l2.add('june 5 2019', 10)
+l2.add('july 7 2020', 15)
+
+let dot = w.dot()
+dot.color('green')
+dot.at('july 7 2019', 15)
+
+let t = w.text()
+t.at('july 7 2019', 15)
+t.text('foo')
 // let l2 = w.line()
 // l2.add(25, 25)
 // l2.add(52, 60)

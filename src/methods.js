@@ -58,6 +58,7 @@ let methods = {
     }
     if (!has(x) && !has(y)) {
       let arr = this.shapes.map((s) => s.extent())
+      console.log(arr)
       let minX = fns.extent(arr.map((o) => o.x.min)).min || 0
       let minY = fns.extent(arr.map((o) => o.y.min)).min || 0
       let maxY = fns.extent(arr.map((o) => o.y.max)).max || 0

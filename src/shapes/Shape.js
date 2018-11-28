@@ -1,10 +1,11 @@
 const flubber = require('flubber')
+const colors = require('spencer-color')
 const {parseX, parseY} = require('../parse')
 const fns = require('../_fns')
 
 const defaults = {
   fill: 'red',
-  stroke: 'steelblue',
+  stroke: colors.blue,
 }
 
 class Shape {
@@ -12,6 +13,7 @@ class Shape {
     this.world = world
     this.data = obj.data || []
     this.attrs = Object.assign({}, defaults, obj)
+    this._shape = 1
   }
   extent() {
     let xArr = this.data.map((o) => o.x)
@@ -19,6 +21,16 @@ class Shape {
     return {
       x: fns.extent(xArr),
       y: fns.extent(yArr),
+    }
+  }
+  color(color) {
+    this.attrs.fill = colors[color] || color
+    return this
+  }
+  at(x, y) {
+    this.data[0] = {
+      x: parseX(x, this.world),
+      y: parseY(y, this.world)
     }
   }
   from(x, y) {

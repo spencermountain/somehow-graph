@@ -1,9 +1,10 @@
+const colors = require('spencer-color')
 const d3Shape = require('d3-shape')
 const Shape = require('./Shape')
 
 const defaults = {
   fill: 'none',
-  stroke: 'steelblue',
+  stroke: colors.blue,
   'stroke-width': 4,
   'stroke-linecap': 'round'
 }
@@ -12,6 +13,10 @@ class Line extends Shape {
   constructor(obj = {}, world) {
     obj = Object.assign({}, defaults, obj)
     super(obj, world);
+  }
+  color(color) {
+    this.attrs.stroke = colors[color] || color
+    return this
   }
   path() {
     let points = this.points()

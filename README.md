@@ -16,10 +16,11 @@
   </a> -->
 </div>
 
+**work-in-progress**
+
 <div align="center">
   <code>npm install somehow</code>
 </div>
-
 
 **somehow** creates SVG, using your data, that you can throw-into your webpage.
 
@@ -42,9 +43,9 @@ world.fit()
 document.body.innerHTML = world.build()
 ```
 
+![image](https://user-images.githubusercontent.com/399657/49157568-1ac42300-f2ee-11e8-8100-5d9992a4c6e0.png)
 
 it's essentially a wrapper for [d3-path](https://github.com/d3/d3-path), [d3-shape](https://github.com/d3/d3-shape), and [spacetime](https://github.com/spencermountain/spacetime) -
 
-**work-in-progress**
 
 MIT

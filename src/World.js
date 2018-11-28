@@ -1,11 +1,14 @@
-const Shape = require('./shapes/Shape')
-const Line = require('./shapes/Line')
+const fitAspect = require('fit-aspect-ratio')
+const methods = require('./methods')
 const YScale = require('./scales/YScale')
 const XScale = require('./scales/Scale')
 const XAxis = require('./axis/XAxis')
 const YAxis = require('./axis/YAxis')
-const fitAspect = require('fit-aspect-ratio')
-const methods = require('./methods')
+
+const Shape = require('./shapes/Shape')
+const Line = require('./shapes/Line')
+const Text = require('./shapes/Text')
+const Dot = require('./shapes/Dot')
 
 class World {
   constructor(obj = {}) {
@@ -27,13 +30,23 @@ class World {
     this.shapes.push(line)
     return line
   }
+  dot(obj) {
+    let dot = new Dot(obj, this)
+    this.shapes.push(dot)
+    return dot
+  }
+  text(obj) {
+    let text = new Text(obj, this)
+    this.shapes.push(text)
+    return text
+  }
   shape(obj) {
     let shape = new Shape(obj, this)
     this.shapes.push(shape)
     return shape
   }
   build() {
-    let shapes = this.shapes.sort((a, b) => a.order > b.order ? 1 : -1)
+    let shapes = this.shapes.sort((a, b) => a._order > b._order ? 1 : -1)
     let elements = []
     if (this.xAxis) {
       elements.push(this.xAxis.build())

@@ -14,7 +14,8 @@
     "d3-shape": "^1.2.2",
     "fit-aspect-ratio": "^1.0.0",
     "flubber": "^0.4.2",
-    "spacetime": "^4.5.1"
+    "spacetime": "^4.5.1",
+    "spencer-color": "0.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.1.6",
