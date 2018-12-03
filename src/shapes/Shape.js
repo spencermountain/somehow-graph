@@ -1,7 +1,8 @@
 const flubber = require('flubber')
 const colors = require('spencer-color')
-const {parseX, parseY} = require('../parse')
+// const {parseX, parseY} = require('../parse')
 const fns = require('../_fns')
+const parseInput = require('./lib/parseInput')
 
 const defaults = {
   fill: 'red',
@@ -16,8 +17,21 @@ class Shape {
     this._shape = 1
   }
   extent() {
-    let xArr = this.data.map((o) => o.x)
-    let yArr = this.data.map((o) => o.y)
+    // let points = this.points()
+    // let xArr = points.map((a) => a[0])
+    // let yArr = points.map((a) => a[1])
+    let xArr = []
+    let yArr = []
+    this.data.forEach((o) => {
+      if (o.x.type !== 'pixel') {
+        xArr.push(o.x.value)
+      }
+      if (o.y.type !== 'pixel') {
+        yArr.push(o.y.value)
+      }
+    })
+    // this.data.map((o) => o.x.value)
+    // let yArr = this.data.map((o) => o.y.value)
     return {
       x: fns.extent(xArr),
       y: fns.extent(yArr),
@@ -27,66 +41,16 @@ class Shape {
     this.attrs.fill = colors[color] || color
     return this
   }
-  at(x, y) {
-    this.data[0] = {
-      x: parseX(x, this.world),
-      y: parseY(y, this.world)
-    }
-  }
-  from(x, y) {
-    x = parseX(x, this.world)
-    y = parseY(y, this.world)
-    this.data.unshift({
-      x: x,
-      from: 'from',
-      y: y
-    })
-    return this
-  }
-  to(x, y) {
-    x = parseX(x, this.world)
-    y = parseY(y, this.world)
-    let last = this.data.length - 1
-    //don't overwrite the first one
-    if (last === 0) {
-      last = 1
-    }
-    this.data[last] = {
-      x: x,
-      y: y
-    }
-    return this
-  }
-  //..sort the point by x-value before adding it
-  add(x, y) {
-    x = parseX(x, this.world)
-    y = parseY(y, this.world)
-    let obj = {
-      x: x,
-      y: y
-    }
-    let index = this.data.findIndex((d) => d.x > obj.x)
-    if (index === -1) {
-      this.data.push(obj)
-    } else {
-      this.data.splice(index, 0, obj)
-    }
-    return this
-  }
-  //add this to the end
-  append(x, y) {
-    x = parseX(x, this.world)
-    y = parseY(y, this.world)
-    this.data.push({
-      x: x,
-      y: y
-    })
+  set(str) {
+    this.data = parseInput(str, this.world)
     return this
   }
   //x,y coordinates
   points() {
     let {x, y} = this.world
-    let points = this.data.map((o) => [x.scale(o.x), y.scale(o.y)])
+    let points = this.data.map((o) => {
+      return [x.place(o.x), y.place(o.y)]
+    })
     return points
   }
   path() {

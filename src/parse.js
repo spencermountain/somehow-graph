@@ -4,14 +4,14 @@ const parse = function(str) {
   if (typeof str === 'number') {
     return {
       type: 'number',
-      val: str
+      value: str
     }
   }
   //support pixels
   if (/[0-9]px$/.test(str)) {
     return {
       type: 'pixel',
-      val: Number(str.replace(/px/, ''))
+      value: Number(str.replace(/px/, ''))
     }
   }
   //support percentages
@@ -19,7 +19,7 @@ const parse = function(str) {
     let num = Number(str.replace(/%/, ''))
     return {
       type: 'percent',
-      val: num
+      value: num
     }
   }
   //try a straight-up number
@@ -27,7 +27,7 @@ const parse = function(str) {
   if (!isNaN(num)) {
     return {
       type: 'number',
-      val: num
+      value: num
     }
   }
   //try a date
@@ -35,29 +35,30 @@ const parse = function(str) {
   if (s.isValid()) {
     return {
       type: 'date',
-      val: s.epoch
+      value: s.epoch
     }
   }
   console.warn('Counldn\'t parse: ' + str)
   return {
     type: 'unknown',
-    val: null
+    value: null
   }
 }
 
 const parseX = function(str, world) {
-  let res = parse(str, world.x)
+  let res = parse(str)
   if (res.type === 'date') {
     world.x.format(res.type)
   }
-  return res.val || 0
+  return res
 }
+
 const parseY = function(str, world) {
-  let res = parse(str, world.y)
+  let res = parse(str)
   if (res.type === 'date') {
     world.y.format(res.type)
   }
-  return res.val || 0
+  return res
 }
 
 module.exports = {

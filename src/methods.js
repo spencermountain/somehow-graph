@@ -11,6 +11,7 @@ let methods = {
   from: function(x, y) {
     if (has(x) === true) {
       x = parseX(x, this)
+
       this.x.min = x
       this.x.rescale()
     }
