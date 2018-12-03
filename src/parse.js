@@ -31,14 +31,14 @@ const parse = function(str) {
 const parseX = function(str, world) {
   let res = parse(str)
   if (res.type === 'date') {
-    world.xScale.format(res.type)
+    world.x.format(res.type)
   }
   return res.val || 0
 }
 const parseY = function(str, world) {
   let res = parse(str)
   if (res.type === 'date') {
-    world.yScale.format(res.type)
+    world.y.format(res.type)
   }
   return res.val || 0
 }

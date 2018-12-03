@@ -20,8 +20,8 @@ class World {
     this.shapes = []
     //give the points a little bit of space.
     this.wiggle_room = 1.05
-    this.xScale = new XScale(obj, this)
-    this.yScale = new YScale(obj, this)
+    this.x = new XScale(obj, this)
+    this.y = new YScale(obj, this)
     this.xAxis = new XAxis({}, this)
     this.yAxis = new YAxis({}, this)
   }

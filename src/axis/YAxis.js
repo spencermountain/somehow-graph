@@ -4,7 +4,7 @@ const Axis = require('./Axis')
 class YAxis extends Axis {
   constructor(obj = {}, world) {
     super(obj, world)
-    this.scale = world.yScale
+    this.scale = world.y
   }
   drawTicks(x) {
     return this.ticks().map((o) => {

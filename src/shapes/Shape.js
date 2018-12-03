@@ -85,9 +85,8 @@ class Shape {
   }
   //x,y coordinates
   points() {
-    let {xScale, yScale} = this.world
-    let points = this.data.map((o) => [xScale.scale(o.x), yScale.scale(o.y)])
-    // console.log(this.data)
+    let {x, y} = this.world
+    let points = this.data.map((o) => [x.scale(o.x), y.scale(o.y)])
     return points
   }
   path() {

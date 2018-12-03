@@ -11,13 +11,13 @@ let methods = {
   from: function(x, y) {
     if (has(x) === true) {
       x = parseX(x, this)
-      this.xScale.min = x
-      this.xScale.rescale()
+      this.x.min = x
+      this.x.rescale()
     }
     if (has(y) === true) {
       y = parseY(y, this)
-      this.yScale.min = y
-      this.yScale.rescale()
+      this.y.min = y
+      this.y.rescale()
     }
     return this
   },
@@ -26,13 +26,13 @@ let methods = {
   to: function(x, y) {
     if (has(x) === true) {
       x = parseX(x, this)
-      this.xScale.max = x
-      this.xScale.rescale()
+      this.c.max = x
+      this.c.rescale()
     }
     if (has(y) === true) {
       y = parseX(y, this)
-      this.yScale.max = y
-      this.yScale.rescale()
+      this.y.max = y
+      this.y.rescale()
     }
     return this
   },
@@ -40,46 +40,44 @@ let methods = {
   fit: function(x, y) {
     if (has(x) === true) {
       x = parseX(x, this)
-      if (x > this.xScale.max) {
-        this.xScale.max = x
-      } else if (x < this.xScale.min) {
-        this.xScale.min = x
+      if (x > this.x.max) {
+        this.x.max = x
+      } else if (x < this.x.min) {
+        this.x.min = x
       }
-      this.xScale.rescale()
+      this.x.rescale()
     }
     if (has(y) === true) {
       y = parseY(y, this)
-      if (y > this.yScale.max) {
-        this.yScale.max = y
-      } else if (y < this.yScale.min) {
-        this.yScale.min = y
+      if (y > this.y.max) {
+        this.y.max = y
+      } else if (y < this.y.min) {
+        this.y.min = y
       }
-      this.yScale.rescale()
+      this.y.rescale()
     }
     if (!has(x) && !has(y)) {
       let arr = this.shapes.map((s) => s.extent())
-      console.log(arr)
-      let minX = fns.extent(arr.map((o) => o.x.min)).min || 0
-      let minY = fns.extent(arr.map((o) => o.y.min)).min || 0
-      let maxY = fns.extent(arr.map((o) => o.y.max)).max || 0
-      let maxX = fns.extent(arr.map((o) => o.x.max)).max || 0
-
+      let minX = fns.extent(arr.map((o) => o.x.min).filter(n => n !== null)).min || 0
+      let minY = fns.extent(arr.map((o) => o.y.min).filter(n => n !== null)).min || 0
+      let maxY = fns.extent(arr.map((o) => o.y.max).filter(n => n !== null)).max || 0
+      let maxX = fns.extent(arr.map((o) => o.x.max).filter(n => n !== null)).max || 0
       //keep graphs from 0, if you can...
-      this.xScale.min = minX > 0 ? 0 : minX
-      this.xScale.max = maxX
-      if (this.xScale.format() === 'date') {
-        this.xScale.min = minX
-        this.xScale.max = maxX
+      this.x.min = minX > 0 ? 0 : minX
+      this.x.max = maxX
+      if (this.x.format() === 'date') {
+        this.x.min = minX
+        this.x.max = maxX
       }
-      this.xScale.rescale()
+      this.x.rescale()
 
-      this.yScale.min = minY > 0 ? 0 : minY
-      this.yScale.max = maxY
-      if (this.yScale.format() === 'date') {
-        this.yScale.min = minY
-        this.yScale.max = maxY
+      this.y.min = minY > 0 ? 0 : minY
+      this.y.max = maxY
+      if (this.y.format() === 'date') {
+        this.y.min = minY
+        this.y.max = maxY
       }
-      this.yScale.rescale()
+      this.y.rescale()
     }
     return this
   }

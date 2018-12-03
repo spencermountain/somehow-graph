@@ -3,7 +3,7 @@ const Axis = require('./Axis')
 class XAxis extends Axis {
   constructor(obj = {}, world) {
     super(obj, world)
-    this.scale = world.xScale
+    this.scale = world.x
   }
   drawTicks(y) {
     return this.ticks().map((o) => {
