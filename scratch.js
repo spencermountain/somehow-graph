@@ -13,6 +13,12 @@ l.add('aug 8 2017', 50)
 l.add('june 5 2019', 10)
 l.add('july 7 2019', 15)
 l.add('july 8 2020', 18)
+
+l.animateTo((l) => {
+  l.draw(``)
+  return l
+})
+
 //
 // let l2 = w.line()
 // l2.color('red')
@@ -28,9 +34,13 @@ l.add('july 8 2020', 18)
 // t.text('foo')
 
 let h = w.line()
-h.color('grey')
-h.width(30)
-h.at('may 1st 2019', 20)
+h.color('red')
+h.add('may 1st 2019', '50%')
+h.add('may 1st 2019', 75)
+// h.width('30px')
+// h.at('may 1st 2019')
+// h.from(null, 25)
+// h.to(null, 75)
 // let l2 = w.line()
 // l2.add(25, 25)
 // l2.add(52, 60)

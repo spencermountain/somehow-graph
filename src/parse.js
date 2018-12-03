@@ -7,6 +7,22 @@ const parse = function(str) {
       val: str
     }
   }
+  //support pixels
+  if (/[0-9]px$/.test(str)) {
+    return {
+      type: 'pixel',
+      val: Number(str.replace(/px/, ''))
+    }
+  }
+  //support percentages
+  if (/[0-9]%$/.test(str)) {
+    let num = Number(str.replace(/%/, ''))
+    return {
+      type: 'percent',
+      val: num
+    }
+  }
+  //try a straight-up number
   let num = Number(str)
   if (!isNaN(num)) {
     return {
@@ -14,6 +30,7 @@ const parse = function(str) {
       val: num
     }
   }
+  //try a date
   let s = spacetime(str)
   if (s.isValid()) {
     return {
@@ -29,14 +46,14 @@ const parse = function(str) {
 }
 
 const parseX = function(str, world) {
-  let res = parse(str)
+  let res = parse(str, world.x)
   if (res.type === 'date') {
     world.x.format(res.type)
   }
   return res.val || 0
 }
 const parseY = function(str, world) {
-  let res = parse(str)
+  let res = parse(str, world.y)
   if (res.type === 'date') {
     world.y.format(res.type)
   }

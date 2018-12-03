@@ -18,6 +18,13 @@ class Scale {
     let max = this.max //* this.world.wiggle_room
     this.scale = scaleLinear().range([this.from, this.to]).domain([this.min, max])
   }
+  byPercent(num = 0) {
+    if (num > 1) {
+      num = num / 100
+    }
+    let diff = this.max - this.min
+    return (diff * num) + this.min
+  }
   format(format) {
     if (format === undefined) {
       return this._format
