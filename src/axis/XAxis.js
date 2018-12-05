@@ -13,6 +13,9 @@ class XAxis extends Axis {
     })
   }
   build() {
+    if (this._show === false) {
+      return ''
+    }
     let attrs = this.attrs
     let width = this.world.width
     let y = this.world.height

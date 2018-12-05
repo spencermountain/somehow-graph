@@ -6,16 +6,31 @@ const defaults = {
   'stroke-width': 1,
   'stroke-linecap': 'round'
 }
+const defaultPoint = {
+  x: '50%',
+  y: '50%',
+}
 
 class Text extends Shape {
   constructor(obj = {}, world) {
+    let text = []
+    if (typeof obj === 'string') {
+      text = [obj]
+      obj = {}
+    }
     obj = Object.assign({}, defaults, obj)
     super(obj, world);
-    this.textLines = []
+    this.textLines = text
     this._order = 0
     this.data = [{
-      x: 0,
-      y: 0,
+      x: {
+        value: 50,
+        type: 'percent'
+      },
+      y: {
+        value: 50,
+        type: 'percent'
+      },
     }]
     this._dodge = {
       x: 0,
@@ -26,14 +41,15 @@ class Text extends Shape {
     // let longest = this.textLines.sort((a, b) => a.length < b.length ? 1 : -1)[0] || ''
     // let width = longest.length * 8
     // let height = this.textLines.length * 20
+    let d = this.data[0] || {}
     return {
       x: {
-        min: this.data[0].x,
-        max: this.data[0].x
+        min: d.x,
+        max: d.x
       },
       y: {
-        min: this.data[0].y, // - height,
-        max: this.data[0].y
+        min: d.y, // - height,
+        max: d.y
       },
     }
   }
@@ -57,6 +73,9 @@ class Text extends Shape {
     inside = inside.join('\n')
 
     let point = this.points()[0]
+    if (!point) {
+      return ''
+    }
     let attrs = Object.assign({}, this.attrs)
     attrs = Object.keys(attrs).map((k) => {
       return `${k}="${attrs[k]}"`

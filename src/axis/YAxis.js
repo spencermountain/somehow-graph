@@ -14,6 +14,9 @@ class YAxis extends Axis {
     })
   }
   build() {
+    if (this._show === false) {
+      return ''
+    }
     let attrs = this.attrs
     let height = this.world.height
     let x = 0

@@ -9,12 +9,23 @@ class Axis {
     this.world = world
     this.attrs = Object.assign({}, defaults, obj)
     this.scale = null
+    this._ticks = 6
+    this._show = true
   }
-  ticks(n = 6) {
-    if (this.scale.format() === 'date') {
-      return ticks.date(this, n)
+  remove() {
+    this._show = false
+  }
+  show() {
+    this._show = true
+  }
+  ticks(n) {
+    if (n !== undefined) {
+      this._ticks = n
     }
-    return ticks.generic(this, n)
+    if (this.scale.format() === 'date') {
+      return ticks.date(this, this._ticks)
+    }
+    return ticks.generic(this, this._ticks)
   }
 }
 module.exports = Axis

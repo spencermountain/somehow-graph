@@ -4,13 +4,12 @@ const Shape = require('./Shape')
 // const {parseX, parseY} = require('../parse')
 
 const defaults = {
-  fill: 'none',
-  stroke: colors.blue,
-  'stroke-width': 4,
+  fill: colors.green,
+  stroke: 'none',
   'stroke-linecap': 'round'
 }
 
-class Line extends Shape {
+class Bar extends Shape {
   constructor(obj = {}, world) {
     obj = Object.assign({}, defaults, obj)
     super(obj, world);
@@ -19,14 +18,14 @@ class Line extends Shape {
     this.attrs.stroke = colors[color] || color
     return this
   }
+  
   width(num) {
-    this.attrs['stroke-width'] = num //parseX(num, this.world)
     return this
   }
   path() {
     let points = this.points()
-    return d3Shape.line().x(d => d[0]).y(d => d[1]).curve(d3Shape.curveMonotoneX)(points);
+    return d3Shape.line().x(d => d[0]).y(d => d[1])(points);
   }
 }
 
-module.exports = Line
+module.exports = Bar
