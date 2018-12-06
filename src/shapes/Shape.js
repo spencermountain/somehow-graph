@@ -63,13 +63,11 @@ class Shape {
     }).join(' ')
   }
   build() {
+    let h = this.world.html
     let attrs = Object.assign({}, this.attrs, {
       d: this.path(),
     })
-    attrs = Object.keys(attrs).map((k) => {
-      return `${k}="${attrs[k]}"`
-    }).join(' ')
-    return `<path ${attrs} style="${this.drawSyle()}"/>`;
+    return `<path ...${attrs} style="${this.drawSyle()}"/>`;
   }
 }
 module.exports = Shape

@@ -5,7 +5,6 @@ let el = document.querySelector('#stage')
 let w = somehow({
   height: 200,
   aspect: 'widescreen',
-  el: el
 })
 
 let l = w.line()
@@ -20,6 +19,11 @@ txt.set('june 10 2018, 25px')
 
 w.fit()
 w.x.fit('Jan 1 2018', 'Dec 31 2018')
+w.y.fit(0, 10)
 w.xAxis.ticks(12)
-w.yAxis.remove()
-w.build()
+let svg = w.build()
+el.innerHTML = svg
+
+
+
+// html`<h1 id=hello>Hello world!</h1>`

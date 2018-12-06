@@ -12,10 +12,12 @@
   "dependencies": {
     "d3-scale": "2.1.2",
     "d3-shape": "1.2.2",
-    "fit-aspect-ratio": "1.0.1",
+    "fit-aspect-ratio": "1.0.2",
     "flubber": "0.4.2",
+    "htm": "^1.0.1",
     "spacetime": "4.5.1",
-    "spencer-color": "0.0.2"
+    "spencer-color": "0.0.3",
+    "vhtml": "^2.1.0"
   },
   "devDependencies": {
     "@babel/core": "7.2.0",

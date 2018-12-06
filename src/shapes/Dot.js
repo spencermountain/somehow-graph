@@ -17,16 +17,14 @@ class Dot extends Shape {
     this._radius = r
   }
   build() {
+    let h = this.world.html
     let point = this.points()[0]
     let attrs = Object.assign({}, this.attrs, {
       cx: point[0],
       cy: point[1],
       r: this._radius,
     })
-    attrs = Object.keys(attrs).map((k) => {
-      return `${k}="${attrs[k]}"`
-    }).join(' ')
-    return `<circle ${attrs} />`;
+    return h`<circle ...${attrs} />`;
   }
 }
 

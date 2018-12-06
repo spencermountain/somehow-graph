@@ -81,16 +81,13 @@ class Text extends Shape {
     return ''
   }
   build() {
-    let inside = this.textLines.map((str) => `<tspan x="0" dy="1.2em">${str}</tspan>`)
+    let h = this.world.html
+    let inside = this.textLines.map((str) => h`<tspan x="0" dy="1.2em">${str}</tspan>`)
     inside = inside.join('\n')
     let point = this.points()[0]
     if (!point) {
       return ''
     }
-    let attrs = Object.assign({}, this.attrs)
-    attrs = Object.keys(attrs).map((k) => {
-      return `${k}="${attrs[k]}"`
-    }).join(' ')
     //calculate height
     let height = 24
     if (this.style['font-size']) {
@@ -101,8 +98,8 @@ class Text extends Shape {
     }
     let y = point[1] - height + (this._dodge.y || 0)
     let x = point[0] + 2 + (this._dodge.x || 0)
-    return `<g transform="translate(${x} ${y})" style="${this.drawSyle()}">
-      <text ${attrs}>
+    return h`<g transform="translate(${x} ${y})" style="${this.drawSyle()}">
+      <text ...${this.attrs}>
         ${inside}
       </text>
     </g>`
