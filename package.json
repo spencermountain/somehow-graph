@@ -7,7 +7,8 @@
   "scripts": {
     "start": "budo scratch.js:assets/_bundle.js --live",
     "watch": "npm run start",
-    "build": "browserify scratch.js -t [ babelify --presets [ @babel/preset-env ] ] | uglifyjs -m -c > ./assets/_bundle.js"
+    "build": "browserify scratch.js -t [ babelify --presets [ @babel/preset-env ] ] | derequire > ./builds/somehow.js",
+    "build:old": "browserify scratch.js -t [ babelify --presets [ @babel/preset-env ] ] | uglifyjs -m -c > ./assets/_bundle.js"
   },
   "dependencies": {
     "d3-scale": "^2.1.2",
@@ -18,10 +19,11 @@
     "spencer-color": "0.0.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.1.6",
-    "@babel/preset-env": "^7.1.6",
-    "babelify": "^10.0.0",
-    "budo": "^11.5.0",
-    "uglify-js": "^3.4.9"
+    "@babel/core": "7.2.0",
+    "@babel/preset-env": "7.2.0",
+    "babelify": "10.0.0",
+    "budo": "11.5.0",
+    "derequire": "2.0.6",
+    "uglify-js": "3.4.9"
   }
 }

@@ -8,6 +8,7 @@ class YScale extends Scale {
     super(data, world);
     //use height instead of width
     this.to = world.height
+    this.is_y = true
     this.parse = parseY
     this.rescale()
   }

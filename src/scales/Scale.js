@@ -9,8 +9,8 @@ const has = function(x) {
 class Scale {
   constructor(data, world) {
     this.world = world
-    this.min = null
-    this.max = null
+    this.min = 0
+    this.max = 100
 
     this.from = 0
     this.to = world.width
@@ -49,7 +49,10 @@ class Scale {
     //from=top
     //to=bottom
     if (obj.type === 'pixel') {
-      return this.to - obj.value
+      if (this.is_y) {
+        return this.to - obj.value //flip grid
+      }
+      return obj.value
     }
     if (obj.type === 'percent') {
       let num = this.byPercent(obj.value)
@@ -58,9 +61,7 @@ class Scale {
     return this.scale(obj.value)
   }
   byPercent(num = 0) {
-    if (num > 1) {
-      num = num / 100
-    }
+    num = num / 100
     let diff = this.max - this.min
     return (diff * num) + this.min
   }

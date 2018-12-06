@@ -6,10 +6,10 @@ const defaults = {
   'stroke-width': 1,
   'stroke-linecap': 'round'
 }
-const defaultPoint = {
-  x: '50%',
-  y: '50%',
-}
+// const defaultPoint = {
+//   x: '50%',
+//   y: '50%',
+// }
 
 class Text extends Shape {
   constructor(obj = {}, world) {

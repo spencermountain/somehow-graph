@@ -63,7 +63,6 @@ let methods = {
     }
     this.y.rescale()
     // }
-
     if (has(x) === true) {
       x = parseX(x, this).value
       if (x > this.x.max) {
