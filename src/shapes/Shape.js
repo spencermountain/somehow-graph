@@ -14,6 +14,7 @@ class Shape {
     this.world = world
     this.data = obj.data || []
     this.attrs = Object.assign({}, defaults, obj)
+    this.style = {}
     this._shape = 1
   }
   extent() {
@@ -56,6 +57,11 @@ class Shape {
   path() {
     return flubber.toPathString(this.points())
   }
+  drawSyle() {
+    return Object.keys(this.style).map((k) => {
+      return `${k}:${this.style[k]};`
+    }).join(' ')
+  }
   build() {
     let attrs = Object.assign({}, this.attrs, {
       d: this.path(),
@@ -63,7 +69,7 @@ class Shape {
     attrs = Object.keys(attrs).map((k) => {
       return `${k}="${attrs[k]}"`
     }).join(' ')
-    return `<path ${attrs} />`;
+    return `<path ${attrs} style="${this.drawSyle()}"/>`;
   }
 }
 module.exports = Shape

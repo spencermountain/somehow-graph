@@ -1,4 +1,5 @@
 const Shape = require('./Shape')
+const colors = require('spencer-color')
 
 const defaults = {
   fill: 'grey',
@@ -37,6 +38,17 @@ class Text extends Shape {
       y: 0,
     }
   }
+  fontSize(num) {
+    if (typeof num === 'number') {
+      num += 'px'
+    }
+    this.style['font-size'] = num
+    return this
+  }
+  underline(color, size = 2) {
+    this.style['border-bottom'] = `${size}px solid ${color}`
+    return this
+  }
   extent() {
     // let longest = this.textLines.sort((a, b) => a.length < b.length ? 1 : -1)[0] || ''
     // let width = longest.length * 8
@@ -71,7 +83,6 @@ class Text extends Shape {
   build() {
     let inside = this.textLines.map((str) => `<tspan x="0" dy="1.2em">${str}</tspan>`)
     inside = inside.join('\n')
-
     let point = this.points()[0]
     if (!point) {
       return ''
@@ -80,9 +91,17 @@ class Text extends Shape {
     attrs = Object.keys(attrs).map((k) => {
       return `${k}="${attrs[k]}"`
     }).join(' ')
+    //calculate height
+    let height = 24
+    if (this.style['font-size']) {
+      let num = this.style['font-size'].replace('px', '')
+      num = Number(num)
+      height = num * 1.5
+      console.log(height)
+    }
+    let y = point[1] - height + (this._dodge.y || 0)
     let x = point[0] + 2 + (this._dodge.x || 0)
-    let y = point[1] - 24 + (this._dodge.y || 0)
-    return `<g transform="translate(${x} ${y})">
+    return `<g transform="translate(${x} ${y})" style="${this.drawSyle()}">
       <text ${attrs}>
         ${inside}
       </text>

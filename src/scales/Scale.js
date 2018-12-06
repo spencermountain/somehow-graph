@@ -10,7 +10,7 @@ class Scale {
   constructor(data, world) {
     this.world = world
     this.min = 0
-    this.max = 100
+    this.max = 1
 
     this.from = 0
     this.to = world.width
@@ -27,21 +27,11 @@ class Scale {
   fit(a, b) {
     if (has(a) === true) {
       let num = this.parse(a, this.world).value
-      if (num > this.max || this.max === null) {
-        this.max = num
-      }
-      if (num < this.min || this.min === null) {
-        this.min = num
-      }
+      this.min = num
     }
     if (has(b) === true) {
       let num = this.parse(b, this.world).value
-      if (num > this.max || this.max === null) {
-        this.max = num
-      }
-      if (num < this.min || this.min === null) {
-        this.min = num
-      }
+      this.max = num
     }
     this.rescale()
   }
