@@ -67,7 +67,7 @@ class Shape {
     let attrs = Object.assign({}, this.attrs, {
       d: this.path(),
     })
-    return `<path ...${attrs} style="${this.drawSyle()}"/>`;
+    return h`<path ...${attrs} style="${this.drawSyle()}"/>`;
   }
 }
 module.exports = Shape

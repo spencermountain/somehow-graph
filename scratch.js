@@ -8,14 +8,19 @@ let w = somehow({
 })
 
 let l = w.line()
-l.set(`
-june 5 2018, 7
-june 10 2018, 25px
-july 10 2018, 75%
-july 12 2018, 10
-`)
-let txt = w.text('cool')
+l.set([
+  ['june 5 2018', 7],
+  ['june 10 2018', '25px'],
+  ['july 10 2018', '75%'],
+  ['july 12 2018', 10]
+])
+let txt = w.text(['cool', 'stuff'])
 txt.set('june 10 2018, 25px')
+txt.dy(5)
+
+let dot = w.dot()
+dot.color('red')
+dot.set('25px, 25px')
 
 w.fit()
 w.x.fit('Jan 1 2018', 'Dec 31 2018')

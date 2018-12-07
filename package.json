@@ -16,7 +16,7 @@
     "flubber": "0.4.2",
     "htm": "^1.0.1",
     "spacetime": "4.5.1",
-    "spencer-color": "0.0.3",
+    "spencer-color": "0.0.4",
     "vhtml": "^2.1.0"
   },
   "devDependencies": {

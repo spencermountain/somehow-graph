@@ -7,10 +7,6 @@ const defaults = {
   'stroke-width': 1,
   'stroke-linecap': 'round'
 }
-// const defaultPoint = {
-//   x: '50%',
-//   y: '50%',
-// }
 
 class Text extends Shape {
   constructor(obj = {}, world) {
@@ -18,6 +14,9 @@ class Text extends Shape {
     if (typeof obj === 'string') {
       text = [obj]
       obj = {}
+    } else if (Array.isArray(obj)) {
+      text = obj
+      obj = []
     }
     obj = Object.assign({}, defaults, obj)
     super(obj, world);
@@ -37,16 +36,32 @@ class Text extends Shape {
       x: 0,
       y: 0,
     }
+    this._underline = ''
+  }
+  color(color) {
+    this.attrs.stroke = colors[color] || color
+    return this
+  }
+  dy(n = 0) {
+    this._dodge.y += n * -1
+    return this
+  }
+  dx(n = 0) {
+    this._dodge.x += n * -1
+    return this
+  }
+  dodge(x, y) {
+    x = x || this._dodge.x
+    y = y || this._dodge.y
+    this._dodge.x = x * -1
+    this._dodge.y = y * -1
+    return this
   }
   fontSize(num) {
     if (typeof num === 'number') {
       num += 'px'
     }
     this.style['font-size'] = num
-    return this
-  }
-  underline(color, size = 2) {
-    this.style['border-bottom'] = `${size}px solid ${color}`
     return this
   }
   extent() {
@@ -65,11 +80,6 @@ class Text extends Shape {
       },
     }
   }
-  dodge(x, y) {
-    this._dodge.x = x
-    this._dodge.y = y
-    return this
-  }
   text(text) {
     if (typeof text === 'string') {
       this.textLines = [text]
@@ -80,26 +90,49 @@ class Text extends Shape {
   path() {
     return ''
   }
-  build() {
-    let h = this.world.html
-    let inside = this.textLines.map((str) => h`<tspan x="0" dy="1.2em">${str}</tspan>`)
-    inside = inside.join('\n')
-    let point = this.points()[0]
-    if (!point) {
-      return ''
-    }
+  estimate() {
     //calculate height
     let height = 24
     if (this.style['font-size']) {
       let num = this.style['font-size'].replace('px', '')
       num = Number(num)
       height = num * 1.5
-      console.log(height)
     }
-    let y = point[1] - height + (this._dodge.y || 0)
-    let x = point[0] + 2 + (this._dodge.x || 0)
+    //calculate width
+    let width = 0
+    this.textLines.forEach((str) => {
+      let w = str.length * 6
+      if (w > width) {
+        width = w
+      }
+    })
+    return {
+      height: height,
+      width: width
+    }
+  }
+  position() {
+    let point = this.points()[0]
+    let res = {
+      x: 0,
+      y: 0,
+    }
+    if (!point) {
+      return res
+    }
+    let {height, width} = this.estimate()
+    res.height = height
+    res.width = width
+    res.y = (point[1] + this._dodge.y) - height
+    res.x = point[0] + 2 + this._dodge.x
+    return res
+  }
+  build() {
+    let h = this.world.html
+    let inside = this.textLines.map((str) => h`<tspan x="0" dy="1.2em">${str}</tspan>`)
+    let {x, y} = this.position()
     return h`<g transform="translate(${x} ${y})" style="${this.drawSyle()}">
-      <text ...${this.attrs}>
+      <text id="fun" ...${this.attrs}>
         ${inside}
       </text>
     </g>`

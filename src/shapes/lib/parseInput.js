@@ -22,7 +22,7 @@ const parseInput = function(set, world) {
   }
   return set.map((a) => {
     let x = parseX(a[0], world)
-    let y = parseX(a[1], world)
+    let y = parseY(a[1], world)
     return {
       x: x,
       y: y
