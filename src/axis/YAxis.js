@@ -7,23 +7,25 @@ class YAxis extends Axis {
     this.scale = world.y
   }
   drawTicks(x) {
+    let h = this.world.html
     return this.ticks().map((o) => {
-      return `<text x="${x}" y="${o.pos}" dy="0" dx="-6" fill="${this.attrs.stroke}" text-anchor="end" style="font-size:12px;">
+      return h`<text x="${x}" y="${o.pos}" dy="0" dx="-6" fill="${this.attrs.stroke}" text-anchor="end" style="font-size:12px;">
         ${o.label}
       </text>`
     })
   }
   build() {
+    let h = this.world.html
+    if (this._show === false) {
+      return ''
+    }
     let attrs = this.attrs
     let height = this.world.height
     let x = 0
-    attrs = Object.keys(attrs).map((k) => {
-      return `${k}="${attrs[k]}"`
-    }).join(' ')
     let ticks = this.drawTicks(x)
-    return `<g>
+    return h`<g>
       ${ticks}
-      <line x1="${x}" y1="${0}" x2="${x}" y2="${height}" ${attrs}/>
+      <line x1="${x}" y1="${0}" x2="${x}" y2="${height}" ...${attrs}/>
     </g>`
   }
 }

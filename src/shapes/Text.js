@@ -1,4 +1,5 @@
 const Shape = require('./Shape')
+const colors = require('spencer-color')
 
 const defaults = {
   fill: 'grey',
@@ -9,38 +10,75 @@ const defaults = {
 
 class Text extends Shape {
   constructor(obj = {}, world) {
+    let text = []
+    if (typeof obj === 'string') {
+      text = [obj]
+      obj = {}
+    } else if (Array.isArray(obj)) {
+      text = obj
+      obj = []
+    }
     obj = Object.assign({}, defaults, obj)
     super(obj, world);
-    this.textLines = []
+    this.textLines = text
     this._order = 0
     this.data = [{
-      x: 0,
-      y: 0,
+      x: {
+        value: 50,
+        type: 'percent'
+      },
+      y: {
+        value: 50,
+        type: 'percent'
+      },
     }]
     this._dodge = {
       x: 0,
       y: 0,
     }
+    this._underline = ''
+  }
+  color(color) {
+    this.attrs.stroke = colors[color] || color
+    return this
+  }
+  dy(n = 0) {
+    this._dodge.y += n * -1
+    return this
+  }
+  dx(n = 0) {
+    this._dodge.x += n * -1
+    return this
+  }
+  dodge(x, y) {
+    x = x || this._dodge.x
+    y = y || this._dodge.y
+    this._dodge.x = x * -1
+    this._dodge.y = y * -1
+    return this
+  }
+  fontSize(num) {
+    if (typeof num === 'number') {
+      num += 'px'
+    }
+    this.style['font-size'] = num
+    return this
   }
   extent() {
     // let longest = this.textLines.sort((a, b) => a.length < b.length ? 1 : -1)[0] || ''
     // let width = longest.length * 8
     // let height = this.textLines.length * 20
+    let d = this.data[0] || {}
     return {
       x: {
-        min: this.data[0].x,
-        max: this.data[0].x
+        min: d.x,
+        max: d.x
       },
       y: {
-        min: this.data[0].y, // - height,
-        max: this.data[0].y
+        min: d.y, // - height,
+        max: d.y
       },
     }
-  }
-  dodge(x, y) {
-    this._dodge.x = x
-    this._dodge.y = y
-    return this
   }
   text(text) {
     if (typeof text === 'string') {
@@ -52,19 +90,49 @@ class Text extends Shape {
   path() {
     return ''
   }
-  build() {
-    let inside = this.textLines.map((str) => `<tspan x="0" dy="1.2em">${str}</tspan>`)
-    inside = inside.join('\n')
-
+  estimate() {
+    //calculate height
+    let height = 24
+    if (this.style['font-size']) {
+      let num = this.style['font-size'].replace('px', '')
+      num = Number(num)
+      height = num * 1.5
+    }
+    //calculate width
+    let width = 0
+    this.textLines.forEach((str) => {
+      let w = str.length * 6
+      if (w > width) {
+        width = w
+      }
+    })
+    return {
+      height: height,
+      width: width
+    }
+  }
+  position() {
     let point = this.points()[0]
-    let attrs = Object.assign({}, this.attrs)
-    attrs = Object.keys(attrs).map((k) => {
-      return `${k}="${attrs[k]}"`
-    }).join(' ')
-    let x = point[0] + 2 + (this._dodge.x || 0)
-    let y = point[1] - 24 + (this._dodge.y || 0)
-    return `<g transform="translate(${x} ${y})">
-      <text ${attrs}>
+    let res = {
+      x: 0,
+      y: 0,
+    }
+    if (!point) {
+      return res
+    }
+    let {height, width} = this.estimate()
+    res.height = height
+    res.width = width
+    res.y = (point[1] + this._dodge.y) - height
+    res.x = point[0] + 2 + this._dodge.x
+    return res
+  }
+  build() {
+    let h = this.world.html
+    let inside = this.textLines.map((str) => h`<tspan x="0" dy="1.2em">${str}</tspan>`)
+    let {x, y} = this.position()
+    return h`<g transform="translate(${x} ${y})" style="${this.drawSyle()}">
+      <text id="fun" ...${this.attrs}>
         ${inside}
       </text>
     </g>`

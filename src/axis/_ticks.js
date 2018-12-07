@@ -25,6 +25,9 @@ const chooseFmt = function(scale) {
     return 'MMM yyyy'
   }
   if (diff.months > 0) {
+    if (diff.months >= 11) {
+      return 'MMM' // Sept
+    }
     return 'MMM d'
   }
   if (diff.days > 0) {

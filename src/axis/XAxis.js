@@ -6,23 +6,25 @@ class XAxis extends Axis {
     this.scale = world.x
   }
   drawTicks(y) {
+    let h = this.world.html
     return this.ticks().map((o) => {
-      return `<text x="${o.pos}" y="${y + 15}" fill="${this.attrs.stroke}" text-anchor="middle" style="font-size:12px;">
+      return h`<text x="${o.pos}" y="${y + 15}" fill="${this.attrs.stroke}" text-anchor="middle" style="font-size:12px;">
         ${o.label}
       </text>`
     })
   }
   build() {
+    let h = this.world.html
+    if (this._show === false) {
+      return ''
+    }
     let attrs = this.attrs
     let width = this.world.width
     let y = this.world.height
-    attrs = Object.keys(attrs).map((k) => {
-      return `${k}="${attrs[k]}"`
-    }).join(' ')
     let ticks = this.drawTicks(y)
-    return `<g>
+    return h`<g>
       ${ticks}
-      <line x1="${0}" y1="${y}" x2="${width}" y2="${y}" ${attrs}/>
+      <line x1="${0}" y1="${y}" x2="${width}" y2="${y}" ...${attrs}/>
     </g>`
   }
 }
