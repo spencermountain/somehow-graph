@@ -18,6 +18,29 @@ class Shape {
     this.style = {}
     this._shape = 1
   }
+  at(x, y) {
+    if ((x || x === 0) && (y || y === 0)) { //hmm
+      this.set([
+        [x, y]
+      ])
+      return this
+    }
+    //vertical line
+    if (x || x === 0) {
+      this.set([
+        [x, '0%'],
+        [x, '100%'],
+      ])
+    }
+    //horizontal line
+    if (y || y === 0) {
+      this.set([
+        ['0%', y],
+        ['100%', y],
+      ])
+    }
+    return this
+  }
   extent() {
     // let points = this.points()
     // let xArr = points.map((a) => a[0])

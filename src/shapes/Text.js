@@ -34,9 +34,27 @@ class Text extends Shape {
     }]
     this._dodge = {
       x: 0,
-      y: 0,
+      y: 4,
     }
     this._underline = ''
+  }
+  before(x, y) {
+    this.attrs['text-anchor'] = "end"
+    this.set([
+      [x, y]
+    ])
+  }
+  after(x, y) {
+    this.attrs['text-anchor'] = "start"
+    this.set([
+      [x, y]
+    ])
+  }
+  center(x, y) {
+    this.attrs['text-anchor'] = "middle"
+    this.set([
+      [x, y]
+    ])
   }
   color(color) {
     this.attrs.stroke = colors[color] || color
@@ -47,7 +65,7 @@ class Text extends Shape {
     return this
   }
   dx(n = 0) {
-    this._dodge.x += n * -1
+    this._dodge.x += n
     return this
   }
   dodge(x, y) {
@@ -57,7 +75,7 @@ class Text extends Shape {
     this._dodge.y = y * -1
     return this
   }
-  fontSize(num) {
+  font(num) {
     if (typeof num === 'number') {
       num += 'px'
     }
