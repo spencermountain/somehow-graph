@@ -7,6 +7,7 @@ const parseInput = require('./lib/parseInput')
 const defaults = {
   fill: 'red',
   stroke: colors.blue,
+  'shape-rendering': 'optimizeQuality'
 }
 
 class Shape {

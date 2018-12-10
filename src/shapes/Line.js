@@ -19,6 +19,31 @@ class Line extends Shape {
     this.attrs.stroke = colors[color] || color
     return this
   }
+  at(x, y) {
+    if ((x || x === 0) && (y || y === 0)) { //hmm
+    }
+    //vertical line
+    if (x || x === 0) {
+      this.set([
+        [x, '0%'],
+        [x, '100%'],
+      ])
+    }
+    //horizontal line
+    if (y || y === 0) {
+      this.set([
+        ['0%', y],
+        ['100%', y],
+      ])
+    }
+  }
+  dotted(n) {
+    if (n === true) {
+      n = 4
+    }
+    this.attrs['stroke-dasharray'] = n || 4
+    return this
+  }
   width(num) {
     this.attrs['stroke-width'] = num //parseX(num, this.world)
     return this
