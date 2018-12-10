@@ -12,6 +12,8 @@ const Line = require('./shapes/Line')
 const Text = require('./shapes/Text')
 const Dot = require('./shapes/Dot')
 
+const Slider = require('./inputs/Slider')
+
 class World {
   constructor(obj = {}) {
     this.aspect = obj.aspect || '3:4'
@@ -26,6 +28,8 @@ class World {
     this.xAxis = new XAxis({}, this)
     this.yAxis = new YAxis({}, this)
     this.html = htm.bind(vhtml);
+    this.inputs = []
+    this.state = {}
   }
   bind(fn) {
     this.html = htm.bind(fn);
@@ -49,6 +53,11 @@ class World {
     let shape = new Shape(obj, this)
     this.shapes.push(shape)
     return shape
+  }
+  slider(obj) {
+    let slider = new Slider(obj, this)
+    this.inputs.push(slider)
+    return slider
   }
   build() {
     let h = this.html
