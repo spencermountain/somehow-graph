@@ -1,12 +1,13 @@
-const flubber = require('flubber')
+// const flubber = require('flubber')
+const d3Shape = require('d3-shape')
 const colors = require('spencer-color')
-// const {parseX, parseY} = require('../parse')
+const {parseY} = require('../parse')
 const fns = require('../_fns')
 const parseInput = require('./lib/parseInput')
 
 const defaults = {
-  fill: 'red',
-  stroke: colors.blue,
+  fill: colors.blue,
+  stroke: 'none',
   'shape-rendering': 'optimizeQuality'
 }
 
@@ -14,6 +15,7 @@ class Shape {
   constructor(obj = {}, world) {
     this.world = world
     this.data = obj.data || []
+    this.id = obj.id
     this.attrs = Object.assign({}, defaults, obj)
     this.style = {}
     this._shape = 1
@@ -83,7 +85,11 @@ class Shape {
     return points
   }
   path() {
-    return flubber.toPathString(this.points())
+    // return flubber.toPathString(this.points())
+    let zero = this.world.y.place(parseY(0))
+    console.log(zero)
+    let points = this.points()
+    return d3Shape.area().x0(d => d[0]).y0(d => d[1]).y1(zero).curve(d3Shape.curveMonotoneX)(points);
   }
   drawSyle() {
     return Object.keys(this.style).map((k) => {

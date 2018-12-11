@@ -63,6 +63,9 @@ class World extends Component {
     this.inputs.push(slider)
     return slider
   }
+  getShape(id) {
+    return this.shapes.find((shape) => shape.id === id)
+  }
   redraw() {
     if (this.el) {
       this.el.innerHTML = this.build()

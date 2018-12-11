@@ -10,7 +10,7 @@ const defaults = {
 
 class Text extends Shape {
   constructor(obj = {}, world) {
-    let text = []
+    let text = null
     if (typeof obj === 'string') {
       text = [obj]
       obj = {}
@@ -20,7 +20,11 @@ class Text extends Shape {
     }
     obj = Object.assign({}, defaults, obj)
     super(obj, world);
-    this.textLines = text
+
+    this.textLines = text || obj.text || []
+    if (typeof this.textLines === 'string') {
+      this.textLines = [this.textLines]
+    }
     this._order = 0
     this.data = [{
       x: {
@@ -61,7 +65,7 @@ class Text extends Shape {
     return this
   }
   dy(n = 0) {
-    this._dodge.y += n * -1
+    this._dodge.y = n * -1
     return this
   }
   dx(n = 0) {
