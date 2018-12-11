@@ -66,6 +66,10 @@ class Shape {
     this.attrs.fill = colors[color] || color
     return this
   }
+  opacity(n) {
+    this.attrs.opacity = n
+    return this
+  }
   set(str) {
     this.data = parseInput(str, this.world)
     return this
