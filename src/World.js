@@ -1,4 +1,5 @@
 const fitAspect = require('fit-aspect-ratio')
+const Component = require('preact').Component
 const htm = require('htm')
 const vhtml = require('vhtml');
 const methods = require('./methods')
@@ -14,8 +15,9 @@ const Dot = require('./shapes/Dot')
 
 const Slider = require('./inputs/Slider')
 
-class World {
+class World extends Component {
   constructor(obj = {}) {
+    super(obj)
     this.aspect = obj.aspect || '3:4'
     let res = fitAspect(obj)
     this.width = res.width || 600
@@ -30,6 +32,16 @@ class World {
     this.html = htm.bind(vhtml);
     this.inputs = []
     this.state = {}
+    this.state.time = Date.now();
+  }
+  componentDidMount() {
+    console.log('mount')
+    // update time every second
+    this.timer = setInterval(() => {
+      this.setState({
+        time: Date.now()
+      });
+    }, 1000);
   }
   bind(fn) {
     this.html = htm.bind(fn);
@@ -58,6 +70,11 @@ class World {
     let slider = new Slider(obj, this)
     this.inputs.push(slider)
     return slider
+  }
+  render() {
+    console.log('render')
+    let h = this.html
+    return h`<div>${this.state.time}</div>`
   }
   build() {
     let h = this.html

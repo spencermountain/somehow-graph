@@ -1,5 +1,9 @@
 const spacetime = require('spacetime')
-//
+const memo = {}
+const day = 60 * 60 * 24 * 1000
+const month = day * 30
+const year = day * 368
+
 const generic = function(axis, n = 5) {
   n = n === 0 ? 0 : n - 1
   let scale = axis.scale
@@ -18,30 +22,29 @@ const generic = function(axis, n = 5) {
 }
 
 const chooseFmt = function(scale) {
-  let min = spacetime(scale.min)
-  let max = spacetime(scale.max)
-  let diff = min.diff(max)
-  if (diff.years > 0) {
+  let diff = scale.max - scale.min
+  if (diff > year) {
     return 'MMM yyyy'
   }
-  if (diff.months > 0) {
-    if (diff.months >= 11) {
-      return 'MMM' // Sept
-    }
-    return 'MMM d'
+  if (diff > month) {
+    return 'MMM' // Sept
   }
-  if (diff.days > 0) {
+  if (diff < day) {
     return 'h:mm a'
   }
   return 'MMM d'
-// return 'iso-short'
 }
+
 
 const date = function(axis, n = 5) {
   let ticks = generic(axis, n)
   let fmt = chooseFmt(axis.scale)
   ticks = ticks.map((o) => {
-    o.label = spacetime(o.num).format(fmt)
+    if (memo[o.num]) {
+      o.label = memo[o.num]
+    } else {
+      o.label = spacetime(o.num).format(fmt)
+    }
     return o
   })
   return ticks
