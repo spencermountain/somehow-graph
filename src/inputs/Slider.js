@@ -1,4 +1,4 @@
-const fns = require('../_fns')
+// const fns = require('../_fns')
 const colors = require('spencer-color')
 const defaults = {
   min: -100,
@@ -6,8 +6,6 @@ const defaults = {
   step: 1,
   size: 200,
 }
-
-
 
 class Slider {
   constructor(obj = {}, world) {
@@ -26,11 +24,12 @@ class Slider {
     if (this._value === undefined) {
       this._value = 50
     }
-    this.id = obj.id || fns.uuid()
-    this.callback = function(e) {
-      console.log(e.target.value)
-    }
+    this.id = obj.id || 'slider'
     this.world.state[this.id] = this._value
+    this.callback = (e) => {
+      this.world.state[this.id] = e.target.value
+      this.world.redraw()
+    }
   }
   labels(data) {
     this._labels = data.map((a) => {

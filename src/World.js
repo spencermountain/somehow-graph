@@ -33,15 +33,7 @@ class World extends Component {
     this.inputs = []
     this.state = {}
     this.state.time = Date.now();
-  }
-  componentDidMount() {
-    console.log('mount')
-    // update time every second
-    this.timer = setInterval(() => {
-      this.setState({
-        time: Date.now()
-      });
-    }, 1000);
+    this.el = obj.el || null
   }
   bind(fn) {
     this.html = htm.bind(fn);
@@ -71,10 +63,12 @@ class World extends Component {
     this.inputs.push(slider)
     return slider
   }
-  render() {
-    console.log('render')
-    let h = this.html
-    return h`<div>${this.state.time}</div>`
+  redraw() {
+    if (this.el) {
+      this.el.innerHTML = this.build()
+    } else {
+      console.log('must define world html element')
+    }
   }
   build() {
     let h = this.html
@@ -95,6 +89,7 @@ class World extends Component {
       style: 'overflow:visible; margin: 10px 20px 25px 25px;' // border:1px solid lightgrey;
     }
     return h`<svg ...${attrs}>
+    <text>${this.state.lat}</text>
       ${elements}
     </svg>`;
   }
