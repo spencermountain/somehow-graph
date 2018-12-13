@@ -92,7 +92,6 @@ class World extends Component {
       style: 'overflow:visible; margin: 10px 20px 25px 25px;' // border:1px solid lightgrey;
     }
     return h`<svg ...${attrs}>
-    <text>${this.state.lat}</text>
       ${elements}
     </svg>`;
   }

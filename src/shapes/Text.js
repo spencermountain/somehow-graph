@@ -69,7 +69,7 @@ class Text extends Shape {
     return this
   }
   dx(n = 0) {
-    this._dodge.x += n
+    this._dodge.x = n
     return this
   }
   dodge(x, y) {

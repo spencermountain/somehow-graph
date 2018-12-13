@@ -4,6 +4,17 @@ const day = 60 * 60 * 24 * 1000
 const month = day * 30
 const year = day * 368
 
+const prettyNum = function(num) {
+  num = parseFloat(num)
+  if (num > 2000000) {
+    num = parseInt(num / 1000, 10) * 1000
+  }
+  if (num > 2000) {
+    num = parseInt(num / 1000, 10) * 1000
+  }
+  return num.toLocaleString()
+}
+
 const generic = function(axis, n = 5) {
   n = n === 0 ? 0 : n - 1
   let scale = axis.scale
@@ -15,7 +26,7 @@ const generic = function(axis, n = 5) {
     ticks.push({
       num: num,
       pos: scale.scale(num),
-      label: parseInt(num, 10)
+      label: prettyNum(num)
     })
   }
   return ticks
@@ -23,6 +34,9 @@ const generic = function(axis, n = 5) {
 
 const chooseFmt = function(scale) {
   let diff = scale.max - scale.min
+  if (diff > year * 3) {
+    return 'yyyy'
+  }
   if (diff > year) {
     return 'MMM yyyy'
   }
