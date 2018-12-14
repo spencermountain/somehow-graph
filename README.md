@@ -16,7 +16,9 @@
   </a> -->
 </div>
 
+<div align="center">
 **work-in-progress**
+</div>
 
 <div align="center">
   <code>npm install somehow</code>
@@ -44,8 +46,12 @@ document.body.innerHTML = world.build()
 ```
 ![image](https://user-images.githubusercontent.com/399657/50016136-4d307a00-ff96-11e8-91f2-bbc476715ecb.png)
 
+the idea is that you think (mostly) about the actual data, and not the layout.
+
 it's essentially a wrapper for [d3-path](https://github.com/d3/d3-path), [d3-shape](https://github.com/d3/d3-shape), and [spacetime](https://github.com/spencermountain/spacetime) -
 
-![image](https://user-images.githubusercontent.com/399657/50015881-acda5580-ff95-11e8-8d60-e53cff453303.png)
+more to come
+
+you can see some [demos here](http://thensome.how/)
 
 MIT
