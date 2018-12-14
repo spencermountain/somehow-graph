@@ -9,6 +9,8 @@ const XAxis = require('./axis/XAxis')
 const YAxis = require('./axis/YAxis')
 
 const Shape = require('./shapes/Shape')
+const Area = require('./shapes/Area')
+const Rect = require('./shapes/Rect')
 const Line = require('./shapes/Line')
 const Text = require('./shapes/Text')
 const Dot = require('./shapes/Dot')
@@ -55,6 +57,16 @@ class World {
     let text = new Text(obj, this)
     this.shapes.push(text)
     return text
+  }
+  area(obj) {
+    let shape = new Area(obj, this)
+    this.shapes.push(shape)
+    return shape
+  }
+  rect(obj) {
+    let shape = new Rect(obj, this)
+    this.shapes.push(shape)
+    return shape
   }
   shape(obj) {
     let shape = new Shape(obj, this)

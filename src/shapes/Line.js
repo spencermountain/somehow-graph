@@ -19,6 +19,7 @@ class Line extends Shape {
     this.attrs.stroke = colors[color] || color
     return this
   }
+
   dotted(n) {
     if (n === true) {
       n = 4

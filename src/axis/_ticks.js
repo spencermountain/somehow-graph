@@ -3,14 +3,23 @@ const memo = {}
 const day = 60 * 60 * 24 * 1000
 const month = day * 30
 const year = day * 368
+const mil = 1000000
+const tenThou = 10000
+const thou = 1000
 
 const prettyNum = function(num) {
   num = parseFloat(num)
-  if (num > 2000000) {
-    num = parseInt(num / 1000, 10) * 1000
+  if (num > mil) {
+    num = parseInt(num / 100000, 10) * 100000
+    return (num / mil) + 'm'
   }
-  if (num > 2000) {
-    num = parseInt(num / 1000, 10) * 1000
+  if (num > tenThou) {
+    num = parseInt(num / thou, 10) * thou
+    return (num / thou) + 'k'
+  }
+  if (num > thou) {
+    num = parseInt(num / 100, 10) * 100
+    return (num / thou) + 'k'
   }
   return num.toLocaleString()
 }

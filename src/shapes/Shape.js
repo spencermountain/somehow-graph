@@ -1,7 +1,7 @@
 // const flubber = require('flubber')
 const d3Shape = require('d3-shape')
 const colors = require('spencer-color')
-const {parseY} = require('../parse')
+const {parseX, parseY} = require('../parse')
 const fns = require('../_fns')
 const parseInput = require('./lib/parseInput')
 
@@ -76,6 +76,20 @@ class Shape {
     this.data = parseInput(str, this.world)
     return this
   }
+  from(x, y) {
+    this.data[0] = {
+      x: parseX(x, this.world),
+      y: parseY(y, this.world)
+    }
+    return this
+  }
+  to(x, y) {
+    this.data[1] = {
+      x: parseX(x, this.world),
+      y: parseY(y, this.world)
+    }
+    return this
+  }
   //x,y coordinates
   points() {
     let {x, y} = this.world
@@ -85,9 +99,8 @@ class Shape {
     return points
   }
   path() {
-    // return flubber.toPathString(this.points())
+    console.log('hi')
     let zero = this.world.y.place(parseY(0))
-    console.log(zero)
     let points = this.points()
     return d3Shape.area().x0(d => d[0]).y0(d => d[1]).y1(zero).curve(d3Shape.curveMonotoneX)(points);
   }
