@@ -47,21 +47,24 @@ class Text extends Shape {
     this.set([
       [x, y]
     ])
+    return this
   }
   after(x, y) {
     this.attrs['text-anchor'] = "start"
     this.set([
       [x, y]
     ])
+    return this
   }
   center(x, y) {
     this.attrs['text-anchor'] = "middle"
     this.set([
       [x, y]
     ])
+    return this
   }
   color(color) {
-    this.attrs.stroke = colors[color] || color
+    this.attrs.fill = colors[color] || color
     return this
   }
   dy(n = 0) {
@@ -108,6 +111,7 @@ class Text extends Shape {
     } else {
       this.textLines = text
     }
+    return this
   }
   path() {
     return ''

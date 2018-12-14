@@ -1,4 +1,5 @@
 const spacetime = require('spacetime')
+const prettyNum = require('./_prettyNum')
 
 const drawTick = function(s, axis) {
   let scale = axis.scale.scale
@@ -14,7 +15,7 @@ const drawTick = function(s, axis) {
   return {
     num: num,
     pos: parseInt(scale(num), 10),
-    label: String(s)
+    label: prettyNum(num)
   }
 }
 module.exports = drawTick

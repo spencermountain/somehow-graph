@@ -21,8 +21,10 @@ class Scale {
   }
   rescale() {
     //give it a little bit of room..
-    let max = this.max //* this.world.wiggle_room
-    this.scale = scaleLinear().range([this.from, this.to]).domain([this.min, max])
+    let max = this.max
+    let min = this.min
+    console.log([min, max])
+    this.scale = scaleLinear().range([this.from, this.to]).domain([min, max])
   }
   fit(a, b) {
     if (has(a) === true) {

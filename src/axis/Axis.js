@@ -1,3 +1,4 @@
+const colors = require('spencer-color')
 const ticks = require('./_ticks')
 const drawTick = require('./_custom')
 
@@ -16,6 +17,10 @@ class Axis {
     this._fmt = undefined
     this._given = undefined
     this._show = true
+  }
+  color(color) {
+    this.attrs.stroke = colors[color] || color
+    return this
   }
   remove() {
     this._show = false

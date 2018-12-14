@@ -24,7 +24,7 @@ class XAxis extends Axis {
     let ticks = this.drawTicks(y)
     return h`<g>
       ${ticks}
-      <line x1="${0}" y1="${y}" x2="${width}" y2="${y}" ...${attrs}/>
+      <line x1="${0}" y1="${y}" x2="${width}" y2="${y}" ...${attrs} stroke="#d7d5d2"/>
     </g>`
   }
 }

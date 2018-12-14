@@ -21,7 +21,7 @@ class Shape {
     this._shape = 1
   }
   at(x, y) {
-    if ((x || x === 0) && (y || y === 0)) { //hmm
+    if ((x || x === 0) && (y || y === 0)) {
       this.set([
         [x, y]
       ])
@@ -33,6 +33,7 @@ class Shape {
         [x, '0%'],
         [x, '100%'],
       ])
+      return this
     }
     //horizontal line
     if (y || y === 0) {
@@ -99,7 +100,6 @@ class Shape {
     return points
   }
   path() {
-    console.log('hi')
     let zero = this.world.y.place(parseY(0))
     let points = this.points()
     return d3Shape.area().x0(d => d[0]).y0(d => d[1]).y1(zero).curve(d3Shape.curveMonotoneX)(points);
