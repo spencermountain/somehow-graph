@@ -1,7 +1,9 @@
 {
   "name": "somehow",
   "description": "",
-  "version": "0.0.2",
+  "version": "0.0.3",
+  "main":"./builds/somehow.js",
+  "unpkg":"./builds/somehow.js",
   "author": "Spencer Kelly (spencermountain)",
   "homepage": "https://github.com/spencermountain/frown#readme",
   "scripts": {
@@ -9,13 +11,15 @@
     "watch": "npm run start",
     "build": "node ./scripts/build.js"
   },
+  "files": [
+    "builds"
+  ],
   "dependencies": {
     "d3-scale": "2.1.2",
     "d3-shape": "1.2.2",
     "fit-aspect-ratio": "1.0.2",
-    "flubber": "0.4.2",
     "htm": "^1.0.1",
-    "spacetime": "4.5.1",
+    "spacetime": "5.0.4",
     "spencer-color": "0.0.4",
     "vhtml": "^2.1.0"
   },
@@ -25,8 +29,6 @@
     "babelify": "10.0.0",
     "budo": "11.5.0",
     "derequire": "2.0.6",
-    "preact": "^8.4.2",
-    "raf-loop": "^1.1.3",
     "shelljs": "0.8.3",
     "uglify-js": "3.4.9"
   }

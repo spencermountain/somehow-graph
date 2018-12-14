@@ -29,23 +29,23 @@ let somehow = require('somehow')
 let world = somehow({
   height: 300,
   aspect: 'golden',
-  el: el
 })
 
-let l = world.line()
-l.add('june 5 2019', 10)
-l.add('july 7 2019', 15)
-l.add('july 7 2020', 18)
-l.add('aug 8 2023', 50)
-
+let line = world.line()
+line.set([
+  ['june 5 2019', 10],
+  ['july 7 2019', 15],
+  ['july 7 2020', 18],
+  ['aug 8 2021', 50],
+])
 world.fit()
 
 document.body.innerHTML = world.build()
 ```
-
-![image](https://user-images.githubusercontent.com/399657/49157568-1ac42300-f2ee-11e8-8100-5d9992a4c6e0.png)
+![image](https://user-images.githubusercontent.com/399657/50016136-4d307a00-ff96-11e8-91f2-bbc476715ecb.png)
 
 it's essentially a wrapper for [d3-path](https://github.com/d3/d3-path), [d3-shape](https://github.com/d3/d3-shape), and [spacetime](https://github.com/spencermountain/spacetime) -
 
+![image](https://user-images.githubusercontent.com/399657/50015881-acda5580-ff95-11e8-8d60-e53cff453303.png)
 
 MIT

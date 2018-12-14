@@ -1,5 +1,5 @@
 const fitAspect = require('fit-aspect-ratio')
-const Component = require('preact').Component
+// const Component = require('preact').Component
 const htm = require('htm')
 const vhtml = require('vhtml');
 const methods = require('./methods')
@@ -15,9 +15,8 @@ const Dot = require('./shapes/Dot')
 
 const Slider = require('./inputs/Slider')
 
-class World extends Component {
+class World {
   constructor(obj = {}) {
-    super(obj)
     this.aspect = obj.aspect || '3:4'
     let res = fitAspect(obj)
     this.width = res.width || 600

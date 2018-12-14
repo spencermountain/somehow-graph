@@ -53,11 +53,12 @@ const chooseFmt = function(scale) {
 const date = function(axis, n = 5) {
   let ticks = generic(axis, n)
   let fmt = chooseFmt(axis.scale)
+  console.log(fmt)
   ticks = ticks.map((o) => {
     if (memo[o.num]) {
       o.label = memo[o.num]
     } else {
-      o.label = spacetime(o.num).format(fmt)
+      o.label = spacetime(o.num).unixFmt(fmt)
     }
     return o
   })
