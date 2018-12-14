@@ -17,10 +17,14 @@ const Slider = require('./inputs/Slider')
 
 class World {
   constructor(obj = {}) {
-    this.aspect = obj.aspect || '3:4'
-    let res = fitAspect(obj)
-    this.width = res.width || 600
-    this.height = res.height || 400
+    this.width = obj.width || 600
+    this.height = obj.height || 400
+    if (obj.aspect) {
+      this.aspect = obj.aspect
+      let res = fitAspect(obj)
+      this.width = res.width || 600
+      this.height = res.height || 400
+    }
     this.shapes = []
     //give the points a little bit of space.
     this.wiggle_room = 1.05

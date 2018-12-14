@@ -1,4 +1,4 @@
-/* somehow v0.0.3
+/* somehow v0.0.4
    github.com/spencermountain/somehow
    MIT
 */
@@ -10333,10 +10333,16 @@ function () {
 
     _classCallCheck(this, World);
 
-    this.aspect = obj.aspect || '3:4';
-    var res = fitAspect(obj);
-    this.width = res.width || 600;
-    this.height = res.height || 400;
+    this.width = obj.width || 600;
+    this.height = obj.height || 400;
+
+    if (obj.aspect) {
+      this.aspect = obj.aspect;
+      var res = fitAspect(obj);
+      this.width = res.width || 600;
+      this.height = res.height || 400;
+    }
+
     this.shapes = []; //give the points a little bit of space.
 
     this.wiggle_room = 1.05;
@@ -10447,7 +10453,7 @@ Object.keys(methods).forEach(function (k) {
 });
 module.exports = World;
 
-},{"./axis/XAxis":19,"./axis/YAxis":20,"./inputs/Slider":23,"./methods":24,"./scales/Scale":26,"./scales/YScale":27,"./shapes/Dot":28,"./shapes/Line":29,"./shapes/Shape":30,"./shapes/Text":31,"fit-aspect-ratio":11,"htm":12,"vhtml":15}],17:[function(_dereq_,module,exports){
+},{"./axis/XAxis":19,"./axis/YAxis":20,"./inputs/Slider":24,"./methods":25,"./scales/Scale":27,"./scales/YScale":28,"./shapes/Dot":29,"./shapes/Line":30,"./shapes/Shape":31,"./shapes/Text":32,"fit-aspect-ratio":11,"htm":12,"vhtml":15}],17:[function(_dereq_,module,exports){
 "use strict";
 
 var extent = function extent(arr) {
@@ -10486,6 +10492,8 @@ module.exports = {
 },{}],18:[function(_dereq_,module,exports){
 "use strict";
 
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -10493,6 +10501,8 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 var _ticks = _dereq_('./_ticks');
+
+var drawTick = _dereq_('./_custom');
 
 var defaults = {
   stroke: '#d7d5d2',
@@ -10511,7 +10521,9 @@ function () {
     this.world = world;
     this.attrs = Object.assign({}, defaults, obj);
     this.scale = null;
-    this._ticks = 6;
+    this._tickCount = 6;
+    this._fmt = undefined;
+    this._given = undefined;
     this._show = true;
   }
 
@@ -10519,24 +10531,42 @@ function () {
     key: "remove",
     value: function remove() {
       this._show = false;
+      return this;
+    }
+  }, {
+    key: "format",
+    value: function format(str) {
+      this._fmt = str;
+      return this;
     }
   }, {
     key: "show",
     value: function show() {
       this._show = true;
+      return this;
     }
   }, {
     key: "ticks",
     value: function ticks(n) {
-      if (n !== undefined) {
-        this._ticks = n;
+      var _this = this;
+
+      if (typeof n === 'number') {
+        this._tickCount = n;
+      } else if (_typeof(n) === 'object') {
+        this._given = n;
+      }
+
+      if (this._given) {
+        return this._given.map(function (o) {
+          return drawTick(o, _this);
+        });
       }
 
       if (this.scale.format() === 'date') {
-        return _ticks.date(this, this._ticks);
+        return _ticks.date(this, this._tickCount);
       }
 
-      return _ticks.generic(this, this._ticks);
+      return _ticks.generic(this, this._tickCount);
     }
   }]);
 
@@ -10545,7 +10575,7 @@ function () {
 
 module.exports = Axis;
 
-},{"./_ticks":21}],19:[function(_dereq_,module,exports){
+},{"./_custom":21,"./_ticks":22}],19:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -10740,6 +10770,36 @@ module.exports = YAxis;
 
 var spacetime = _dereq_('spacetime');
 
+var drawTick = function drawTick(s, axis) {
+  var scale = axis.scale.scale;
+
+  if (typeof s === 'string') {
+    s = spacetime(s);
+    return {
+      num: s.epoch,
+      //val
+      pos: parseInt(scale(s.epoch), 10),
+      //x/y
+      label: s.format(axis._fmt || '{month} {year}') //text
+
+    };
+  }
+
+  var num = Number(s);
+  return {
+    num: num,
+    pos: parseInt(scale(num), 10),
+    label: String(s)
+  };
+};
+
+module.exports = drawTick;
+
+},{"spacetime":13}],22:[function(_dereq_,module,exports){
+"use strict";
+
+var spacetime = _dereq_('spacetime');
+
 var memo = {};
 var day = 60 * 60 * 24 * 1000;
 var month = day * 30;
@@ -10805,7 +10865,6 @@ var date = function date(axis) {
   var n = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 5;
   var ticks = generic(axis, n);
   var fmt = chooseFmt(axis.scale);
-  console.log(fmt);
   ticks = ticks.map(function (o) {
     if (memo[o.num]) {
       o.label = memo[o.num];
@@ -10823,7 +10882,7 @@ module.exports = {
   date: date
 };
 
-},{"spacetime":13}],22:[function(_dereq_,module,exports){
+},{"spacetime":13}],23:[function(_dereq_,module,exports){
 "use strict";
 
 var World = _dereq_('./World'); //
@@ -10835,7 +10894,7 @@ var somehow = function somehow(obj) {
 
 module.exports = somehow;
 
-},{"./World":16}],23:[function(_dereq_,module,exports){
+},{"./World":16}],24:[function(_dereq_,module,exports){
 "use strict";
 
 function _templateObject2() {
@@ -10988,7 +11047,7 @@ function () {
 
 module.exports = Slider;
 
-},{"spencer-color":14}],24:[function(_dereq_,module,exports){
+},{"spencer-color":14}],25:[function(_dereq_,module,exports){
 "use strict";
 
 var _require = _dereq_('./parse'),
@@ -11108,7 +11167,7 @@ var methods = {
 };
 module.exports = methods;
 
-},{"./_fns":17,"./parse":25}],25:[function(_dereq_,module,exports){
+},{"./_fns":17,"./parse":26}],26:[function(_dereq_,module,exports){
 "use strict";
 
 var spacetime = _dereq_('spacetime'); //
@@ -11192,7 +11251,7 @@ module.exports = {
   parseY: parseY
 };
 
-},{"spacetime":13}],26:[function(_dereq_,module,exports){
+},{"spacetime":13}],27:[function(_dereq_,module,exports){
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -11295,7 +11354,7 @@ function () {
 
 module.exports = Scale;
 
-},{"../parse":25,"d3-scale":7}],27:[function(_dereq_,module,exports){
+},{"../parse":26,"d3-scale":7}],28:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -11358,7 +11417,7 @@ function (_Scale) {
 
 module.exports = YScale;
 
-},{"../parse":25,"./Scale":26,"d3-scale":7}],28:[function(_dereq_,module,exports){
+},{"../parse":26,"./Scale":27,"d3-scale":7}],29:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -11444,7 +11503,7 @@ function (_Shape) {
 
 module.exports = Dot;
 
-},{"./Shape":30,"spencer-color":14}],29:[function(_dereq_,module,exports){
+},{"./Shape":31,"spencer-color":14}],30:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -11534,7 +11593,7 @@ function (_Shape) {
 
 module.exports = Line;
 
-},{"./Shape":30,"d3-shape":8,"spencer-color":14}],30:[function(_dereq_,module,exports){
+},{"./Shape":31,"d3-shape":8,"spencer-color":14}],31:[function(_dereq_,module,exports){
 "use strict";
 
 function _templateObject() {
@@ -11703,7 +11762,7 @@ function () {
 
 module.exports = Shape;
 
-},{"../_fns":17,"../parse":25,"./lib/parseInput":32,"d3-shape":8,"spencer-color":14}],31:[function(_dereq_,module,exports){
+},{"../_fns":17,"../parse":26,"./lib/parseInput":33,"d3-shape":8,"spencer-color":14}],32:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -11967,7 +12026,7 @@ function (_Shape) {
 
 module.exports = Text;
 
-},{"./Shape":30,"spencer-color":14}],32:[function(_dereq_,module,exports){
+},{"./Shape":31,"spencer-color":14}],33:[function(_dereq_,module,exports){
 "use strict";
 
 var _require = _dereq_('../../parse'),
@@ -12011,5 +12070,5 @@ var parseInput = function parseInput(set, world) {
 
 module.exports = parseInput;
 
-},{"../../parse":25}]},{},[22])(22)
+},{"../../parse":26}]},{},[23])(23)
 });

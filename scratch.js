@@ -1,8 +1,9 @@
 const somehow = require('./src')
 
 let world = somehow({
-  height: 300,
-  aspect: 'golden',
+  height: 60,
+  width: 600,
+// aspect: 'golden',
 })
 
 let line = world.line()

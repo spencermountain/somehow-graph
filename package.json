@@ -1,7 +1,7 @@
 {
   "name": "somehow",
   "description": "",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main":"./builds/somehow.js",
   "unpkg":"./builds/somehow.js",
   "author": "Spencer Kelly (spencermountain)",
