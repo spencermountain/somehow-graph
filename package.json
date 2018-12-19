@@ -1,9 +1,9 @@
 {
   "name": "somehow",
-  "description": "",
-  "version": "0.0.4",
-  "main":"./builds/somehow.js",
-  "unpkg":"./builds/somehow.js",
+  "description": "make infographics without thinking",
+  "version": "0.0.5",
+  "main": "./builds/somehow.js",
+  "unpkg": "./builds/somehow.js",
   "author": "Spencer Kelly (spencermountain)",
   "homepage": "https://github.com/spencermountain/frown#readme",
   "scripts": {
@@ -30,6 +30,6 @@
     "budo": "11.5.0",
     "derequire": "2.0.6",
     "shelljs": "0.8.3",
-    "uglify-js": "3.4.9"
+    "terser": "3.12.0"
   }
 }

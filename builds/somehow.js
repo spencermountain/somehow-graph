@@ -1,4 +1,4 @@
-/* somehow v0.0.4
+/* somehow v0.0.5
    github.com/spencermountain/somehow
    MIT
 */
@@ -10317,6 +10317,10 @@ var YAxis = _dereq_('./axis/YAxis');
 
 var Shape = _dereq_('./shapes/Shape');
 
+var Area = _dereq_('./shapes/Area');
+
+var Rect = _dereq_('./shapes/Rect');
+
 var Line = _dereq_('./shapes/Line');
 
 var Text = _dereq_('./shapes/Text');
@@ -10382,6 +10386,20 @@ function () {
       var text = new Text(obj, this);
       this.shapes.push(text);
       return text;
+    }
+  }, {
+    key: "area",
+    value: function area(obj) {
+      var shape = new Area(obj, this);
+      this.shapes.push(shape);
+      return shape;
+    }
+  }, {
+    key: "rect",
+    value: function rect(obj) {
+      var shape = new Rect(obj, this);
+      this.shapes.push(shape);
+      return shape;
     }
   }, {
     key: "shape",
@@ -10453,7 +10471,7 @@ Object.keys(methods).forEach(function (k) {
 });
 module.exports = World;
 
-},{"./axis/XAxis":19,"./axis/YAxis":20,"./inputs/Slider":24,"./methods":25,"./scales/Scale":27,"./scales/YScale":28,"./shapes/Dot":29,"./shapes/Line":30,"./shapes/Shape":31,"./shapes/Text":32,"fit-aspect-ratio":11,"htm":12,"vhtml":15}],17:[function(_dereq_,module,exports){
+},{"./axis/XAxis":19,"./axis/YAxis":20,"./inputs/Slider":25,"./methods":26,"./scales/Scale":28,"./scales/YScale":29,"./shapes/Area":30,"./shapes/Dot":31,"./shapes/Line":32,"./shapes/Rect":33,"./shapes/Shape":34,"./shapes/Text":35,"fit-aspect-ratio":11,"htm":12,"vhtml":15}],17:[function(_dereq_,module,exports){
 "use strict";
 
 var extent = function extent(arr) {
@@ -10500,6 +10518,8 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+var colors = _dereq_('spencer-color');
+
 var _ticks = _dereq_('./_ticks');
 
 var drawTick = _dereq_('./_custom');
@@ -10528,6 +10548,12 @@ function () {
   }
 
   _createClass(Axis, [{
+    key: "color",
+    value: function color(_color) {
+      this.attrs.stroke = colors[_color] || _color;
+      return this;
+    }
+  }, {
     key: "remove",
     value: function remove() {
       this._show = false;
@@ -10575,13 +10601,13 @@ function () {
 
 module.exports = Axis;
 
-},{"./_custom":21,"./_ticks":22}],19:[function(_dereq_,module,exports){
+},{"./_custom":21,"./_ticks":23,"spencer-color":14}],19:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _templateObject2() {
-  var data = _taggedTemplateLiteral(["<g>\n      ", "\n      <line x1=\"", "\" y1=\"", "\" x2=\"", "\" y2=\"", "\" ...", "/>\n    </g>"]);
+  var data = _taggedTemplateLiteral(["<g>\n      ", "\n      <line x1=\"", "\" y1=\"", "\" x2=\"", "\" y2=\"", "\" ...", " stroke=\"#d7d5d2\"/>\n    </g>"]);
 
   _templateObject2 = function _templateObject2() {
     return data;
@@ -10770,6 +10796,8 @@ module.exports = YAxis;
 
 var spacetime = _dereq_('spacetime');
 
+var prettyNum = _dereq_('./_prettyNum');
+
 var drawTick = function drawTick(s, axis) {
   var scale = axis.scale.scale;
 
@@ -10789,46 +10817,64 @@ var drawTick = function drawTick(s, axis) {
   return {
     num: num,
     pos: parseInt(scale(num), 10),
-    label: String(s)
+    label: prettyNum(num)
   };
 };
 
 module.exports = drawTick;
 
-},{"spacetime":13}],22:[function(_dereq_,module,exports){
+},{"./_prettyNum":22,"spacetime":13}],22:[function(_dereq_,module,exports){
+"use strict";
+
+var mil = 1000000;
+var tenThou = 10000;
+var thou = 1000;
+
+var prettyNum = function prettyNum(num) {
+  num = parseFloat(num);
+
+  if (num >= mil) {
+    num = parseInt(num / 100000, 10) * 100000;
+    return num / mil + 'm';
+  }
+
+  if (num >= tenThou) {
+    num = parseInt(num / thou, 10) * thou;
+    return num / thou + 'k';
+  }
+
+  if (num >= thou) {
+    num = parseInt(num / 100, 10) * 100;
+    return num / thou + 'k';
+  }
+
+  return num.toLocaleString();
+};
+
+module.exports = prettyNum;
+
+},{}],23:[function(_dereq_,module,exports){
 "use strict";
 
 var spacetime = _dereq_('spacetime');
+
+var prettyNum = _dereq_('./_prettyNum');
 
 var memo = {};
 var day = 60 * 60 * 24 * 1000;
 var month = day * 30;
 var year = day * 368;
 
-var prettyNum = function prettyNum(num) {
-  num = parseFloat(num);
-
-  if (num > 2000000) {
-    num = parseInt(num / 1000, 10) * 1000;
-  }
-
-  if (num > 2000) {
-    num = parseInt(num / 1000, 10) * 1000;
-  }
-
-  return num.toLocaleString();
-};
-
 var generic = function generic(axis) {
   var n = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 5;
   n = n === 0 ? 0 : n - 1;
   var scale = axis.scale;
-  var total = scale.max - scale.min;
+  var total = (scale.max || 0) - (scale.min || 0);
   var ticks = [];
 
   for (var i = 0; i <= n; i += 1) {
     var dec = i / n;
-    var num = dec * total + scale.min;
+    var num = dec * total + (scale.min || 0);
     ticks.push({
       num: num,
       pos: scale.scale(num),
@@ -10882,7 +10928,7 @@ module.exports = {
   date: date
 };
 
-},{"spacetime":13}],23:[function(_dereq_,module,exports){
+},{"./_prettyNum":22,"spacetime":13}],24:[function(_dereq_,module,exports){
 "use strict";
 
 var World = _dereq_('./World'); //
@@ -10894,7 +10940,7 @@ var somehow = function somehow(obj) {
 
 module.exports = somehow;
 
-},{"./World":16}],24:[function(_dereq_,module,exports){
+},{"./World":16}],25:[function(_dereq_,module,exports){
 "use strict";
 
 function _templateObject2() {
@@ -11047,7 +11093,7 @@ function () {
 
 module.exports = Slider;
 
-},{"spencer-color":14}],25:[function(_dereq_,module,exports){
+},{"spencer-color":14}],26:[function(_dereq_,module,exports){
 "use strict";
 
 var _require = _dereq_('./parse'),
@@ -11167,7 +11213,7 @@ var methods = {
 };
 module.exports = methods;
 
-},{"./_fns":17,"./parse":26}],26:[function(_dereq_,module,exports){
+},{"./_fns":17,"./parse":27}],27:[function(_dereq_,module,exports){
 "use strict";
 
 var spacetime = _dereq_('spacetime'); //
@@ -11251,7 +11297,7 @@ module.exports = {
   parseY: parseY
 };
 
-},{"spacetime":13}],27:[function(_dereq_,module,exports){
+},{"spacetime":13}],28:[function(_dereq_,module,exports){
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -11290,9 +11336,10 @@ function () {
     key: "rescale",
     value: function rescale() {
       //give it a little bit of room..
-      var max = this.max; //* this.world.wiggle_room
-
-      this.scale = scaleLinear().range([this.from, this.to]).domain([this.min, max]);
+      var max = this.max;
+      var min = this.min;
+      console.log([min, max]);
+      this.scale = scaleLinear().range([this.from, this.to]).domain([min, max]);
     }
   }, {
     key: "fit",
@@ -11354,7 +11401,7 @@ function () {
 
 module.exports = Scale;
 
-},{"../parse":26,"d3-scale":7}],28:[function(_dereq_,module,exports){
+},{"../parse":27,"d3-scale":7}],29:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -11417,7 +11464,134 @@ function (_Scale) {
 
 module.exports = YScale;
 
-},{"../parse":26,"./Scale":27,"d3-scale":7}],29:[function(_dereq_,module,exports){
+},{"../parse":27,"./Scale":28,"d3-scale":7}],30:[function(_dereq_,module,exports){
+"use strict";
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _templateObject2() {
+  var data = _taggedTemplateLiteral(["<path ...", " style=\"", "\"/>"]);
+
+  _templateObject2 = function _templateObject2() {
+    return data;
+  };
+
+  return data;
+}
+
+function _templateObject() {
+  var data = _taggedTemplateLiteral(["<path ...", " style=\"", "\"/>"]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
+}
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var colors = _dereq_('spencer-color');
+
+var Shape = _dereq_('./Shape');
+
+var d3Shape = _dereq_('d3-shape');
+
+var defaults = {
+  fill: colors.green,
+  stroke: colors.green,
+  'fill-opacity': .25,
+  'stroke-width': 2
+};
+
+var Area =
+/*#__PURE__*/
+function (_Shape) {
+  _inherits(Area, _Shape);
+
+  function Area() {
+    var _this;
+
+    var obj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var world = arguments.length > 1 ? arguments[1] : undefined;
+
+    _classCallCheck(this, Area);
+
+    obj = Object.assign({}, defaults, obj);
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Area).call(this, obj, world));
+    _this._line = 2;
+    return _this;
+  }
+
+  _createClass(Area, [{
+    key: "color",
+    value: function color(_color) {
+      this.attrs.stroke = colors[_color] || _color;
+      this.attrs.fill = colors[_color] || _color;
+      return this;
+    }
+  }, {
+    key: "line",
+    value: function line(num) {
+      this._line = num;
+    }
+  }, {
+    key: "linePath",
+    value: function linePath() {
+      var points = this.points();
+      return d3Shape.line().x(function (d) {
+        return d[0];
+      }).y(function (d) {
+        return d[1];
+      }).curve(d3Shape.curveMonotoneX)(points);
+    }
+  }, {
+    key: "build",
+    value: function build() {
+      var h = this.world.html;
+      var areaAttr = Object.assign({}, this.attrs, {
+        d: this.path(),
+        stroke: 'none'
+      }); //draw an area, and a line on top
+
+      var area = h(_templateObject(), areaAttr, this.drawSyle());
+
+      if (!this._line) {
+        return area;
+      } //draw a line on top
+
+
+      var lineAttr = Object.assign({}, this.attrs, {
+        d: this.linePath(),
+        fill: 'none'
+      });
+      var line = h(_templateObject2(), lineAttr, this.drawSyle());
+      return [line, area];
+    }
+  }]);
+
+  return Area;
+}(Shape);
+
+module.exports = Area;
+
+},{"./Shape":34,"d3-shape":8,"spencer-color":14}],31:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -11503,7 +11677,7 @@ function (_Shape) {
 
 module.exports = Dot;
 
-},{"./Shape":31,"spencer-color":14}],30:[function(_dereq_,module,exports){
+},{"./Shape":34,"spencer-color":14}],32:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -11593,7 +11767,131 @@ function (_Shape) {
 
 module.exports = Line;
 
-},{"./Shape":31,"d3-shape":8,"spencer-color":14}],31:[function(_dereq_,module,exports){
+},{"./Shape":34,"d3-shape":8,"spencer-color":14}],33:[function(_dereq_,module,exports){
+"use strict";
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _templateObject() {
+  var data = _taggedTemplateLiteral(["<rect ...", " />"]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
+}
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var colors = _dereq_('spencer-color');
+
+var Shape = _dereq_('./Shape');
+
+var defaults = {
+  fill: colors.green,
+  stroke: colors.green,
+  'fill-opacity': .25,
+  'stroke-width': 1
+};
+
+var Rect =
+/*#__PURE__*/
+function (_Shape) {
+  _inherits(Rect, _Shape);
+
+  function Rect() {
+    var _this;
+
+    var obj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var world = arguments.length > 1 ? arguments[1] : undefined;
+
+    _classCallCheck(this, Rect);
+
+    obj = Object.assign({}, defaults, obj);
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Rect).call(this, obj, world));
+    _this._rounded = 3;
+    _this._width = undefined;
+    _this._height = undefined;
+    return _this;
+  }
+
+  _createClass(Rect, [{
+    key: "color",
+    value: function color(_color) {
+      this.attrs.stroke = colors[_color] || _color;
+      this.attrs.fill = colors[_color] || _color;
+      return this;
+    }
+  }, {
+    key: "width",
+    value: function width(n) {
+      this._width = n;
+      return this;
+    }
+  }, {
+    key: "height",
+    value: function height(n) {
+      this._height = n;
+      return this;
+    }
+  }, {
+    key: "rounded",
+    value: function rounded(r) {
+      console.log('hi');
+      this._rounded = r;
+    }
+  }, {
+    key: "build",
+    value: function build() {
+      var h = this.world.html;
+      var points = this.points();
+      var a = points[0];
+      var b = points[1];
+      var width = Math.abs(b[0] - a[0]);
+      var height = Math.abs(b[1] - a[1]);
+
+      if (this._width !== undefined) {
+        width = this._width;
+      }
+
+      if (this._height !== undefined) {
+        height = this._height;
+      }
+
+      var attrs = Object.assign({}, this.attrs, {
+        x: a[0],
+        y: a[1] - height,
+        width: width,
+        height: height,
+        rx: this._rounded
+      });
+      return h(_templateObject(), attrs); //<rect x="120" y="0" width="100" height="100" rx="15" ry="15" />
+    }
+  }]);
+
+  return Rect;
+}(Shape);
+
+module.exports = Rect;
+
+},{"./Shape":34,"spencer-color":14}],34:[function(_dereq_,module,exports){
 "use strict";
 
 function _templateObject() {
@@ -11620,6 +11918,7 @@ var d3Shape = _dereq_('d3-shape');
 var colors = _dereq_('spencer-color');
 
 var _require = _dereq_('../parse'),
+    parseX = _require.parseX,
     parseY = _require.parseY;
 
 var fns = _dereq_('../_fns');
@@ -11653,7 +11952,6 @@ function () {
     key: "at",
     value: function at(x, y) {
       if ((x || x === 0) && (y || y === 0)) {
-        //hmm
         this.set([[x, y]]);
         return this;
       } //vertical line
@@ -11661,6 +11959,7 @@ function () {
 
       if (x || x === 0) {
         this.set([[x, '0%'], [x, '100%']]);
+        return this;
       } //horizontal line
 
 
@@ -11711,6 +12010,24 @@ function () {
     value: function set(str) {
       this.data = parseInput(str, this.world);
       return this;
+    }
+  }, {
+    key: "from",
+    value: function from(x, y) {
+      this.data[0] = {
+        x: parseX(x, this.world),
+        y: parseY(y, this.world)
+      };
+      return this;
+    }
+  }, {
+    key: "to",
+    value: function to(x, y) {
+      this.data[1] = {
+        x: parseX(x, this.world),
+        y: parseY(y, this.world)
+      };
+      return this;
     } //x,y coordinates
 
   }, {
@@ -11727,9 +12044,7 @@ function () {
   }, {
     key: "path",
     value: function path() {
-      // return flubber.toPathString(this.points())
       var zero = this.world.y.place(parseY(0));
-      console.log(zero);
       var points = this.points();
       return d3Shape.area().x0(function (d) {
         return d[0];
@@ -11762,7 +12077,7 @@ function () {
 
 module.exports = Shape;
 
-},{"../_fns":17,"../parse":26,"./lib/parseInput":33,"d3-shape":8,"spencer-color":14}],32:[function(_dereq_,module,exports){
+},{"../_fns":17,"../parse":27,"./lib/parseInput":36,"d3-shape":8,"spencer-color":14}],35:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -11871,23 +12186,26 @@ function (_Shape) {
     value: function before(x, y) {
       this.attrs['text-anchor'] = "end";
       this.set([[x, y]]);
+      return this;
     }
   }, {
     key: "after",
     value: function after(x, y) {
       this.attrs['text-anchor'] = "start";
       this.set([[x, y]]);
+      return this;
     }
   }, {
     key: "center",
     value: function center(x, y) {
       this.attrs['text-anchor'] = "middle";
       this.set([[x, y]]);
+      return this;
     }
   }, {
     key: "color",
     value: function color(_color) {
-      this.attrs.stroke = colors[_color] || _color;
+      this.attrs.fill = colors[_color] || _color;
       return this;
     }
   }, {
@@ -11950,6 +12268,8 @@ function (_Shape) {
       } else {
         this.textLines = _text;
       }
+
+      return this;
     }
   }, {
     key: "path",
@@ -12026,7 +12346,7 @@ function (_Shape) {
 
 module.exports = Text;
 
-},{"./Shape":31,"spencer-color":14}],33:[function(_dereq_,module,exports){
+},{"./Shape":34,"spencer-color":14}],36:[function(_dereq_,module,exports){
 "use strict";
 
 var _require = _dereq_('../../parse'),
@@ -12070,5 +12390,5 @@ var parseInput = function parseInput(set, world) {
 
 module.exports = parseInput;
 
-},{"../../parse":26}]},{},[23])(23)
+},{"../../parse":27}]},{},[24])(24)
 });
