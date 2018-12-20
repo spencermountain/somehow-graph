@@ -2,8 +2,12 @@
 <div align="center">
   <img src="https://cloud.githubusercontent.com/assets/399657/23590290/ede73772-01aa-11e7-8915-181ef21027bc.png" />
   <div>make infographics, without thinking</div>
+
   <a href="https://npmjs.org/package/somehow">
     <img src="https://img.shields.io/npm/v/somehow.svg?style=flat-square" />
+  </a>
+  <a href="https://unpkg.com/somehow">
+    <img src="https://badge-size.herokuapp.com/spencermountain/somehow/master/builds/somehow.min.js" />
   </a>
   <!-- <a href="https://nodejs.org/api/documentation.html#documentation_stability_index">
     <img src="https://img.shields.io/badge/stability-stable-green.svg?style=flat-square" />
@@ -16,12 +20,13 @@
   </a> -->
 </div>
 
-<div align="center">
-**work-in-progress**
-</div>
 
 <div align="center">
   <code>npm install somehow</code>
+</div>
+
+<div align="center">
+**work-in-progress**
 </div>
 
 **somehow** creates SVG, using your data, that you can throw-into your webpage.

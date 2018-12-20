@@ -2,8 +2,8 @@
   "name": "somehow",
   "description": "make infographics without thinking",
   "version": "0.0.6",
-  "main": "./builds/somehow.js",
-  "unpkg": "./builds/somehow.js",
+  "main": "builds/somehow.js",
+  "unpkg": "builds/somehow.min.js",
   "author": "Spencer Kelly (spencermountain)",
   "homepage": "https://github.com/spencermountain/frown#readme",
   "scripts": {

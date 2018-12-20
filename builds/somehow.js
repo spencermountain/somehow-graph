@@ -6326,7 +6326,7 @@ Object.keys(methods).forEach(function (k) {
 });
 module.exports = World;
 
-},{"./axis/XAxis":11,"./axis/YAxis":12,"./inputs/Slider":17,"./methods":18,"./scales/Scale":20,"./scales/YScale":21,"./shapes/Area":22,"./shapes/Dot":23,"./shapes/Line":24,"./shapes/Rect":25,"./shapes/Shape":26,"./shapes/Text":27,"fit-aspect-ratio":3,"htm":4,"vhtml":7}],9:[function(_dereq_,module,exports){
+},{"./axis/XAxis":11,"./axis/YAxis":12,"./inputs/Slider":17,"./methods":18,"./scales/Scale":20,"./scales/YScale":21,"./shapes/Area":23,"./shapes/Dot":24,"./shapes/Line":25,"./shapes/Rect":26,"./shapes/Shape":27,"./shapes/Text":28,"fit-aspect-ratio":3,"htm":4,"vhtml":7}],9:[function(_dereq_,module,exports){
 "use strict";
 
 var extent = function extent(arr) {
@@ -7161,12 +7161,11 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var scaleLinear = function scaleLinear() {}; //require('d3-scale').scaleLinear
-
+// const scaleLinear = require('d3-scale').scaleLinear
+var scaleLinear = _dereq_('./_linear');
 
 var _require = _dereq_('../parse'),
-    parseX = _require.parseX; // const spacetime = require('spacetime')
-
+    parseX = _require.parseX;
 
 var has = function has(x) {
   return x !== undefined && x !== null;
@@ -7194,8 +7193,10 @@ function () {
       //give it a little bit of room..
       var max = this.max;
       var min = this.min;
-      console.log([min, max]);
-      this.scale = scaleLinear().range([this.from, this.to]).domain([min, max]);
+      this.scale = scaleLinear({
+        world: [this.from, this.to],
+        minmax: [min, max]
+      });
     }
   }, {
     key: "fit",
@@ -7257,7 +7258,7 @@ function () {
 
 module.exports = Scale;
 
-},{"../parse":19}],21:[function(_dereq_,module,exports){
+},{"../parse":19,"./_linear":22}],21:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -7280,7 +7281,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 var Scale = _dereq_('./Scale');
 
-var scaleLinear = function scaleLinear() {}; //require('d3-scale').scaleLinear
+var scaleLinear = _dereq_('./_linear'); // const scaleLinear = require('d3-scale').scaleLinear
 
 
 var _require = _dereq_('../parse'),
@@ -7312,7 +7313,10 @@ function (_Scale) {
     value: function rescale() {
       var max = this.max; //* this.world.wiggle_room
 
-      this.scale = scaleLinear().range([this.from, this.to]).domain([max, this.min]);
+      this.scale = scaleLinear({
+        world: [this.from, this.to],
+        minmax: [this.min, max]
+      });
     }
   }]);
 
@@ -7321,7 +7325,31 @@ function (_Scale) {
 
 module.exports = YScale;
 
-},{"../parse":19,"./Scale":20}],22:[function(_dereq_,module,exports){
+},{"../parse":19,"./Scale":20,"./_linear":22}],22:[function(_dereq_,module,exports){
+"use strict";
+
+//a very-tiny version of d3-scale's scaleLinear
+var scaleLinear = function scaleLinear(obj) {
+  var world = obj.world || [];
+  var minmax = obj.minmax || [];
+
+  var calc = function calc(num) {
+    var range = minmax[1] - minmax[0];
+    var percent = (num - minmax[0]) / range;
+    var size = world[1] - world[0];
+    return parseInt(size * percent, 10);
+  };
+
+  return calc;
+};
+
+module.exports = scaleLinear; // let scale = scaleLinear({
+//   world: [0, 300],
+//   minmax: [0, 100]
+// })
+// console.log(scale(107))
+
+},{}],23:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -7448,7 +7476,7 @@ function (_Shape) {
 
 module.exports = Area;
 
-},{"./Shape":26,"d3-shape":2,"spencer-color":6}],23:[function(_dereq_,module,exports){
+},{"./Shape":27,"d3-shape":2,"spencer-color":6}],24:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -7534,7 +7562,7 @@ function (_Shape) {
 
 module.exports = Dot;
 
-},{"./Shape":26,"spencer-color":6}],24:[function(_dereq_,module,exports){
+},{"./Shape":27,"spencer-color":6}],25:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -7624,7 +7652,7 @@ function (_Shape) {
 
 module.exports = Line;
 
-},{"./Shape":26,"d3-shape":2,"spencer-color":6}],25:[function(_dereq_,module,exports){
+},{"./Shape":27,"d3-shape":2,"spencer-color":6}],26:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -7748,7 +7776,7 @@ function (_Shape) {
 
 module.exports = Rect;
 
-},{"./Shape":26,"spencer-color":6}],26:[function(_dereq_,module,exports){
+},{"./Shape":27,"spencer-color":6}],27:[function(_dereq_,module,exports){
 "use strict";
 
 function _templateObject() {
@@ -7934,7 +7962,7 @@ function () {
 
 module.exports = Shape;
 
-},{"../_fns":9,"../parse":19,"./lib/parseInput":28,"d3-shape":2,"spencer-color":6}],27:[function(_dereq_,module,exports){
+},{"../_fns":9,"../parse":19,"./lib/parseInput":29,"d3-shape":2,"spencer-color":6}],28:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8203,7 +8231,7 @@ function (_Shape) {
 
 module.exports = Text;
 
-},{"./Shape":26,"spencer-color":6}],28:[function(_dereq_,module,exports){
+},{"./Shape":27,"spencer-color":6}],29:[function(_dereq_,module,exports){
 "use strict";
 
 var _require = _dereq_('../../parse'),
