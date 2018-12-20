@@ -1,6 +1,6 @@
-const scaleLinear = require('d3-scale').scaleLinear
+// const scaleLinear = require('d3-scale').scaleLinear
+const scaleLinear = require('./_linear')
 const {parseX} = require('../parse')
-// const spacetime = require('spacetime')
 
 const has = function(x) {
   return x !== undefined && x !== null
@@ -23,8 +23,10 @@ class Scale {
     //give it a little bit of room..
     let max = this.max
     let min = this.min
-    console.log([min, max])
-    this.scale = scaleLinear().range([this.from, this.to]).domain([min, max])
+    this.scale = scaleLinear({
+      world: [this.from, this.to],
+      minmax: [min, max]
+    })
   }
   fit(a, b) {
     if (has(a) === true) {

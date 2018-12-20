@@ -1,7 +1,7 @@
 {
   "name": "somehow",
   "description": "make infographics without thinking",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "./builds/somehow.js",
   "unpkg": "./builds/somehow.js",
   "author": "Spencer Kelly (spencermountain)",
@@ -15,21 +15,20 @@
     "builds"
   ],
   "dependencies": {
-    "d3-scale": "2.1.2",
     "d3-shape": "1.2.2",
     "fit-aspect-ratio": "1.0.2",
-    "htm": "^1.0.1",
-    "spacetime": "5.0.4",
+    "htm": "1.0.1",
+    "spacetime": "5.1.0",
     "spencer-color": "0.0.4",
-    "vhtml": "^2.1.0"
+    "vhtml": "2.1.0"
   },
   "devDependencies": {
-    "@babel/core": "7.2.0",
-    "@babel/preset-env": "7.2.0",
+    "@babel/core": "7.2.2",
+    "@babel/preset-env": "7.2.3",
     "babelify": "10.0.0",
     "budo": "11.5.0",
     "derequire": "2.0.6",
     "shelljs": "0.8.3",
-    "terser": "3.12.0"
+    "terser": "3.13.1"
   }
 }
