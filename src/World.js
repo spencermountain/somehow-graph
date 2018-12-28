@@ -16,6 +16,7 @@ const Text = require('./shapes/Text')
 const Dot = require('./shapes/Dot')
 
 const Slider = require('./inputs/Slider')
+const Legend = require('./inputs/Legend')
 
 class World {
   constructor(obj = {}) {
@@ -77,6 +78,11 @@ class World {
     let slider = new Slider(obj, this)
     this.inputs.push(slider)
     return slider
+  }
+  legend(obj) {
+    let legend = new Legend(obj, this)
+    this.inputs.push(legend)
+    return legend
   }
   getShape(id) {
     return this.shapes.find((shape) => shape.id === id)

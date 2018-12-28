@@ -15,6 +15,7 @@ class Dot extends Shape {
   }
   radius(r) {
     this._radius = r
+    return this
   }
   build() {
     let h = this.world.html
