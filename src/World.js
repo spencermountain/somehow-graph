@@ -14,6 +14,7 @@ const Rect = require('./shapes/Rect')
 const Line = require('./shapes/Line')
 const Text = require('./shapes/Text')
 const Dot = require('./shapes/Dot')
+const Annotation = require('./shapes/Annotation')
 
 const Slider = require('./inputs/Slider')
 const Legend = require('./inputs/Legend')
@@ -66,6 +67,11 @@ class World {
   }
   rect(obj) {
     let shape = new Rect(obj, this)
+    this.shapes.push(shape)
+    return shape
+  }
+  annotation(obj) {
+    let shape = new Annotation(obj, this)
     this.shapes.push(shape)
     return shape
   }
