@@ -1,9 +1,8 @@
-// const flubber = require('flubber')
 const d3Shape = require('d3-shape')
-const colors = require('spencer-color')
-const {parseX, parseY} = require('../parse')
+const colors = require('spencer-color').colors
 const fns = require('../_fns')
 const parseInput = require('./lib/parseInput')
+const {parseX, parseY} = require('../parse')
 
 const defaults = {
   fill: colors.blue,
@@ -45,9 +44,6 @@ class Shape {
     return this
   }
   extent() {
-    // let points = this.points()
-    // let xArr = points.map((a) => a[0])
-    // let yArr = points.map((a) => a[1])
     let xArr = []
     let yArr = []
     this.data.forEach((o) => {
@@ -58,8 +54,6 @@ class Shape {
         yArr.push(o.y.value)
       }
     })
-    // this.data.map((o) => o.x.value)
-    // let yArr = this.data.map((o) => o.y.value)
     return {
       x: fns.extent(xArr),
       y: fns.extent(yArr),

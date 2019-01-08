@@ -38,13 +38,9 @@ let methods = {
     return this
   },
 
-  fit: function(x, y) {
-
-    // if (!has(x) && !has(y)) {
+  fitX: function(x) {
     let arr = this.shapes.map((s) => s.extent())
     let minX = fns.extent(arr.map((o) => o.x.min).filter(n => n !== null)).min || 0
-    let minY = fns.extent(arr.map((o) => o.y.min).filter(n => n !== null)).min || 0
-    let maxY = fns.extent(arr.map((o) => o.y.max).filter(n => n !== null)).max || 0
     let maxX = fns.extent(arr.map((o) => o.x.max).filter(n => n !== null)).max || 0
     //keep graphs from 0, if you can...
     this.x.min = minX > 0 ? 0 : minX
@@ -54,15 +50,6 @@ let methods = {
       this.x.max = maxX
     }
     this.x.rescale()
-
-    this.y.min = minY > 0 ? 0 : minY
-    this.y.max = maxY
-    if (this.y.format() === 'date') {
-      this.y.min = minY
-      this.y.max = maxY
-    }
-    this.y.rescale()
-    // }
     if (has(x) === true) {
       x = parseX(x, this).value
       if (x > this.x.max) {
@@ -72,6 +59,19 @@ let methods = {
       }
       this.x.rescale()
     }
+    return this
+  },
+  fitY: function(y) {
+    let arr = this.shapes.map((s) => s.extent())
+    let minY = fns.extent(arr.map((o) => o.y.min).filter(n => n !== null)).min || 0
+    let maxY = fns.extent(arr.map((o) => o.y.max).filter(n => n !== null)).max || 0
+    this.y.min = minY > 0 ? 0 : minY
+    this.y.max = maxY
+    if (this.y.format() === 'date') {
+      this.y.min = minY
+      this.y.max = maxY
+    }
+    this.y.rescale()
     if (has(y) === true) {
       y = parseY(y, this).value
       if (y > this.y.max) {
@@ -81,6 +81,12 @@ let methods = {
       }
       this.y.rescale()
     }
+    return this
+  },
+
+  fit: function(x, y) {
+    this.fitX(x)
+    this.fitY(y)
     return this
   }
 }

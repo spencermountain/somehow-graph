@@ -1,7 +1,6 @@
-const colors = require('spencer-color')
+const colors = require('spencer-color').colors
 const d3Shape = require('d3-shape')
 const Shape = require('./Shape')
-// const {parseX, parseY} = require('../parse')
 
 const defaults = {
   fill: 'none',
@@ -19,7 +18,6 @@ class Line extends Shape {
     this.attrs.stroke = colors[color] || color
     return this
   }
-
   dotted(n) {
     if (n === true) {
       n = 4
@@ -28,7 +26,7 @@ class Line extends Shape {
     return this
   }
   width(num) {
-    this.attrs['stroke-width'] = num //parseX(num, this.world)
+    this.attrs['stroke-width'] = num
     return this
   }
   path() {

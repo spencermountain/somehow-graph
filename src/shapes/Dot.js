@@ -1,5 +1,4 @@
-const colors = require('spencer-color')
-// const d3Shape = require('d3-shape')
+const colors = require('spencer-color').colors
 const Shape = require('./Shape')
 
 const defaults = {

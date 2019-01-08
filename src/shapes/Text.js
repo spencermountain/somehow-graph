@@ -1,5 +1,5 @@
 const Shape = require('./Shape')
-const colors = require('spencer-color')
+const colors = require('spencer-color').colors
 
 const defaults = {
   fill: 'grey',

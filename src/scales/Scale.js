@@ -17,18 +17,26 @@ class Scale {
 
     this._format = 'number'
     this.parse = parseX
+    this.is_y = false
     this.rescale()
   }
   rescale() {
-    //give it a little bit of room..
-    let max = this.max
-    let min = this.min
     this.scale = scaleLinear({
       world: [this.from, this.to],
-      minmax: [min, max]
+      minmax: [this.max, this.min]
     })
+    return this
   }
   fit(a, b) {
+    if (has(a) === false && has(b) === false) {
+      if (this.is_y) {
+        this.world.fitY()
+      } else {
+        this.world.fitX()
+      }
+      this.rescale()
+      return this
+    }
     if (has(a) === true) {
       let num = this.parse(a, this.world).value
       this.min = num
@@ -38,6 +46,7 @@ class Scale {
       this.max = num
     }
     this.rescale()
+    return this
   }
   place(obj) {
     //from=top
