@@ -7,7 +7,6 @@ const defaults = {
   'stroke-width': 1
 }
 
-
 class Axis {
   constructor(obj = {}, world) {
     this.world = world

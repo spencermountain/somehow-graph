@@ -19,7 +19,7 @@
     "fit-aspect-ratio": "1.0.2",
     "htm": "2.0.0",
     "spacetime": "5.1.0",
-    "spencer-color": "0.0.4",
+    "spencer-color": "0.0.5",
     "vhtml": "2.1.0"
   },
   "devDependencies": {
@@ -29,6 +29,6 @@
     "budo": "11.5.0",
     "derequire": "2.0.6",
     "shelljs": "0.8.3",
-    "terser": "3.13.1"
+    "terser": "3.14.1"
   }
 }

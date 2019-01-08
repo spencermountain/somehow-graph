@@ -1,5 +1,4 @@
 const fitAspect = require('fit-aspect-ratio')
-// const Component = require('preact').Component
 const htm = require('htm')
 const vhtml = require('vhtml');
 const methods = require('./methods')

@@ -68,15 +68,17 @@ class Slider {
     }
     setTimeout(() => {
       let el = document.getElementById(this.id)
-      el.addEventListener('input', (e) => {
-        this.world.state[this.id] = e.target.value
-        this.callback(e)
-      })
+      if (el) {
+        el.addEventListener('input', (e) => {
+          this.world.state[this.id] = e.target.value
+          this.callback(e)
+        })
+      }
     }, 50)
     return h`<div style="${styles.box}">
         <div style="${styles.title}">${this._title}</div>
         ${this.makeLabels()}
-        <input type="range" id="${this.id}" style="${styles.input}" value=${this._value} ...${this.attrs}>
+        <input type="range" id="${this.id}" style="${styles.input}" value=${this._value} ...${this.attrs}/>
       </div>`;
   }
 }
