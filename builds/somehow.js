@@ -1,4 +1,4 @@
-/* somehow v0.0.7
+/* somehow v0.0.8
    github.com/spencermountain/somehow
    MIT
 */
@@ -6196,6 +6196,42 @@ return h;
 
 
 },{}],8:[function(_dereq_,module,exports){
+module.exports={
+  "name": "somehow",
+  "description": "make infographics without thinking",
+  "version": "0.0.8",
+  "main": "builds/somehow.js",
+  "unpkg": "builds/somehow.min.js",
+  "author": "Spencer Kelly (spencermountain)",
+  "homepage": "https://github.com/spencermountain/frown#readme",
+  "scripts": {
+    "start": "budo scratch.js:assets/bundle.js --live",
+    "watch": "npm run start",
+    "build": "node ./scripts/build.js"
+  },
+  "files": [
+    "builds"
+  ],
+  "dependencies": {
+    "d3-shape": "1.2.2",
+    "fit-aspect-ratio": "1.0.2",
+    "htm": "2.0.0",
+    "spacetime": "5.2.1",
+    "spencer-color": "0.1.0",
+    "vhtml": "2.1.0"
+  },
+  "devDependencies": {
+    "@babel/core": "7.2.2",
+    "@babel/preset-env": "7.2.3",
+    "babelify": "10.0.0",
+    "budo": "11.5.0",
+    "derequire": "2.0.6",
+    "shelljs": "0.8.3",
+    "terser": "3.14.1"
+  }
+}
+
+},{}],9:[function(_dereq_,module,exports){
 "use strict";
 
 function _templateObject() {
@@ -6406,7 +6442,7 @@ Object.keys(methods).forEach(function (k) {
 });
 module.exports = World;
 
-},{"./axis/XAxis":11,"./axis/YAxis":12,"./inputs/Legend":17,"./inputs/Slider":18,"./methods":19,"./scales/Scale":21,"./scales/YScale":22,"./shapes/Annotation":24,"./shapes/Area":25,"./shapes/Dot":26,"./shapes/Line":27,"./shapes/Rect":28,"./shapes/Shape":29,"./shapes/Text":30,"fit-aspect-ratio":3,"htm":4,"vhtml":7}],9:[function(_dereq_,module,exports){
+},{"./axis/XAxis":12,"./axis/YAxis":13,"./inputs/Legend":18,"./inputs/Slider":19,"./methods":20,"./scales/Scale":22,"./scales/YScale":23,"./shapes/Annotation":25,"./shapes/Area":26,"./shapes/Dot":27,"./shapes/Line":28,"./shapes/Rect":29,"./shapes/Shape":30,"./shapes/Text":31,"fit-aspect-ratio":3,"htm":4,"vhtml":7}],10:[function(_dereq_,module,exports){
 "use strict";
 
 var extent = function extent(arr) {
@@ -6442,7 +6478,7 @@ module.exports = {
   uuid: uuid
 };
 
-},{}],10:[function(_dereq_,module,exports){
+},{}],11:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -6536,7 +6572,7 @@ function () {
 
 module.exports = Axis;
 
-},{"./_custom":13,"./_ticks":15,"spencer-color":6}],11:[function(_dereq_,module,exports){
+},{"./_custom":14,"./_ticks":16,"spencer-color":6}],12:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -6631,7 +6667,7 @@ function (_Axis) {
 
 module.exports = XAxis;
 
-},{"./Axis":10}],12:[function(_dereq_,module,exports){
+},{"./Axis":11}],13:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -6726,7 +6762,7 @@ function (_Axis) {
 
 module.exports = YAxis;
 
-},{"./Axis":10}],13:[function(_dereq_,module,exports){
+},{"./Axis":11}],14:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -6768,7 +6804,7 @@ var drawTick = function drawTick(s, axis) {
 
 module.exports = drawTick;
 
-},{"./_prettyNum":14,"spacetime":5}],14:[function(_dereq_,module,exports){
+},{"./_prettyNum":15,"spacetime":5}],15:[function(_dereq_,module,exports){
 "use strict";
 
 var mil = 1000000;
@@ -6798,7 +6834,7 @@ var prettyNum = function prettyNum(num) {
 
 module.exports = prettyNum;
 
-},{}],15:[function(_dereq_,module,exports){
+},{}],16:[function(_dereq_,module,exports){
 "use strict";
 
 var spacetime = _dereq_('spacetime');
@@ -6881,19 +6917,22 @@ module.exports = {
   date: date
 };
 
-},{"./_prettyNum":14,"spacetime":5}],16:[function(_dereq_,module,exports){
+},{"./_prettyNum":15,"spacetime":5}],17:[function(_dereq_,module,exports){
 "use strict";
 
-var World = _dereq_('./World'); //
+var World = _dereq_('./World');
+
+var pkg = _dereq_('../package.json'); //
 
 
 var somehow = function somehow(obj) {
   return new World(obj);
 };
 
+somehow.version = pkg.version;
 module.exports = somehow;
 
-},{"./World":8}],17:[function(_dereq_,module,exports){
+},{"../package.json":8,"./World":9}],18:[function(_dereq_,module,exports){
 "use strict";
 
 function _templateObject2() {
@@ -6991,7 +7030,7 @@ function () {
 
 module.exports = Legend;
 
-},{}],18:[function(_dereq_,module,exports){
+},{}],19:[function(_dereq_,module,exports){
 "use strict";
 
 function _templateObject2() {
@@ -7147,7 +7186,7 @@ function () {
 
 module.exports = Slider;
 
-},{"spencer-color":6}],19:[function(_dereq_,module,exports){
+},{"spencer-color":6}],20:[function(_dereq_,module,exports){
 "use strict";
 
 var _require = _dereq_('./parse'),
@@ -7278,7 +7317,7 @@ var methods = {
 };
 module.exports = methods;
 
-},{"./_fns":9,"./parse":20}],20:[function(_dereq_,module,exports){
+},{"./_fns":10,"./parse":21}],21:[function(_dereq_,module,exports){
 "use strict";
 
 var spacetime = _dereq_('spacetime'); //
@@ -7362,7 +7401,7 @@ module.exports = {
   parseY: parseY
 };
 
-},{"spacetime":5}],21:[function(_dereq_,module,exports){
+},{"spacetime":5}],22:[function(_dereq_,module,exports){
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -7479,7 +7518,7 @@ function () {
 
 module.exports = Scale;
 
-},{"../parse":20,"./_linear":23}],22:[function(_dereq_,module,exports){
+},{"../parse":21,"./_linear":24}],23:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -7544,7 +7583,7 @@ function (_Scale) {
 
 module.exports = YScale;
 
-},{"../parse":20,"./Scale":21,"./_linear":23}],23:[function(_dereq_,module,exports){
+},{"../parse":21,"./Scale":22,"./_linear":24}],24:[function(_dereq_,module,exports){
 "use strict";
 
 //a very-tiny version of d3-scale's scaleLinear
@@ -7568,7 +7607,7 @@ module.exports = scaleLinear; // let scale = scaleLinear({
 // })
 // console.log(scale(107))
 
-},{}],24:[function(_dereq_,module,exports){
+},{}],25:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -7715,7 +7754,7 @@ function (_Shape) {
 
 module.exports = Annotation;
 
-},{"./Shape":29,"spencer-color":6}],25:[function(_dereq_,module,exports){
+},{"./Shape":30,"spencer-color":6}],26:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -7842,7 +7881,7 @@ function (_Shape) {
 
 module.exports = Area;
 
-},{"./Shape":29,"d3-shape":2,"spencer-color":6}],26:[function(_dereq_,module,exports){
+},{"./Shape":30,"d3-shape":2,"spencer-color":6}],27:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -7928,7 +7967,7 @@ function (_Shape) {
 
 module.exports = Dot;
 
-},{"./Shape":29,"spencer-color":6}],27:[function(_dereq_,module,exports){
+},{"./Shape":30,"spencer-color":6}],28:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8016,7 +8055,7 @@ function (_Shape) {
 
 module.exports = Line;
 
-},{"./Shape":29,"d3-shape":2,"spencer-color":6}],28:[function(_dereq_,module,exports){
+},{"./Shape":30,"d3-shape":2,"spencer-color":6}],29:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8140,7 +8179,7 @@ function (_Shape) {
 
 module.exports = Rect;
 
-},{"./Shape":29,"spencer-color":6}],29:[function(_dereq_,module,exports){
+},{"./Shape":30,"spencer-color":6}],30:[function(_dereq_,module,exports){
 "use strict";
 
 function _templateObject() {
@@ -8320,13 +8359,13 @@ function () {
 
 module.exports = Shape;
 
-},{"../_fns":9,"../parse":20,"./lib/parseInput":31,"d3-shape":2,"spencer-color":6}],30:[function(_dereq_,module,exports){
+},{"../_fns":10,"../parse":21,"./lib/parseInput":32,"d3-shape":2,"spencer-color":6}],31:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _templateObject2() {
-  var data = _taggedTemplateLiteral(["<g transform=\"translate(", " ", ")\" style=\"", "\">\n      <text id=\"fun\" ...", ">\n        ", "\n      </text>\n    </g>"]);
+  var data = _taggedTemplateLiteral(["<g transform=\"", "\" style=\"", "\">\n      <text id=\"fun\" ...", ">\n        ", "\n      </text>\n    </g>"]);
 
   _templateObject2 = function _templateObject2() {
     return data;
@@ -8580,7 +8619,8 @@ function (_Shape) {
           x = _this$position.x,
           y = _this$position.y;
 
-      return h(_templateObject2(), x, y, this.drawSyle(), this.attrs, inside);
+      var transform = "translate(".concat(x, " ").concat(y, ")");
+      return h(_templateObject2(), transform, this.drawSyle(), this.attrs, inside);
     }
   }]);
 
@@ -8589,7 +8629,7 @@ function (_Shape) {
 
 module.exports = Text;
 
-},{"./Shape":29,"spencer-color":6}],31:[function(_dereq_,module,exports){
+},{"./Shape":30,"spencer-color":6}],32:[function(_dereq_,module,exports){
 "use strict";
 
 var _require = _dereq_('../../parse'),
@@ -8633,5 +8673,5 @@ var parseInput = function parseInput(set, world) {
 
 module.exports = parseInput;
 
-},{"../../parse":20}]},{},[16])(16)
+},{"../../parse":21}]},{},[17])(17)
 });
