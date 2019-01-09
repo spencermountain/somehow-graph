@@ -23,7 +23,7 @@ class Scale {
   rescale() {
     this.scale = scaleLinear({
       world: [this.from, this.to],
-      minmax: [this.max, this.min]
+      minmax: [this.min, this.max]
     })
     return this
   }

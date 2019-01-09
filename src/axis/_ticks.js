@@ -3,6 +3,7 @@ const prettyNum = require('./_prettyNum')
 const memo = {}
 const day = 60 * 60 * 24 * 1000
 const month = day * 30
+const sixMonth = month * 6
 const year = day * 368
 
 const generic = function(axis, n = 5) {
@@ -30,9 +31,15 @@ const chooseFmt = function(scale) {
   if (diff > year) {
     return 'MMM yyyy'
   }
-  if (diff > month) {
-    return 'MMM' // Sept
+  //sept
+  if (diff > sixMonth) {
+    return 'MMM'
   }
+  //sept 1
+  if (diff > month) {
+    return 'MMM d'
+  }
+  //time
   if (diff < day) {
     return 'h:mm a'
   }

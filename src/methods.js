@@ -89,5 +89,6 @@ let methods = {
     this.fitY(y)
     return this
   }
+
 }
 module.exports = methods

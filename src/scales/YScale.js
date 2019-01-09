@@ -1,5 +1,5 @@
 const Scale = require('./Scale')
-// const scaleLinear = require('./_linear')
+const scaleLinear = require('./_linear')
 // const scaleLinear = require('d3-scale').scaleLinear
 const {parseY} = require('../parse')
 
@@ -13,11 +13,11 @@ class YScale extends Scale {
     this.parse = parseY
     this.rescale()
   }
-// rescale() {
-//   this.scale = scaleLinear({
-//     world: [this.from, this.to],
-//     minmax: [this.max, this.min]
-//   })
-// }
+  rescale() {
+    this.scale = scaleLinear({
+      world: [this.from, this.to],
+      minmax: [this.max, this.min]
+    })
+  }
 }
 module.exports = YScale
