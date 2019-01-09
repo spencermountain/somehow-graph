@@ -157,7 +157,8 @@ class Text extends Shape {
     let h = this.world.html
     let inside = this.textLines.map((str) => h`<tspan x="0" dy="1.2em">${str}</tspan>`)
     let {x, y} = this.position()
-    return h`<g transform="translate(${x} ${y})" style="${this.drawSyle()}">
+    let transform = `translate(${x} ${y})`
+    return h`<g transform="${transform}" style="${this.drawSyle()}">
       <text id="fun" ...${this.attrs}>
         ${inside}
       </text>
