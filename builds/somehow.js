@@ -1,4 +1,4 @@
-/* somehow v0.0.8
+/* somehow v0.0.9
    github.com/spencermountain/somehow
    MIT
 */
@@ -6199,7 +6199,7 @@ return h;
 module.exports={
   "name": "somehow",
   "description": "make infographics without thinking",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "main": "builds/somehow.js",
   "unpkg": "builds/somehow.min.js",
   "author": "Spencer Kelly (spencermountain)",
@@ -6282,6 +6282,8 @@ var Dot = _dereq_('./shapes/Dot');
 
 var Annotation = _dereq_('./shapes/Annotation');
 
+var MidArea = _dereq_('./shapes/MidArea');
+
 var Slider = _dereq_('./inputs/Slider');
 
 var Legend = _dereq_('./inputs/Legend');
@@ -6348,6 +6350,13 @@ function () {
     key: "area",
     value: function area(obj) {
       var shape = new Area(obj, this);
+      this.shapes.push(shape);
+      return shape;
+    }
+  }, {
+    key: "midArea",
+    value: function midArea(obj) {
+      var shape = new MidArea(obj, this);
       this.shapes.push(shape);
       return shape;
     }
@@ -6442,7 +6451,7 @@ Object.keys(methods).forEach(function (k) {
 });
 module.exports = World;
 
-},{"./axis/XAxis":12,"./axis/YAxis":13,"./inputs/Legend":18,"./inputs/Slider":19,"./methods":20,"./scales/Scale":22,"./scales/YScale":23,"./shapes/Annotation":25,"./shapes/Area":26,"./shapes/Dot":27,"./shapes/Line":28,"./shapes/Rect":29,"./shapes/Shape":30,"./shapes/Text":31,"fit-aspect-ratio":3,"htm":4,"vhtml":7}],10:[function(_dereq_,module,exports){
+},{"./axis/XAxis":12,"./axis/YAxis":13,"./inputs/Legend":18,"./inputs/Slider":19,"./methods":20,"./scales/Scale":22,"./scales/YScale":23,"./shapes/Annotation":25,"./shapes/Area":26,"./shapes/Dot":27,"./shapes/Line":28,"./shapes/MidArea":29,"./shapes/Rect":30,"./shapes/Shape":31,"./shapes/Text":32,"fit-aspect-ratio":3,"htm":4,"vhtml":7}],10:[function(_dereq_,module,exports){
 "use strict";
 
 var extent = function extent(arr) {
@@ -7623,7 +7632,7 @@ function _templateObject4() {
 }
 
 function _templateObject3() {
-  var data = _taggedTemplateLiteral(["<g >\n      <line x1=\"0\" y1=\"0\" x2=\"", "\" y2=\"", "\" stroke=", "/>\n    </g>"]);
+  var data = _taggedTemplateLiteral(["<line x1=\"", "\" y1=\"", "\" x2=\"", "\" y2=\"", "\" style=\"stroke-width:2px; shapeRendering:optimizeQuality;\" stroke=", "/>"]);
 
   _templateObject3 = function _templateObject3() {
     return data;
@@ -7633,7 +7642,7 @@ function _templateObject3() {
 }
 
 function _templateObject2() {
-  var data = _taggedTemplateLiteral(["<g transform=\"translate(", " ", ")\" style=\"", "\">\n      <text id=\"fun\" ...", ">\n        ", "\n      </text>\n    </g>"]);
+  var data = _taggedTemplateLiteral(["<g transform=\"", "\" style=\"", "\">\n      <text id=\"fun\" ...", ">\n        ", "\n      </text>\n      <line x1=\"", "\" y1=\"", "\" x2=\"", "\" y2=\"", "\" style=\"stroke-width:1.5px; shapeRendering:optimizeQuality;\"  stroke=", "/>\n    </g>"]);
 
   _templateObject2 = function _templateObject2() {
     return data;
@@ -7672,19 +7681,16 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 var colors = _dereq_('spencer-color').colors;
 
-var Shape = _dereq_('./Shape');
+var Text = _dereq_('./Text');
 
 var defaults = {
-  fill: 'grey',
-  stroke: 'none',
-  'stroke-width': 1,
-  'stroke-linecap': 'round'
+  'text-anchor': "start"
 };
 
 var Annotation =
 /*#__PURE__*/
-function (_Shape) {
-  _inherits(Annotation, _Shape);
+function (_Text) {
+  _inherits(Annotation, _Text);
 
   function Annotation() {
     var _this;
@@ -7694,52 +7700,65 @@ function (_Shape) {
 
     _classCallCheck(this, Annotation);
 
-    var text = null;
-
-    if (typeof obj === 'string') {
-      text = [obj];
-      obj = {};
-    } else if (Array.isArray(obj)) {
-      text = obj;
-      obj = {};
-    }
-
-    obj = Object.assign({}, defaults, obj);
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Annotation).call(this, obj, world));
-    _this._text = text;
-    _this._origin = {};
+    _this.attrs = Object.assign({}, defaults, _this.attrs);
+    _this._nudge = {
+      x: 0,
+      y: 0
+    };
     return _this;
   }
 
   _createClass(Annotation, [{
-    key: "path",
-    value: function path() {
-      return '';
+    key: "on",
+    value: function on(x, y) {
+      this.at(x, y);
+      return this;
+    }
+  }, {
+    key: "nudge",
+    value: function nudge(x, y) {
+      //always in pixels
+      this._nudge.x = x;
+      this._nudge.y = y;
+      return this;
     }
   }, {
     key: "drawText",
     value: function drawText() {
       var h = this.world.html;
+      var nudge = this._nudge;
       var inside = this.textLines.map(function (str) {
         return h(_templateObject(), str);
       });
+      var point = this.position();
+      var estimate = this.estimate();
+      var place = {
+        x: point.x + nudge.x,
+        y: point.y - nudge.y //- estimate.height,
 
-      var _this$position = this.position(),
-          x = _this$position.x,
-          y = _this$position.y;
-
-      return h(_templateObject2(), x, y, this.drawSyle(), this.attrs, inside);
+      };
+      var transform = "translate(".concat(place.x, " ").concat(place.y, ")");
+      return h(_templateObject2(), transform, this.drawSyle(), this.attrs, inside, -2, estimate.height, estimate.width, estimate.height, colors.grey);
     }
   }, {
     key: "drawLine",
     value: function drawLine() {
       var h = this.world.html;
+      var nudge = this._nudge;
+      var point = this.points()[0];
+      var place = {
+        x: point[0] + nudge.x,
+        y: point[1] - nudge.y + 4 //touch the right side, instead
 
-      var _this$position2 = this.position(),
-          x = _this$position2.x,
-          y = _this$position2.y;
+      };
 
-      return h(_templateObject3(), x, y, colors.grey);
+      if (nudge.x < 0) {
+        var estimate = this.estimate();
+        place.x += estimate.width;
+      }
+
+      return h(_templateObject3(), place.x, place.y, point[0], point[1], colors.grey);
     }
   }, {
     key: "build",
@@ -7750,11 +7769,11 @@ function (_Shape) {
   }]);
 
   return Annotation;
-}(Shape);
+}(Text);
 
 module.exports = Annotation;
 
-},{"./Shape":30,"spencer-color":6}],26:[function(_dereq_,module,exports){
+},{"./Text":32,"spencer-color":6}],26:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -7803,6 +7822,9 @@ var Shape = _dereq_('./Shape');
 
 var d3Shape = _dereq_('d3-shape');
 
+var _require = _dereq_('../parse'),
+    parseY = _require.parseY;
+
 var defaults = {
   fill: colors.green,
   stroke: colors.green,
@@ -7842,10 +7864,43 @@ function (_Shape) {
       this._line = num;
     }
   }, {
+    key: "areaPath",
+    value: function areaPath() {
+      var points = this.points(); //support non-zero bottom
+
+      if (points[0] && points[0].length === 3) {
+        return d3Shape.area().x(function (d) {
+          return d[0];
+        }).y(function (d) {
+          return d[1];
+        }).y1(function (d) {
+          return d[2];
+        }).curve(d3Shape.curveMonotoneX)(points);
+      }
+
+      var zero = this.world.y.place(parseY(0));
+      return d3Shape.area().x0(function (d) {
+        return d[0];
+      }).y0(function (d) {
+        return d[1];
+      }).y1(zero).curve(d3Shape.curveMonotoneX)(points);
+    }
+  }, {
     key: "linePath",
     value: function linePath() {
-      var points = this.points();
-      return d3Shape.line().x(function (d) {
+      var points = this.points(); //support non-zero bottom
+
+      if (points[0] && points[0].length === 3) {
+        return d3Shape.area().x(function (d) {
+          return d[0];
+        }).y(function (d) {
+          return d[1];
+        }).y1(function (d) {
+          return d[2];
+        }).curve(d3Shape.curveMonotoneX)(points);
+      }
+
+      return d3Shape.area().x(function (d) {
         return d[0];
       }).y(function (d) {
         return d[1];
@@ -7856,7 +7911,7 @@ function (_Shape) {
     value: function build() {
       var h = this.world.html;
       var areaAttr = Object.assign({}, this.attrs, {
-        d: this.path(),
+        d: this.areaPath(),
         stroke: 'none'
       }); //draw an area, and a line on top
 
@@ -7881,7 +7936,7 @@ function (_Shape) {
 
 module.exports = Area;
 
-},{"./Shape":30,"d3-shape":2,"spencer-color":6}],27:[function(_dereq_,module,exports){
+},{"../parse":21,"./Shape":31,"d3-shape":2,"spencer-color":6}],27:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -7967,7 +8022,7 @@ function (_Shape) {
 
 module.exports = Dot;
 
-},{"./Shape":30,"spencer-color":6}],28:[function(_dereq_,module,exports){
+},{"./Shape":31,"spencer-color":6}],28:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8055,7 +8110,157 @@ function (_Shape) {
 
 module.exports = Line;
 
-},{"./Shape":30,"d3-shape":2,"spencer-color":6}],29:[function(_dereq_,module,exports){
+},{"./Shape":31,"d3-shape":2,"spencer-color":6}],29:[function(_dereq_,module,exports){
+"use strict";
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _templateObject3() {
+  var data = _taggedTemplateLiteral(["<path ...", " style=\"", "\"/>"]);
+
+  _templateObject3 = function _templateObject3() {
+    return data;
+  };
+
+  return data;
+}
+
+function _templateObject2() {
+  var data = _taggedTemplateLiteral(["<path ...", " style=\"", "\"/>"]);
+
+  _templateObject2 = function _templateObject2() {
+    return data;
+  };
+
+  return data;
+}
+
+function _templateObject() {
+  var data = _taggedTemplateLiteral(["<path ...", " style=\"", "\"/>"]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
+}
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var Area = _dereq_('./Area');
+
+var _require = _dereq_('../parse'),
+    parseY = _require.parseY;
+
+var parseInput = _dereq_('./lib/parseInput');
+
+var d3Shape = _dereq_('d3-shape');
+
+var Midarea =
+/*#__PURE__*/
+function (_Area) {
+  _inherits(Midarea, _Area);
+
+  function Midarea(obj, world) {
+    var _this;
+
+    _classCallCheck(this, Midarea);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Midarea).call(this, obj, world));
+    _this._zero = _this.world.y.place(parseY(0));
+    return _this;
+  }
+
+  _createClass(Midarea, [{
+    key: "zero",
+    value: function zero(y) {
+      this._zero = y;
+    }
+  }, {
+    key: "set",
+    value: function set(str) {
+      this.data = parseInput(str, this.world); //add the bottom part, to data
+
+      console.log(this.data);
+      this.data.forEach(function (o) {
+        o.y.value /= 2;
+        o.y2 = Object.assign({}, o.y);
+        o.y2.value *= -1;
+      });
+      return this;
+    }
+  }, {
+    key: "topLine",
+    value: function topLine(points) {
+      return d3Shape.line().x(function (d) {
+        return d[0];
+      }).y(function (d) {
+        return d[1];
+      }).curve(d3Shape.curveMonotoneX)(points);
+    }
+  }, {
+    key: "bottomLine",
+    value: function bottomLine(points) {
+      return d3Shape.line().x(function (d) {
+        return d[0];
+      }).y(function (d) {
+        return d[2];
+      }).curve(d3Shape.curveMonotoneX)(points);
+    }
+  }, {
+    key: "build",
+    value: function build() {
+      var h = this.world.html;
+      var areaAttr = Object.assign({}, this.attrs, {
+        d: this.areaPath(),
+        stroke: 'none'
+      }); //draw an area, and a line on top
+
+      var area = h(_templateObject(), areaAttr, this.drawSyle());
+
+      if (!this._line) {
+        return area;
+      }
+
+      var points = this.points(); //draw a line on top
+
+      var topLine = Object.assign({}, this.attrs, {
+        d: this.topLine(points),
+        fill: 'none'
+      });
+      topLine = h(_templateObject2(), topLine, this.drawSyle()); //draw a line on the bottom
+
+      var bottomLine = Object.assign({}, this.attrs, {
+        d: this.bottomLine(points),
+        fill: 'none'
+      });
+      bottomLine = h(_templateObject3(), bottomLine, this.drawSyle());
+      return [topLine, area, bottomLine];
+    }
+  }]);
+
+  return Midarea;
+}(Area);
+
+module.exports = Midarea;
+
+},{"../parse":21,"./Area":26,"./lib/parseInput":33,"d3-shape":2}],30:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8179,7 +8384,7 @@ function (_Shape) {
 
 module.exports = Rect;
 
-},{"./Shape":30,"spencer-color":6}],30:[function(_dereq_,module,exports){
+},{"./Shape":31,"spencer-color":6}],31:[function(_dereq_,module,exports){
 "use strict";
 
 function _templateObject() {
@@ -8269,6 +8474,10 @@ function () {
         if (o.y.type !== 'pixel') {
           yArr.push(o.y.value);
         }
+
+        if (o.y2 && o.y2.type !== 'pixel') {
+          yArr.push(o.y2.value);
+        }
       });
       return {
         x: fns.extent(xArr),
@@ -8319,7 +8528,13 @@ function () {
           x = _this$world.x,
           y = _this$world.y;
       var points = this.data.map(function (o) {
-        return [x.place(o.x), y.place(o.y)];
+        var arr = [x.place(o.x), y.place(o.y)];
+
+        if (o.y2 !== undefined) {
+          arr.push(y.place(o.y2));
+        }
+
+        return arr;
       });
       return points;
     }
@@ -8359,7 +8574,7 @@ function () {
 
 module.exports = Shape;
 
-},{"../_fns":10,"../parse":21,"./lib/parseInput":32,"d3-shape":2,"spencer-color":6}],31:[function(_dereq_,module,exports){
+},{"../_fns":10,"../parse":21,"./lib/parseInput":33,"d3-shape":2,"spencer-color":6}],32:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8568,12 +8783,13 @@ function (_Shape) {
         var num = this.style['font-size'].replace('px', '');
         num = Number(num);
         height = num * 1.5;
-      } //calculate width
+      }
 
+      height *= this.textLines.length; //calculate width
 
       var width = 0;
       this.textLines.forEach(function (str) {
-        var w = str.length * 6;
+        var w = str.length * 8;
 
         if (w > width) {
           width = w;
@@ -8629,7 +8845,7 @@ function (_Shape) {
 
 module.exports = Text;
 
-},{"./Shape":30,"spencer-color":6}],32:[function(_dereq_,module,exports){
+},{"./Shape":31,"spencer-color":6}],33:[function(_dereq_,module,exports){
 "use strict";
 
 var _require = _dereq_('../../parse'),
@@ -8645,13 +8861,22 @@ var parseStr = function parseStr() {
     return l;
   });
   lines = lines.map(function (line) {
-    var split = line.split(/(,|\t) ?/);
+    var split = line.split(/(,|\t) ?/).map(function (s) {
+      return s.trim();
+    });
     var x = parseX(split[0], world);
-    var y = parseX(split[2], world);
-    return {
+    var y = parseY(split[2], world);
+    var obj = {
       x: x,
-      y: y
+      y: y //y2 is bottom of an area
+
     };
+
+    if (split[4] !== undefined) {
+      obj.y2 = parseY(split[4], world);
+    }
+
+    return obj;
   });
   return lines;
 };
@@ -8664,10 +8889,17 @@ var parseInput = function parseInput(set, world) {
   return set.map(function (a) {
     var x = parseX(a[0], world);
     var y = parseY(a[1], world);
-    return {
+    var obj = {
       x: x,
-      y: y
+      y: y //y2 is bottom of an area
+
     };
+
+    if (a[2] !== undefined) {
+      obj.y2 = parseY(a[2], world);
+    }
+
+    return obj;
   });
 };
 
