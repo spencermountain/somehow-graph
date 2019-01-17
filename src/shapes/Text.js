@@ -128,7 +128,7 @@ class Text extends Shape {
     //calculate width
     let width = 0
     this.textLines.forEach((str) => {
-      let w = str.length * 7
+      let w = str.length * 8
       if (w > width) {
         width = w
       }

@@ -26,7 +26,7 @@ June 30 2019, 50% `)
 //   ]
 // ]
 // )
-w.annotation(['here be', 'more']).on('April 6 2019', '40%').nudge(0, 0)
+w.annotation('here be the solution').on('April 6 2019', '40%').nudge(-200, 100)
 
 w.fit()
 let txt = w.text('fun ');
