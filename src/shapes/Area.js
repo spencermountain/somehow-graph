@@ -1,6 +1,7 @@
 const colors = require('spencer-color').colors
 const Shape = require('./Shape')
 const d3Shape = require('d3-shape')
+const {parseY} = require('../parse')
 
 const defaults = {
   fill: colors.green,
@@ -23,14 +24,27 @@ class Area extends Shape {
   line(num) {
     this._line = num
   }
+  areaPath() {
+    let points = this.points()
+    //support non-zero bottom
+    if (points[0] && points[0].length === 3) {
+      return d3Shape.area().x(d => d[0]).y(d => d[1]).y1(d => d[2]).curve(d3Shape.curveMonotoneX)(points);
+    }
+    let zero = this.world.y.place(parseY(0))
+    return d3Shape.area().x0(d => d[0]).y0(d => d[1]).y1(zero).curve(d3Shape.curveMonotoneX)(points);
+  }
   linePath() {
     let points = this.points()
-    return d3Shape.line().x(d => d[0]).y(d => d[1]).curve(d3Shape.curveMonotoneX)(points);
+    //support non-zero bottom
+    if (points[0] && points[0].length === 3) {
+      return d3Shape.area().x(d => d[0]).y(d => d[1]).y1(d => d[2]).curve(d3Shape.curveMonotoneX)(points);
+    }
+    return d3Shape.area().x(d => d[0]).y(d => d[1]).curve(d3Shape.curveMonotoneX)(points);
   }
   build() {
     let h = this.world.html
     let areaAttr = Object.assign({}, this.attrs, {
-      d: this.path(),
+      d: this.areaPath(),
       stroke: 'none'
     })
     //draw an area, and a line on top

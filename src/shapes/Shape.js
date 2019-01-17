@@ -89,7 +89,11 @@ class Shape {
   points() {
     let {x, y} = this.world
     let points = this.data.map((o) => {
-      return [x.place(o.x), y.place(o.y)]
+      let arr = [x.place(o.x), y.place(o.y)]
+      if (o.y2 !== undefined) {
+        arr.push(y.place(o.y2))
+      }
+      return arr
     })
     return points
   }

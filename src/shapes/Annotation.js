@@ -1,47 +1,56 @@
 const colors = require('spencer-color').colors
-const Shape = require('./Shape')
+const Text = require('./Text')
 
 const defaults = {
-  fill: 'grey',
-  stroke: 'none',
-  'stroke-width': 1,
-  'stroke-linecap': 'round'
+  'text-anchor': "start"
 }
 
-class Annotation extends Shape {
+class Annotation extends Text {
   constructor(obj = {}, world) {
-    let text = null
-    if (typeof obj === 'string') {
-      text = [obj]
-      obj = {}
-    } else if (Array.isArray(obj)) {
-      text = obj
-      obj = {}
-    }
-    obj = Object.assign({}, defaults, obj)
     super(obj, world);
-    this._text = text
-    this._origin = {}
+    this.attrs = Object.assign({}, defaults, this.attrs)
+    this._nudge = {
+      x: 0,
+      y: 0
+    }
   }
-  path() {
-    return ''
+  on(x, y) {
+    this.at(x, y)
+    return this
+  }
+  nudge(x, y) { //always in pixels
+    this._nudge.x = x;
+    this._nudge.y = y;
+    return this
   }
   drawText() {
     let h = this.world.html
+    let nudge = this._nudge
     let inside = this.textLines.map((str) => h`<tspan x="0" dy="1.2em">${str}</tspan>`)
-    let {x, y} = this.position()
-    return h`<g transform="translate(${x} ${y})" style="${this.drawSyle()}">
+    let point = this.position()
+    let estimate = this.estimate()
+    let place = {
+      x: point.x + nudge.x,
+      y: point.y - nudge.y - estimate.height,
+    }
+    let transform = `translate(${place.x} ${place.y})`
+    return h`<g transform="${transform}" style="${this.drawSyle()}">
       <text id="fun" ...${this.attrs}>
         ${inside}
       </text>
+      <line x1="${0}" y1="${estimate.height + 4}" x2="${estimate.width}" y2="${estimate.height + 4}" style="stroke-width:1.5px; shapeRendering:optimizeQuality;"  stroke=${colors.grey}/>
     </g>`
   }
   drawLine() {
     let h = this.world.html
-    let {x, y} = this.position()
-    return h`<g >
-      <line x1="0" y1="0" x2="${x}" y2="${y}" stroke=${colors.grey}/>
-    </g>`
+    let nudge = this._nudge
+    let point = this.position()
+    let estimate = this.estimate()
+    let place = {
+      x: point.x + nudge.x,
+      y: point.y - nudge.y + 5,
+    }
+    return h`<line x1="${place.x}" y1="${place.y}" x2="${point.x - 2}" y2="${point.y + estimate.height - 3}" style="stroke-width:2px; shapeRendering:optimizeQuality;" stroke=${colors.grey}/>`
   }
   build() {
     let h = this.world.html

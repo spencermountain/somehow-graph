@@ -7,22 +7,31 @@ let w = somehow({
   aspect: 'widescreen',
 })
 
-let line = w.line()
-// line.set([
+let area = w.area()
+area.set(`April 6 2019, 40%
+June 13 2019, 50% `)
+
+w.line().set(`April 6 2019, 40%
+June 30 2019, 50% `)
+// area.set([
 //   [
 //     "April 6 2019",
-//     "40%"
+//     "40%",
+//     "10%"
 //   ],
 //   [
 //     "June 13 2019",
-//     "50%"
+//     "50%",
+//     "20%"
 //   ]
 // ]
 // )
-// w.fit()
-let lat = w.text('fun ');
-lat.font(21)
-lat.set(`aug 6 2019, 5`);
+w.annotation(['here be', 'more']).on('April 6 2019', '40%').nudge(0, 0)
+
+w.fit()
+let txt = w.text('fun ');
+txt.font(21)
+txt.set(`aug 6 2019, 5`);
 
 w.y.fit(0, 9);
 w.x.fit('Jan 1 2019', 'Dec 31 2019');
