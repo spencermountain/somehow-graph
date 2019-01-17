@@ -14,6 +14,7 @@ const Line = require('./shapes/Line')
 const Text = require('./shapes/Text')
 const Dot = require('./shapes/Dot')
 const Annotation = require('./shapes/Annotation')
+const MidArea = require('./shapes/MidArea')
 
 const Slider = require('./inputs/Slider')
 const Legend = require('./inputs/Legend')
@@ -61,6 +62,11 @@ class World {
   }
   area(obj) {
     let shape = new Area(obj, this)
+    this.shapes.push(shape)
+    return shape
+  }
+  midArea(obj) {
+    let shape = new MidArea(obj, this)
     this.shapes.push(shape)
     return shape
   }

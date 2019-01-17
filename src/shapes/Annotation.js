@@ -23,13 +23,6 @@ class Annotation extends Text {
     this._nudge.y = y;
     return this
   }
-  // position() {
-  //   let point = this.points()[0]
-  //   return {
-  //     x: point[0],
-  //     y: point[1],
-  //   }
-  // }
   drawText() {
     let h = this.world.html
     let nudge = this._nudge

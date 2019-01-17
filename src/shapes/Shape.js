@@ -53,6 +53,9 @@ class Shape {
       if (o.y.type !== 'pixel') {
         yArr.push(o.y.value)
       }
+      if (o.y2 && o.y2.type !== 'pixel') {
+        yArr.push(o.y2.value)
+      }
     })
     return {
       x: fns.extent(xArr),
