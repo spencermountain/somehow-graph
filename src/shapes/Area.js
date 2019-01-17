@@ -28,18 +28,18 @@ class Area extends Shape {
     let points = this.points()
     //support non-zero bottom
     if (points[0] && points[0].length === 3) {
-      return d3Shape.area().x(d => d[0]).y(d => d[1]).y1(d => d[2]).curve(d3Shape.curveMonotoneX)(points);
+      return d3Shape.area().x(d => d[0]).y(d => d[1]).y1(d => d[2]).curve(this.curve)(points);
     }
     let zero = this.world.y.place(parseY(0))
-    return d3Shape.area().x0(d => d[0]).y0(d => d[1]).y1(zero).curve(d3Shape.curveMonotoneX)(points);
+    return d3Shape.area().x0(d => d[0]).y0(d => d[1]).y1(zero).curve(this.curve)(points);
   }
   linePath() {
     let points = this.points()
     //support non-zero bottom
     if (points[0] && points[0].length === 3) {
-      return d3Shape.area().x(d => d[0]).y(d => d[1]).y1(d => d[2]).curve(d3Shape.curveMonotoneX)(points);
+      return d3Shape.area().x(d => d[0]).y(d => d[1]).y1(d => d[2]).curve(this.curve)(points);
     }
-    return d3Shape.area().x(d => d[0]).y(d => d[1]).curve(d3Shape.curveMonotoneX)(points);
+    return d3Shape.area().x(d => d[0]).y(d => d[1]).curve(this.curve)(points);
   }
   build() {
     let h = this.world.html

@@ -1,4 +1,4 @@
-/* somehow v0.0.9
+/* somehow v0.0.10
    github.com/spencermountain/somehow
    MIT
 */
@@ -6199,7 +6199,7 @@ return h;
 module.exports={
   "name": "somehow",
   "description": "make infographics without thinking",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "main": "builds/somehow.js",
   "unpkg": "builds/somehow.min.js",
   "author": "Spencer Kelly (spencermountain)",
@@ -7875,7 +7875,7 @@ function (_Shape) {
           return d[1];
         }).y1(function (d) {
           return d[2];
-        }).curve(d3Shape.curveMonotoneX)(points);
+        }).curve(this.curve)(points);
       }
 
       var zero = this.world.y.place(parseY(0));
@@ -7883,7 +7883,7 @@ function (_Shape) {
         return d[0];
       }).y0(function (d) {
         return d[1];
-      }).y1(zero).curve(d3Shape.curveMonotoneX)(points);
+      }).y1(zero).curve(this.curve)(points);
     }
   }, {
     key: "linePath",
@@ -7897,14 +7897,14 @@ function (_Shape) {
           return d[1];
         }).y1(function (d) {
           return d[2];
-        }).curve(d3Shape.curveMonotoneX)(points);
+        }).curve(this.curve)(points);
       }
 
       return d3Shape.area().x(function (d) {
         return d[0];
       }).y(function (d) {
         return d[1];
-      }).curve(d3Shape.curveMonotoneX)(points);
+      }).curve(this.curve)(points);
     }
   }, {
     key: "build",
@@ -8101,7 +8101,7 @@ function (_Shape) {
         return d[0];
       }).y(function (d) {
         return d[1];
-      }).curve(d3Shape.curveMonotoneX)(points);
+      }).curve(this.curve)(points);
     }
   }]);
 
@@ -8212,7 +8212,7 @@ function (_Area) {
         return d[0];
       }).y(function (d) {
         return d[1];
-      }).curve(d3Shape.curveMonotoneX)(points);
+      }).curve(this.curve)(points);
     }
   }, {
     key: "bottomLine",
@@ -8221,7 +8221,7 @@ function (_Area) {
         return d[0];
       }).y(function (d) {
         return d[2];
-      }).curve(d3Shape.curveMonotoneX)(points);
+      }).curve(this.curve)(points);
     }
   }, {
     key: "build",
@@ -8437,10 +8437,23 @@ function () {
     this.id = obj.id;
     this.attrs = Object.assign({}, defaults, obj);
     this.style = {};
+    this.curve = d3Shape.curveMonotoneX;
     this._shape = 1;
   }
 
   _createClass(Shape, [{
+    key: "straight",
+    value: function straight() {
+      this.curve = d3Shape.curveLinear;
+      return this;
+    }
+  }, {
+    key: "soft",
+    value: function soft() {
+      this.curve = d3Shape.curveBasis;
+      return this;
+    }
+  }, {
     key: "at",
     value: function at(x, y) {
       if ((x || x === 0) && (y || y === 0)) {

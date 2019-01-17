@@ -23,10 +23,10 @@ class Midarea extends Area {
     return this
   }
   topLine(points) {
-    return d3Shape.line().x(d => d[0]).y(d => d[1]).curve(d3Shape.curveMonotoneX)(points);
+    return d3Shape.line().x(d => d[0]).y(d => d[1]).curve(this.curve)(points);
   }
   bottomLine(points) {
-    return d3Shape.line().x(d => d[0]).y(d => d[2]).curve(d3Shape.curveMonotoneX)(points);
+    return d3Shape.line().x(d => d[0]).y(d => d[2]).curve(this.curve)(points);
   }
   build() {
     let h = this.world.html

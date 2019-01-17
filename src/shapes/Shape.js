@@ -17,7 +17,16 @@ class Shape {
     this.id = obj.id
     this.attrs = Object.assign({}, defaults, obj)
     this.style = {}
+    this.curve = d3Shape.curveMonotoneX
     this._shape = 1
+  }
+  straight() {
+    this.curve = d3Shape.curveLinear
+    return this
+  }
+  soft() {
+    this.curve = d3Shape.curveBasis
+    return this
   }
   at(x, y) {
     if ((x || x === 0) && (y || y === 0)) {
