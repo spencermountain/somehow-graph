@@ -30,14 +30,13 @@ class Rect extends Shape {
     return this
   }
   rounded(r) {
-    console.log('hi')
     this._rounded = r
   }
   build() {
     let h = this.world.html
     let points = this.points()
     let a = points[0]
-    let b = points[1]
+    let b = points[1] || 0
     let width = Math.abs(b[0] - a[0])
     let height = Math.abs(b[1] - a[1])
     if (this._width !== undefined) {

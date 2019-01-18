@@ -14,7 +14,6 @@ class Midarea extends Area {
   set(str) {
     this.data = parseInput(str, this.world)
     //add the bottom part, to data
-    console.log(this.data)
     this.data.forEach((o) => {
       o.y.value /= 2
       o.y2 = Object.assign({}, o.y)

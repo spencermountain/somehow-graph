@@ -7,6 +7,8 @@ let w = somehow({
   aspect: 'widescreen',
 })
 
+w.bar().color('purple').width(10).at("April 16 2019", 8)
+
 let area = w.midArea()
 area.set([
   [
@@ -27,7 +29,7 @@ area.set([
 
 w.fit()
 
-// w.y.fit(-9, 9);
+w.y.fit(-9, 19);
 w.x.fit('Jan 1 2019', 'Dec 31 2019');
 w.xAxis.ticks(12);
 // w.yAxis.remove();
