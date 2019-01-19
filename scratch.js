@@ -2,6 +2,7 @@ const somehow = require('./src')
 // const somehow = require('./builds/somehow')
 
 let w = somehow({
+  el: '#stage',
   height: 200,
   // width: 600,
   aspect: 'widescreen',
@@ -25,17 +26,25 @@ area.set([
   ]
 ]
 )
-// w.annotation('here be the solution').on('April 6 2019', 2).nudge(-200, 100)
+
+let text = w.annotation('hi').nudge(-200, 100)
+text.set([
+  ['April 6 2019', 2],
+  ['Sept 12 2019', 2],
+// ['Sept 12 2019', 9],
+])
+// text.at('April 6 2019', 2)
+text.text((world) => world.state.slider + '!')
 
 w.fit()
 
 w.y.fit(-9, 19);
 w.x.fit('Jan 1 2019', 'Dec 31 2019');
-w.xAxis.ticks(12);
-// w.yAxis.remove();
 
-// w.x.fit('jan 1 2018', 'jan 2 2022')
-// w.xAxis.ticks(['June 5 2019', 'July 1 2020'])
+let slider = w.slider()
+document.querySelector('#control').innerHTML = slider.build()
 
+
+console.log(w.state)
 
 document.querySelector('#stage').innerHTML = w.build()

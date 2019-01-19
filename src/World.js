@@ -42,6 +42,9 @@ class World {
     this.state = {}
     this.state.time = Date.now();
     this.el = obj.el || null
+    if (typeof this.el === 'string') {
+      this.el = document.querySelector(this.el)
+    }
   }
   bind(fn) {
     this.html = htm.bind(fn);

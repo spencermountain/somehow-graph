@@ -20,8 +20,8 @@ class Text extends Shape {
     }
     obj = Object.assign({}, defaults, obj)
     super(obj, world);
-
     this.textLines = text || obj.text || []
+    this.textFn = null
     if (typeof this.textLines === 'string') {
       this.textLines = [this.textLines]
     }
@@ -89,6 +89,9 @@ class Text extends Shape {
     this.style['font-size'] = num
     return this
   }
+  size(num) {
+    return this.font(num)
+  }
   extent() {
     // let longest = this.textLines.sort((a, b) => a.length < b.length ? 1 : -1)[0] || ''
     // let width = longest.length * 8
@@ -108,6 +111,9 @@ class Text extends Shape {
   text(text) {
     if (typeof text === 'string') {
       this.textLines = [text]
+    } else if (typeof text === 'function') {
+      this.textLines = []
+      this.textFn = text
     } else {
       this.textLines = text
     }
@@ -117,6 +123,11 @@ class Text extends Shape {
     return ''
   }
   estimate() {
+    let textArr = this.textLines
+    if (this.textFn !== null) {
+      textArr = this.textFn(this.world)
+      textArr = typeof textArr === 'string' ? [textArr] : textArr
+    }
     //calculate height
     let height = 24
     if (this.style['font-size']) {
@@ -124,10 +135,10 @@ class Text extends Shape {
       num = Number(num)
       height = num * 1.5
     }
-    height *= this.textLines.length
+    height *= textArr.length
     //calculate width
     let width = 0
-    this.textLines.forEach((str) => {
+    textArr.forEach((str) => {
       let w = str.length * 8
       if (w > width) {
         width = w
@@ -156,7 +167,12 @@ class Text extends Shape {
   }
   build() {
     let h = this.world.html
-    let inside = this.textLines.map((str) => h`<tspan x="0" dy="1.2em">${str}</tspan>`)
+    let textArr = this.textLines
+    if (this.textFn !== null) {
+      textArr = this.textFn(this.world)
+      textArr = typeof textArr === 'string' ? [textArr] : textArr
+    }
+    let inside = textArr.map((str) => h`<tspan x="0" dy="1.2em">${String(str)}</tspan>`)
     let {x, y} = this.position()
     let transform = `translate(${x} ${y})`
     return h`<g transform="${transform}" style="${this.drawSyle()}">
