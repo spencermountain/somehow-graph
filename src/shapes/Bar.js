@@ -53,8 +53,11 @@ class Bar extends Rect {
       width: this._width,
       height: height,
       rx: this._rounded,
+      title: this._title
     })
-    return h`<rect ...${attrs} />`;
+    return h`<rect ...${attrs} >
+        <title>${this._title}</title>
+      </rect>`;
   }
 }
 module.exports = Bar

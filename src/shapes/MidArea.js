@@ -34,7 +34,9 @@ class Midarea extends Area {
       stroke: 'none'
     })
     //draw an area, and a line on top
-    let area = h`<path ...${areaAttr} style="${this.drawSyle()}"/>`;
+    let area = h`<path ...${areaAttr} style="${this.drawSyle()}">
+      <title>${this._title}</title>
+    </path>`;
     if (!this._line) {
       return area
     }

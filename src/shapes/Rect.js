@@ -52,7 +52,9 @@ class Rect extends Shape {
       height: height,
       rx: this._rounded,
     })
-    return h`<rect ...${attrs} />`; //<rect x="120" y="0" width="100" height="100" rx="15" ry="15" />
+    return h`<rect ...${attrs} >
+      <title>${this._title}</title>
+    </rect>`; //<rect x="120" y="0" width="100" height="100" rx="15" ry="15" />
   }
 }
 

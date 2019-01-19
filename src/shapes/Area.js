@@ -57,7 +57,9 @@ class Area extends Shape {
       d: this.linePath(),
       fill: 'none'
     })
-    let line = h`<path ...${lineAttr} style="${this.drawSyle()}"/>`;
+    let line = h`<path ...${lineAttr} style="${this.drawSyle()}">
+        <title>${this._title}</title>
+      </path>`;
     return [line, area]
   }
 }

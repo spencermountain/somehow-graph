@@ -19,6 +19,7 @@ class Shape {
     this.style = {}
     this.curve = d3Shape.curveMonotoneX
     this._shape = 1
+    this._title = ''
   }
   straight() {
     this.curve = d3Shape.curveLinear
@@ -77,6 +78,10 @@ class Shape {
   }
   opacity(n) {
     this.attrs.opacity = n
+    return this
+  }
+  title(str) {
+    this._title = str
     return this
   }
   set(str) {

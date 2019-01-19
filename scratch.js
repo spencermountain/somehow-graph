@@ -8,9 +8,9 @@ let w = somehow({
   aspect: 'widescreen',
 })
 
-w.bar().color('purple').width(10).at("April 16 2019", 8)
+w.bar().color('purple').width(10).at("April 16 2019", 8).title('hello-bar')
 
-let area = w.midArea()
+let area = w.midArea().title('hello-area!')
 area.set([
   [
     "April 6 2019",
