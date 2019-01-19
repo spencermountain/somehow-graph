@@ -1,4 +1,4 @@
-/* somehow v0.0.11
+/* somehow v0.0.12
    github.com/spencermountain/somehow
    MIT
 */
@@ -6199,7 +6199,7 @@ return h;
 module.exports={
   "name": "somehow",
   "description": "make infographics without thinking",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "main": "builds/somehow.js",
   "unpkg": "builds/somehow.min.js",
   "author": "Spencer Kelly (spencermountain)",
@@ -8254,7 +8254,7 @@ module.exports = Annotation;
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _templateObject2() {
-  var data = _taggedTemplateLiteral(["<path ...", " style=\"", "\"/>"]);
+  var data = _taggedTemplateLiteral(["<path ...", " style=\"", "\">\n        <title>", "</title>\n      </path>"]);
 
   _templateObject2 = function _templateObject2() {
     return data;
@@ -8401,7 +8401,7 @@ function (_Shape) {
         d: this.linePath(),
         fill: 'none'
       });
-      var line = h(_templateObject2(), lineAttr, this.drawSyle());
+      var line = h(_templateObject2(), lineAttr, this.drawSyle(), this._title);
       return [line, area];
     }
   }]);
@@ -8417,7 +8417,7 @@ module.exports = Area;
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["<rect ...", " />"]);
+  var data = _taggedTemplateLiteral(["<rect ...", " >\n        <title>", "</title>\n      </rect>"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -8519,9 +8519,10 @@ function (_Rect) {
         y: bottom,
         width: this._width,
         height: height,
-        rx: this._rounded
+        rx: this._rounded,
+        title: this._title
       });
-      return h(_templateObject(), attrs);
+      return h(_templateObject(), attrs, this._title);
     }
   }]);
 
@@ -8852,7 +8853,7 @@ function _templateObject2() {
 }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["<path ...", " style=\"", "\"/>"]);
+  var data = _taggedTemplateLiteral(["<path ...", " style=\"", "\">\n      <title>", "</title>\n    </path>"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -8947,7 +8948,7 @@ function (_Area) {
         stroke: 'none'
       }); //draw an area, and a line on top
 
-      var area = h(_templateObject(), areaAttr, this.drawSyle());
+      var area = h(_templateObject(), areaAttr, this.drawSyle(), this._title);
 
       if (!this._line) {
         return area;
@@ -8981,7 +8982,7 @@ module.exports = Midarea;
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["<rect ...", " />"]);
+  var data = _taggedTemplateLiteral(["<rect ...", " >\n      <title>", "</title>\n    </rect>"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -9089,7 +9090,7 @@ function (_Shape) {
         height: height,
         rx: this._rounded
       });
-      return h(_templateObject(), attrs); //<rect x="120" y="0" width="100" height="100" rx="15" ry="15" />
+      return h(_templateObject(), attrs, this._title); //<rect x="120" y="0" width="100" height="100" rx="15" ry="15" />
     }
   }]);
 
@@ -9153,6 +9154,7 @@ function () {
     this.style = {};
     this.curve = d3Shape.curveMonotoneX;
     this._shape = 1;
+    this._title = '';
   }
 
   _createClass(Shape, [{
@@ -9221,6 +9223,12 @@ function () {
     key: "opacity",
     value: function opacity(n) {
       this.attrs.opacity = n;
+      return this;
+    }
+  }, {
+    key: "title",
+    value: function title(str) {
+      this._title = str;
       return this;
     }
   }, {
