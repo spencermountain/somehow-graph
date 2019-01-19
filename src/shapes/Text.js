@@ -11,8 +11,12 @@ const defaults = {
 class Text extends Shape {
   constructor(obj = {}, world) {
     let text = null
+    let textFn = null
     if (typeof obj === 'string') {
       text = [obj]
+      obj = {}
+    } else if (typeof obj === 'function') {
+      textFn = obj
       obj = {}
     } else if (Array.isArray(obj)) {
       text = obj
@@ -21,7 +25,7 @@ class Text extends Shape {
     obj = Object.assign({}, defaults, obj)
     super(obj, world);
     this.textLines = text || obj.text || []
-    this.textFn = null
+    this.textFn = textFn
     if (typeof this.textLines === 'string') {
       this.textLines = [this.textLines]
     }

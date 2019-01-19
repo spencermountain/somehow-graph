@@ -1,5 +1,6 @@
 // const fns = require('../_fns')
 const colors = require('spencer-color')
+const Input = require('./Input')
 const defaults = {
   min: -100,
   max: 100,
@@ -7,29 +8,24 @@ const defaults = {
   size: 200,
 }
 
-class Slider {
+class Slider extends Input {
   constructor(obj = {}, world) {
-    if (typeof obj === 'string') {
-      this.id = obj
-      obj = {}
-    }
-    this.world = world
+    super(obj, world)
+    this.attrs = Object.assign({}, defaults, this.attrs)
     this.data = obj.data || []
-    this.attrs = Object.assign({}, defaults, obj)
     this.style = {}
     this._title = ''
-    this.onChange = function() {}
     this._labels = []
-    this._value = obj.value
-    if (this._value === undefined) {
+    this._orientation = 'horizontal'
+    if (this._value === '') {
       this._value = 50
     }
     this.id = obj.id || 'slider'
     this.world.state[this.id] = this._value
-    this.callback = (e) => {
-      this.world.state[this.id] = e.target.value
-      this.world.redraw()
-    }
+  }
+  orientation(str) {
+    this._orientation = str
+    return this
   }
   labels(data) {
     this._labels = data.map((a) => {
@@ -58,23 +54,23 @@ class Slider {
   title(str) {
     this._title = str
   }
-  build() {
-    let h = this.world.html
+  makeStyle() {
     let size = this.attrs.size
     let styles = {
-      box: `position:relative; height:${size}px; width:100px;`,
-      input: `transform: rotate(90deg); width:${size}px;  transform-origin: 0% 0%;`,
+      box: `position:relative; width:${size}px; height:60px;`,
+      input: `width:${size}px;`,
       title: `position:absolute; top:-20px; left:-20px; color:${colors.lightgrey}; font-size:14px;`
     }
-    setTimeout(() => {
-      let el = document.getElementById(this.id)
-      if (el) {
-        el.addEventListener('input', (e) => {
-          this.world.state[this.id] = e.target.value
-          this.callback(e)
-        })
-      }
-    }, 50)
+    if (this._orientation === 'vertical') {
+      styles.input += `transform: rotate(90deg); transform-origin: 0% 0%;`
+      styles.box = `position:relative; height:${size}px; width:100px;`
+    }
+    return styles
+  }
+  build() {
+    let h = this.world.html
+    this.setCallback()
+    let styles = this.makeStyle()
     return h`<div style="${styles.box}">
         <div style="${styles.title}">${this._title}</div>
         ${this.makeLabels()}

@@ -27,12 +27,8 @@ area.set([
 ]
 )
 
-
-let img = w.image()
-img.src('http://thensome.how/2018/04/assets/lastman-1970.jpg')
-img.size(300, 200)
-img.at("April 6 2019", 2)
-img.caption('the end of walking')
+w.text((wo) => 'hi' + wo.state.slider)
+w.text((wo) => 'hi' + wo.state.input).at('20%', '20%')
 
 w.fit()
 
@@ -42,7 +38,8 @@ w.x.fit('Jan 1 2019', 'Dec 31 2019');
 let slider = w.slider()
 document.querySelector('#control').innerHTML = slider.build()
 
+let input = w.input()
+document.querySelector('#input').innerHTML = input.build()
 
-console.log(w.state)
 
 document.querySelector('#stage').innerHTML = w.build()

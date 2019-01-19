@@ -18,6 +18,7 @@ const MidArea = require('./shapes/MidArea')
 const Bar = require('./shapes/Bar')
 const Image = require('./shapes/Image')
 
+const Input = require('./inputs/Input')
 const Slider = require('./inputs/Slider')
 const Legend = require('./inputs/Legend')
 
@@ -99,6 +100,11 @@ class World {
     let shape = new Shape(obj, this)
     this.shapes.push(shape)
     return shape
+  }
+  input(obj) {
+    let slider = new Input(obj, this)
+    this.inputs.push(slider)
+    return slider
   }
   slider(obj) {
     let slider = new Slider(obj, this)
