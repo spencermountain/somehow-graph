@@ -28,7 +28,11 @@ area.set([
 )
 
 
-// w.image().src('http://thensome.how/2018/04/assets/lastman-1970.jpg').at("April 6 2019", 2)
+let img = w.image()
+img.src('http://thensome.how/2018/04/assets/lastman-1970.jpg')
+img.size(300, 200)
+img.at("April 6 2019", 2)
+img.caption('the end of walking')
 
 w.fit()
 
