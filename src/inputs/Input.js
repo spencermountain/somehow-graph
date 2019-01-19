@@ -1,4 +1,3 @@
-// const colors = require('spencer-color')
 const defaults = {}
 
 class Input {
@@ -12,12 +11,18 @@ class Input {
     this.id = obj.id || 'input'
     this._value = obj.value || ''
     this.world.state[this.id] = this._value
-    this.callback = (e) => {
-      this.world.state[this.id] = e.target.value
+    this.callback = (val) => {
+      this.world.state[this.id] = val
+      this._value = val
       this.world.redraw()
     }
     this.mounted = false
     this.el = null
+  }
+  default(val) {
+    this._value = val
+    this.world.state[this.id] = this._value
+    return this
   }
   setCallback() {
     setTimeout(() => {
@@ -25,7 +30,7 @@ class Input {
       if (el) {
         el.addEventListener('input', (e) => {
           this.world.state[this.id] = e.target.value
-          this.callback(e)
+          this.callback(e.target.value)
         })
       }
     }, 50)

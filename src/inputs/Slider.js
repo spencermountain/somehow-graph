@@ -1,5 +1,5 @@
 // const fns = require('../_fns')
-const colors = require('spencer-color')
+const colors = require('spencer-color').colors
 const Input = require('./Input')
 const defaults = {
   min: -100,
@@ -12,8 +12,6 @@ class Slider extends Input {
   constructor(obj = {}, world) {
     super(obj, world)
     this.attrs = Object.assign({}, defaults, this.attrs)
-    this.data = obj.data || []
-    this.style = {}
     this._title = ''
     this._labels = []
     this._orientation = 'horizontal'

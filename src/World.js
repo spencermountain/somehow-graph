@@ -20,7 +20,9 @@ const Image = require('./shapes/Image')
 
 const Input = require('./inputs/Input')
 const Slider = require('./inputs/Slider')
+const Select = require('./inputs/Select')
 const Legend = require('./inputs/Legend')
+const PlusMinus = require('./inputs/PlusMinus')
 
 class World {
   constructor(obj = {}) {
@@ -101,6 +103,7 @@ class World {
     this.shapes.push(shape)
     return shape
   }
+  //inputs:
   input(obj) {
     let slider = new Input(obj, this)
     this.inputs.push(slider)
@@ -111,11 +114,22 @@ class World {
     this.inputs.push(slider)
     return slider
   }
+  select(obj) {
+    let slider = new Select(obj, this)
+    this.inputs.push(slider)
+    return slider
+  }
+  plusMinus(obj) {
+    let slider = new PlusMinus(obj, this)
+    this.inputs.push(slider)
+    return slider
+  }
   legend(obj) {
     let legend = new Legend(obj, this)
     this.inputs.push(legend)
     return legend
   }
+
   getShape(id) {
     return this.shapes.find((shape) => shape.id === id)
   }
@@ -151,5 +165,11 @@ class World {
 }
 Object.keys(methods).forEach((k) => {
   World.prototype[k] = methods[k]
+})
+const aliases = {
+  plusminus: 'plusMinus'
+}
+Object.keys(aliases).forEach((k) => {
+  World.prototype[k] = methods[aliases[k]]
 })
 module.exports = World
