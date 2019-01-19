@@ -27,14 +27,8 @@ area.set([
 ]
 )
 
-let text = w.annotation('hi').nudge(-200, 100)
-text.set([
-  ['April 6 2019', 2],
-  ['Sept 12 2019', 2],
-// ['Sept 12 2019', 9],
-])
-// text.at('April 6 2019', 2)
-text.text((world) => world.state.slider + '!')
+
+// w.image().src('http://thensome.how/2018/04/assets/lastman-1970.jpg').at("April 6 2019", 2)
 
 w.fit()
 

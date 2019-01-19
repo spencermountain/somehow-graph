@@ -13,9 +13,14 @@ class Annotation extends Text {
       x: 0,
       y: 0
     }
+    this._title = ''
   }
   on(x, y) {
     this.at(x, y)
+    return this
+  }
+  title(txt) {
+    this._title = txt
     return this
   }
   nudge(x, y) { //always in pixels
