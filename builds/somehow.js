@@ -1,4 +1,4 @@
-/* somehow v0.0.12
+/* somehow v0.0.13
    github.com/spencermountain/somehow
    MIT
 */
@@ -147,7 +147,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 })));
 
 },{}],2:[function(_dereq_,module,exports){
-// https://d3js.org/d3-shape/ v1.2.2 Copyright 2018 Mike Bostock
+// https://d3js.org/d3-shape/ v1.3.3 Copyright 2019 Mike Bostock
 (function (global, factory) {
 typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, _dereq_('d3-path')) :
 typeof define === 'function' && define.amd ? define(['exports', 'd3-path'], factory) :
@@ -204,7 +204,9 @@ function arcPadAngle(d) {
 function intersect(x0, y0, x1, y1, x2, y2, x3, y3) {
   var x10 = x1 - x0, y10 = y1 - y0,
       x32 = x3 - x2, y32 = y3 - y2,
-      t = (x32 * (y0 - y2) - y32 * (x0 - x2)) / (y32 * x10 - x32 * y10);
+      t = y32 * x10 - x32 * y10;
+  if (t * t < epsilon) return;
+  t = (x32 * (y0 - y2) - y32 * (x0 - x2)) / t;
   return [x0 + t * x10, y0 + t * y10];
 }
 
@@ -325,12 +327,12 @@ function arc() {
         var x11 = r1 * cos(a11),
             y11 = r1 * sin(a11),
             x00 = r0 * cos(a00),
-            y00 = r0 * sin(a00);
+            y00 = r0 * sin(a00),
+            oc;
 
         // Restrict the corner radius according to the sector angle.
-        if (da < pi) {
-          var oc = da0 > epsilon ? intersect(x01, y01, x00, y00, x11, y11, x10, y10) : [x10, y10],
-              ax = x01 - oc[0],
+        if (da <= tau - epsilon && (oc = intersect(x01, y01, x00, y00, x11, y11, x10, y10))) {
+          var ax = x01 - oc[0],
               ay = y01 - oc[1],
               bx = x11 - oc[0],
               by = y11 - oc[1],
@@ -1984,6 +1986,17 @@ function wiggle(series, order) {
   none(series, order);
 }
 
+function appearance(series) {
+  var peaks = series.map(peak);
+  return none$1(series).sort(function(a, b) { return peaks[a] - peaks[b]; });
+}
+
+function peak(series) {
+  var i = -1, j = 0, n = series.length, vi, vj = -Infinity;
+  while (++i < n) if ((vi = +series[i][1]) > vj) vj = vi, j = i;
+  return j;
+}
+
 function ascending(series) {
   var sums = series.map(sum);
   return none$1(series).sort(function(a, b) { return sums[a] - sums[b]; });
@@ -2004,7 +2017,7 @@ function insideOut(series) {
       i,
       j,
       sums = series.map(sum),
-      order = none$1(series).sort(function(a, b) { return sums[b] - sums[a]; }),
+      order = appearance(series),
       top = 0,
       bottom = 0,
       tops = [],
@@ -2073,6 +2086,7 @@ exports.stackOffsetDiverging = diverging;
 exports.stackOffsetNone = none;
 exports.stackOffsetSilhouette = silhouette;
 exports.stackOffsetWiggle = wiggle;
+exports.stackOrderAppearance = appearance;
 exports.stackOrderAscending = ascending;
 exports.stackOrderDescending = descending$1;
 exports.stackOrderInsideOut = insideOut;
@@ -2085,7 +2099,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 },{"d3-path":1}],3:[function(_dereq_,module,exports){
 (function (global){
-!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{("undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this).fitAspect=e()}}(function(){return function a(o,s,d){function c(t,e){if(!s[t]){if(!o[t]){var i="function"==typeof _dereq_&&_dereq_;if(!e&&i)return i(t,!0);if(p)return p(t,!0);var n=new Error("Cannot find module '"+t+"'");throw n.code="MODULE_NOT_FOUND",n}var r=s[t]={exports:{}};o[t][0].call(r.exports,function(e){return c(o[t][1][e]||e)},r,r.exports,a,o,s,d)}return s[t].exports}for(var p="function"==typeof _dereq_&&_dereq_,e=0;e<d.length;e++)c(d[e]);return c}({1:[function(e,t,i){"use strict";var n=[{names:["square","1:1","instagram"],description:"Square",decimal:1,orientation:"landscape"},{names:["4:3","fullscreen","four three","1.33:1","ipad","pythagorean"],description:"Traditional TVs",decimal:1.333333,orientation:"landscape"},{names:["a4","√2:1","paper","lichtenberg","1:1.41"],description:"A4 paper",decimal:1.41},{names:["imax","1.43:1"],description:"IMAX film",decimal:1.43,orientation:"landscape"},{names:["3:2","35mm","photo","1.5:1","1.5"],description:"35mm photos",decimal:1.5,orientation:"landscape"},{names:["business card","bank card","1.58:1"],description:"Bank Cards",decimal:1.58577,orientation:"landscape"},{names:["golden","kepler","1.618","1.6:1"],description:"Golden ratio",decimal:1.61803,orientation:"landscape"},{names:["16:9","hd","hdtv","fhd","tv","computer","iphone","4k","8k","1.78:1"],description:"HD video",decimal:1.77777,orientation:"landscape"},{names:["widescreen","1.85:1"],description:"Movie-theatres",decimal:1.85,orientation:"landscape"},{names:["2:1","univisium","mobile","18:9"],description:"2:1",decimal:2,orientation:"landscape"},{names:["cinemascope","widescreen","wide","2.35:1","2.39:1"],description:"Widescreen",decimal:2.35,orientation:"landscape"},{names:["silver","1 + √2","2.41:1"],description:"Silver ratio",decimal:2.41,orientation:"landscape"}],r=n.map(function(e){return(e=Object.assign({},e)).decimal=1/e.decimal,e.orientation="portrait",e}),a={};n.forEach(function(t){t.names.forEach(function(e){a[e]=t})}),t.exports={lookup:a,portraits:r,list:n}},{}],2:[function(e,t,i){"use strict";var n=e("./aspects");t.exports=function(e,t){var i=e/t;return(i=parseInt(100*i,10)/100)<1?function(e,t){for(var i=0;i<t.length;i+=1)if(e>t[i].decimal){if(t[i-1]){var n=Math.abs(e-t[i].decimal);if(Math.abs(e-t[i-1].decimal)<n)return t[i-1]}return t[i]}return t[t.length-1]}(i,n.portraits):function(e,t){for(var i=0;i<t.length;i+=1)if(e<=t[i].decimal){if(t[i-1]){var n=Math.abs(e-t[i].decimal);if(Math.abs(e-t[i-1].decimal)<n)return t[i-1]}return t[i]}return t[t.length-1]}(i,n.list)}},{"./aspects":1}],3:[function(i,n,e){(function(e){"use strict";var f=i("./find-best-ratio"),u=i("./parse-ratio"),t=function(){var e=0<arguments.length&&void 0!==arguments[0]?arguments[0]:{};if("number"==typeof e.width&&"number"==typeof e.height){var t=f(e.width,e.height),i=1/t.decimal,n=e.width*i,r=(n-e.height)/e.height;return r=parseInt(1e3*r,10)/10,n=Math.round(n),{aspect:t,percent_change:r,width:e.width,height:n}}var a=u(e.aspect||e.ratio||"");if(null===a)return console.error("find-aspect-ratio error: Could not find a given aspect ratio."),e;if("number"==typeof e.width){var o=1/a.decimal,s=e.orientation||"landscape";"portrait"===s&&(o=1/o);var d=e.width*o;return d=Math.round(d),{aspect:a,width:e.width,height:d,orientation:s}}if("number"!=typeof e.height)return console.error("find-aspect-ratio error: Please supply a height, width, or ratio value."),e;var c=a.decimal,p=e.orientation||"landscape";"portrait"===p&&(c=1/c);var l=e.height*c;return{aspect:a,width:l=Math.round(l),height:e.height,orientation:p}};"undefined"!=typeof self?self.nlp=t:"undefined"!=typeof window?window.nlp=t:void 0!==e&&(e.nlp=t),void 0!==n&&(n.exports=t)}).call(this,"undefined"!=typeof global?global:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{"./find-best-ratio":2,"./parse-ratio":4}],4:[function(e,t,i){"use strict";var n=e("./aspects"),r=/^[0-9\.]+:[0-9\.]+$/;t.exports=function(e){if(e=(e=(e=(e=e.toLowerCase()).trim()).replace(" ratio","")).replace("-"," "),!0===n.lookup.hasOwnProperty(e))return n.lookup[e];if(!0!==r.test(e))return null;var t=e.split(":");return{description:"custom",decimal:parseFloat(t[0])/parseFloat(t[1])}}},{"./aspects":1}]},{},[3])(3)});
+!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{("undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this).fitAspect=e()}}(function(){return function a(o,s,d){function c(t,e){if(!s[t]){if(!o[t]){var i="function"==typeof _dereq_&&_dereq_;if(!e&&i)return i(t,!0);if(l)return l(t,!0);var n=new Error("Cannot find module '"+t+"'");throw n.code="MODULE_NOT_FOUND",n}var r=s[t]={exports:{}};o[t][0].call(r.exports,function(e){return c(o[t][1][e]||e)},r,r.exports,a,o,s,d)}return s[t].exports}for(var l="function"==typeof _dereq_&&_dereq_,e=0;e<d.length;e++)c(d[e]);return c}({1:[function(e,t,i){"use strict";var n=[{names:["square","1:1","instagram"],description:"Square",decimal:1,orientation:"landscape"},{names:["4:3","fullscreen","four three","1.33:1","ipad","pythagorean"],description:"Traditional TVs",decimal:1.333333,orientation:"landscape"},{names:["a4","√2:1","paper","lichtenberg","1:1.41"],description:"A4 paper",decimal:1.41},{names:["imax","1.43:1"],description:"IMAX film",decimal:1.43,orientation:"landscape"},{names:["3:2","35mm","photo","1.5:1","1.5"],description:"35mm photos",decimal:1.5,orientation:"landscape"},{names:["business card","bank card","1.58:1"],description:"Bank Cards",decimal:1.58577,orientation:"landscape"},{names:["golden","kepler","1.618","1.6:1"],description:"Golden ratio",decimal:1.61803,orientation:"landscape"},{names:["16:9","hd","hdtv","fhd","tv","computer","iphone","4k","8k","1.78:1"],description:"HD video",decimal:1.77777,orientation:"landscape"},{names:["widescreen","1.85:1"],description:"Movie-theatres",decimal:1.85,orientation:"landscape"},{names:["2:1","univisium","mobile","18:9"],description:"2:1",decimal:2,orientation:"landscape"},{names:["cinemascope","widescreen","wide","2.35:1","2.39:1"],description:"Widescreen",decimal:2.35,orientation:"landscape"},{names:["silver","1 + √2","2.41:1"],description:"Silver ratio",decimal:2.41,orientation:"landscape"}],r=n.map(function(e){return(e=Object.assign({},e)).decimal=1/e.decimal,e.orientation="portrait",e}),a={};n.forEach(function(t){t.names.forEach(function(e){a[e]=t})}),t.exports={lookup:a,portraits:r,list:n}},{}],2:[function(e,t,i){"use strict";var n=e("./aspects");t.exports=function(e,t){var i=e/t;return(i=parseInt(100*i,10)/100)<1?function(e,t){for(var i=0;i<t.length;i+=1)if(e>t[i].decimal){if(t[i-1]){var n=Math.abs(e-t[i].decimal);if(Math.abs(e-t[i-1].decimal)<n)return t[i-1]}return t[i]}return t[t.length-1]}(i,n.portraits):function(e,t){for(var i=0;i<t.length;i+=1)if(e<=t[i].decimal){if(t[i-1]){var n=Math.abs(e-t[i].decimal);if(Math.abs(e-t[i-1].decimal)<n)return t[i-1]}return t[i]}return t[t.length-1]}(i,n.list)}},{"./aspects":1}],3:[function(e,t,i){"use strict";var n=function(e,t){var i=1/t.decimal,n=e.orientation||"landscape";"portrait"===n&&(i=1/i);var r=e.width*i;return r=Math.round(r),{closest:t,width:e.width,height:r,orientation:n,original:e}},r=function(e,t){var i=t.decimal,n=e.orientation||"landscape";"portrait"===n&&(i=1/i);var r=e.height*i;return{closest:t,width:r=Math.round(r),height:e.height,orientation:n,original:e}};t.exports={both:function(e,t){var i=r(e,t);return i.width>e.width?n(e,t):i},width:r,height:n}},{}],4:[function(i,n,e){(function(e){"use strict";var o=i("./find-best-ratio"),s=i("./parse-ratio"),d=i("./fit"),t=function(){var e=0<arguments.length&&void 0!==arguments[0]?arguments[0]:{};if(!e.aspect&&!e.ratio){var t=o(e.width,e.height),i=1/t.decimal,n=e.width*i,r=(n-e.height)/e.height;return r=parseInt(1e3*r,10)/10,n=Math.round(n),{closest:t,percent_change:r,width:e.width,height:n}}var a=s(e.aspect||e.ratio||"");return null===a?(console.error("find-aspect-ratio error: Could not find a given aspect ratio."),e):"number"==typeof e.width&&"number"==typeof e.height?d.both(e,a):"number"==typeof e.width?d.height(e,a):"number"==typeof e.height?d.width(e,a):(console.error("find-aspect-ratio error: Please supply a height, width, or ratio value."),e)};"undefined"!=typeof self?self.nlp=t:"undefined"!=typeof window?window.nlp=t:void 0!==e&&(e.nlp=t),void 0!==n&&(n.exports=t)}).call(this,"undefined"!=typeof global?global:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{"./find-best-ratio":2,"./fit":3,"./parse-ratio":5}],5:[function(e,t,i){"use strict";var n=e("./aspects"),r=/^[0-9\.]+:[0-9\.]+$/;t.exports=function(e){if(e=(e=(e=(e=e.toLowerCase()).trim()).replace(" ratio","")).replace("-"," "),!0===n.lookup.hasOwnProperty(e))return n.lookup[e];if(!0!==r.test(e))return null;var t=e.split(":");return{description:"custom",decimal:parseFloat(t[0])/parseFloat(t[1])}}},{"./aspects":1}]},{},[4])(4)});
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],4:[function(_dereq_,module,exports){
@@ -6199,7 +6213,7 @@ return h;
 module.exports={
   "name": "somehow",
   "description": "make infographics without thinking",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "main": "builds/somehow.js",
   "unpkg": "builds/somehow.min.js",
   "author": "Spencer Kelly (spencermountain)",
@@ -6213,8 +6227,8 @@ module.exports={
     "builds"
   ],
   "dependencies": {
-    "d3-shape": "1.2.2",
-    "fit-aspect-ratio": "1.0.2",
+    "d3-shape": "1.3.3",
+    "fit-aspect-ratio": "2.0.0",
     "htm": "2.0.0",
     "spacetime": "5.2.1",
     "spencer-color": "0.1.0",
@@ -6222,9 +6236,9 @@ module.exports={
   },
   "devDependencies": {
     "@babel/core": "7.2.2",
-    "@babel/preset-env": "7.2.3",
+    "@babel/preset-env": "7.3.1",
     "babelify": "10.0.0",
-    "budo": "11.5.0",
+    "budo": "11.6.0",
     "derequire": "2.0.6",
     "shelljs": "0.8.3",
     "terser": "3.14.1"
@@ -6449,7 +6463,7 @@ function () {
     key: "getShape",
     value: function getShape(id) {
       return this.shapes.find(function (shape) {
-        return shape.id === id;
+        return shape.id === id || shape._id === id;
       });
     }
   }, {
@@ -7042,9 +7056,12 @@ function () {
     this._value = obj.value || '';
     this.world.state[this.id] = this._value;
 
+    var cb = obj.cb || function () {};
+
     this.callback = function (val) {
       _this.world.state[_this.id] = val;
       _this._value = val;
+      cb(val);
 
       _this.world.redraw();
     };
@@ -9103,7 +9120,7 @@ module.exports = Rect;
 "use strict";
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["<path ...", " style=\"", "\"/>"]);
+  var data = _taggedTemplateLiteral(["<path ...", " id=", " style=\"", "\"/>"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -9149,7 +9166,7 @@ function () {
 
     this.world = world;
     this.data = obj.data || [];
-    this.id = obj.id;
+    this._id = obj.id;
     this.attrs = Object.assign({}, defaults, obj);
     this.style = {};
     this.curve = d3Shape.curveMonotoneX;
@@ -9161,6 +9178,12 @@ function () {
     key: "straight",
     value: function straight() {
       this.curve = d3Shape.curveLinear;
+      return this;
+    }
+  }, {
+    key: "id",
+    value: function id(str) {
+      this._id = str;
       return this;
     }
   }, {
@@ -9300,7 +9323,7 @@ function () {
       var attrs = Object.assign({}, this.attrs, {
         d: this.path()
       });
-      return h(_templateObject(), attrs, this.drawSyle());
+      return h(_templateObject(), attrs, this._id, this.drawSyle());
     }
   }]);
 
@@ -9315,7 +9338,7 @@ module.exports = Shape;
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _templateObject2() {
-  var data = _taggedTemplateLiteral(["<g transform=\"", "\" style=\"", "\">\n      <text id=\"fun\" ...", ">\n        ", "\n      </text>\n    </g>"]);
+  var data = _taggedTemplateLiteral(["<g transform=\"", "\" style=\"", "\">\n      <text ...", ">\n        ", "\n      </text>\n    </g>"]);
 
   _templateObject2 = function _templateObject2() {
     return data;
