@@ -11,9 +11,11 @@ class Input {
     this.id = obj.id || 'input'
     this._value = obj.value || ''
     this.world.state[this.id] = this._value
+    let cb = obj.cb || function() {}
     this.callback = (val) => {
       this.world.state[this.id] = val
       this._value = val
+      cb(val)
       this.world.redraw()
     }
     this.mounted = false

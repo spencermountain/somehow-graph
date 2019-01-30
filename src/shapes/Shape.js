@@ -14,7 +14,7 @@ class Shape {
   constructor(obj = {}, world) {
     this.world = world
     this.data = obj.data || []
-    this.id = obj.id
+    this._id = obj.id
     this.attrs = Object.assign({}, defaults, obj)
     this.style = {}
     this.curve = d3Shape.curveMonotoneX
@@ -23,6 +23,10 @@ class Shape {
   }
   straight() {
     this.curve = d3Shape.curveLinear
+    return this
+  }
+  id(str) {
+    this._id = str
     return this
   }
   soft() {
@@ -129,7 +133,7 @@ class Shape {
     let attrs = Object.assign({}, this.attrs, {
       d: this.path(),
     })
-    return h`<path ...${attrs} style="${this.drawSyle()}"/>`;
+    return h`<path ...${attrs} id=${this._id} style="${this.drawSyle()}"/>`;
   }
 }
 module.exports = Shape

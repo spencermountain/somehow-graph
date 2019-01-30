@@ -131,7 +131,7 @@ class World {
   }
 
   getShape(id) {
-    return this.shapes.find((shape) => shape.id === id)
+    return this.shapes.find((shape) => shape.id === id || shape._id === id)
   }
   redraw() {
     if (this.el) {
