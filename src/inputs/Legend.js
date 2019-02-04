@@ -1,3 +1,4 @@
+const colors = require('spencer-color').colors
 //a component for colors/names
 class Legend {
   constructor(obj = {}, world) {
@@ -23,23 +24,31 @@ class Legend {
     this._height = h
     return this
   }
+  buildStyle(color) {
+    color = colors[color] || color
+    return {
+      box: `color:${color}; margin:8px;`,
+      line: `background-color:${color}; display:inline-block; width:15px; height:5px; border-radius:2px; margin-right:3px;`
+    }
+  }
   build() {
     let obj = this.obj
     let h = this.world.html
     let inside = Object.keys(obj).map((k) => {
-      return h`<div style="color:${obj[k]}; margin:8px;">
-      <span style="background-color:${obj[k]}; display:inline-block; width:10px; height:10px; border-radius:50%;"/>
-      ${k}
+      let style = this.buildStyle(obj[k])
+      return h`<div style="${style.box}">
+        <span style="${style.line}"/>
+        ${k}
       </div>`
     })
-    let style = 'justify-content:space-evenly; '
+    let container = `display:flex; justify-content: space-around; align-items: flex-start; text-align:left;`
     if (this._width) {
-      style += `width:${this._width}px;`
+      container += `width:${this._width}px;`
     }
     if (this._height) {
-      style += `height:${this._height}px;`
+      container += `height:${this._height}px;`
     }
-    return h`<div class=${this._orientation} style=${style}>
+    return h`<div class=${this._orientation} style=${container}>
       ${inside}
       </div>
       `

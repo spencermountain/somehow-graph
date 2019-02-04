@@ -1,4 +1,4 @@
-/* somehow v0.0.13
+/* somehow v0.0.14
    github.com/spencermountain/somehow
    MIT
 */
@@ -6213,7 +6213,7 @@ return h;
 module.exports={
   "name": "somehow",
   "description": "make infographics without thinking",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "main": "builds/somehow.js",
   "unpkg": "builds/somehow.min.js",
   "author": "Spencer Kelly (spencermountain)",
@@ -7122,7 +7122,7 @@ function _templateObject2() {
 }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["<div style=\"color:", "; margin:8px;\">\n      <span style=\"background-color:", "; display:inline-block; width:10px; height:10px; border-radius:50%;\"/>\n      ", "\n      </div>"]);
+  var data = _taggedTemplateLiteral(["<div style=\"", "\">\n        <span style=\"", "\"/>\n        ", "\n      </div>"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -7139,7 +7139,9 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-//a component for colors/names
+var colors = _dereq_('spencer-color').colors; //a component for colors/names
+
+
 var Legend =
 /*#__PURE__*/
 function () {
@@ -7180,24 +7182,37 @@ function () {
       return this;
     }
   }, {
+    key: "buildStyle",
+    value: function buildStyle(color) {
+      color = colors[color] || color;
+      return {
+        box: "color:".concat(color, "; margin:8px;"),
+        line: "background-color:".concat(color, "; display:inline-block; width:15px; height:5px; border-radius:2px; margin-right:3px;")
+      };
+    }
+  }, {
     key: "build",
     value: function build() {
+      var _this = this;
+
       var obj = this.obj;
       var h = this.world.html;
       var inside = Object.keys(obj).map(function (k) {
-        return h(_templateObject(), obj[k], obj[k], k);
+        var style = _this.buildStyle(obj[k]);
+
+        return h(_templateObject(), style.box, style.line, k);
       });
-      var style = 'justify-content:space-evenly; ';
+      var container = "display:flex; justify-content: space-around; align-items: flex-start; text-align:left;";
 
       if (this._width) {
-        style += "width:".concat(this._width, "px;");
+        container += "width:".concat(this._width, "px;");
       }
 
       if (this._height) {
-        style += "height:".concat(this._height, "px;");
+        container += "height:".concat(this._height, "px;");
       }
 
-      return h(_templateObject2(), this._orientation, style, inside);
+      return h(_templateObject2(), this._orientation, container, inside);
     }
   }]);
 
@@ -7206,7 +7221,7 @@ function () {
 
 module.exports = Legend;
 
-},{}],20:[function(_dereq_,module,exports){
+},{"spencer-color":6}],20:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
