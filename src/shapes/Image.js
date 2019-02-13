@@ -32,6 +32,7 @@ class Image extends Shape {
   }
   build() {
     let h = this.world.html
+    this.onMount()
     let point = this.points()[0]
     if (!point) {
       point = [0, 0]

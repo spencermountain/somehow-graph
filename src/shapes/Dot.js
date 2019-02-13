@@ -18,8 +18,10 @@ class Dot extends Shape {
   }
   build() {
     let h = this.world.html
+    this.onMount()
     let point = this.points()[0]
     let attrs = Object.assign({}, this.attrs, {
+      id: this._id,
       cx: point[0],
       cy: point[1],
       r: this._radius,

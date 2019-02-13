@@ -34,6 +34,7 @@ class Rect extends Shape {
   }
   build() {
     let h = this.world.html
+    this.onMount()
     let points = this.points()
     let a = points[0]
     let b = points[1] || 0

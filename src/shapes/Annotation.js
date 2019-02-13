@@ -111,6 +111,7 @@ class Annotation extends Text {
   }
   build() {
     let h = this.world.html
+    this.onMount()
     return h`<g id="build">
       ${this.drawText()}
       ${this.drawLine()}

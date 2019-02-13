@@ -16,16 +16,16 @@ const extent = function(arr) {
 }
 
 /* eslint no-bitwise: 0 */
-const uuid = function() {
-  return (Math.random() + 1).toString(36).substring(7);
-// return 'xxxxx'.replace(/[xy]/g, function(c) {
-//   var r = Math.random() * 16 | 0,
-//     v = c === 'x' ? r : (r & 0x3 | 0x8);
-//   return v.toString(16);
-// });
-}
+//may need to change when the term really-transforms? not sure.
+const uid = (str) => {
+  let nums = '';
+  for (let i = 0; i < 5; i++) {
+    nums += parseInt(Math.random() * 9, 10);
+  }
+  return str + '-' + nums;
+};
 
 module.exports = {
   extent: extent,
-  uuid: uuid
+  uid: uid
 }

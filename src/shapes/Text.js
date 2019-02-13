@@ -171,6 +171,7 @@ class Text extends Shape {
   }
   build() {
     let h = this.world.html
+    this.onMount()
     let textArr = this.textLines
     if (this.textFn !== null) {
       textArr = this.textFn(this.world)

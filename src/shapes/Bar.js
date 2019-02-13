@@ -41,6 +41,7 @@ class Bar extends Rect {
   }
   build() {
     let h = this.world.html
+    this.onMount()
     let points = this.points()
     let bottom = points[0][1]
     if (points[0][1] > points[1][1]) {

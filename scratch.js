@@ -27,26 +27,13 @@ area.set([
 ]
 )
 
-w.text((wo) => 'slider: ' + wo.state.slider)
-w.text((wo) => 'input: ' + wo.state.input).at('20%', '20%')
-w.text((wo) => 'select: ' + wo.state.select).at('70%', '20%')
-w.text((wo) => 'plusMinus: ' + wo.state.plusMinus).at('20%', '80%')
-
+let start = ['200px', '200px']
+w.arrow().set([start, ['200px', '100px']])
+w.dot().radius(6).color('green').at(start[0], start[1])
 w.fit()
 
 w.y.fit(-9, 19);
 w.x.fit('Jan 1 2019', 'Dec 31 2019');
 
-let slider = w.slider()
-document.querySelector('#control').innerHTML = slider.build()
-
-let input = w.input().default('text!')
-document.querySelector('#input').innerHTML = input.build()
-
-let select = w.select().choices(['cool', 'fun', 'bye']).default('fun')
-document.querySelector('#select').innerHTML = select.build()
-
-let plusminus = w.plusMinus().max(25).min(0)
-document.querySelector('#plusminus').innerHTML = plusminus.build()
 
 document.querySelector('#stage').innerHTML = w.build()

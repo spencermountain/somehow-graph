@@ -43,6 +43,7 @@ class Area extends Shape {
   }
   build() {
     let h = this.world.html
+    this.onMount()
     let areaAttr = Object.assign({}, this.attrs, {
       d: this.areaPath(),
       stroke: 'none'

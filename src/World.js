@@ -17,6 +17,7 @@ const Annotation = require('./shapes/Annotation')
 const MidArea = require('./shapes/MidArea')
 const Bar = require('./shapes/Bar')
 const Image = require('./shapes/Image')
+const Arrow = require('./shapes/Arrow')
 
 const Input = require('./inputs/Input')
 const Slider = require('./inputs/Slider')
@@ -95,6 +96,11 @@ class World {
   }
   image(obj) {
     let shape = new Image(obj, this)
+    this.shapes.push(shape)
+    return shape
+  }
+  arrow(obj) {
+    let shape = new Arrow(obj, this)
     this.shapes.push(shape)
     return shape
   }
