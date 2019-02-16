@@ -50,27 +50,39 @@ class Arrow extends Shape {
     let slope = xDiff / yDiff
     return slope
   }
+  getAngle(start, end) {
+    let p1 = {
+      x: start[0],
+      y: start[1],
+    }
+    let p2 = {
+      x: end[0],
+      y: end[1],
+    }
+    var angleRadians = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+    console.log('radian: ', angleRadians)
+    // angle in degrees
+    var angleDeg = angleRadians * 180 / Math.PI;
+    console.log('angle:', angleDeg)
+
+    return angleRadians
+  }
   head(start, end) {
     let h = this.world.html
-    let diff = 20
-    let slope = this.getSlope(start, end)
-    let x = start[0] + diff
-    let y;
-
-    if (slope === 0) {
-      console.log('horizontal')
-      y = start[1]
-    } else if (slope === null) {
-      console.log('vertical')
-      y = start[1] - diff
-      x = start[0]
-    } else {
-      y = start[1] + (diff / slope)
-    }
-    let one = [x, y]
-
+    let radian = this.getAngle(start, end)
+    let length = 50
+    //---soh cah toa--
+    //sin(angle) = opp/hyp
+    //opp = sin(angle)*length
+    let opp = Math.sin(radian) * length
+    //cos(angle) = adj/length
+    //adj = cos(angle)*length
+    let adj = Math.cos(radian) * length
+    console.log(adj)
+    let x = start[0] - adj
+    let y = start[1] - opp
     return h`<g>
-      <line x1=${start[0]} y1=${start[1]} x2=${one[0]} y2=${one[1]} stroke="darkred" stroke-width="5"/>
+      <line x1=${start[0]} y1=${start[1]} x2=${x} y2=${y} stroke="darkred" stroke-width="5"/>
     </g>`
   }
   build() {

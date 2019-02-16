@@ -26,7 +26,7 @@ class Dot extends Shape {
       cy: point[1],
       r: this._radius,
     })
-    return h`<circle ...${attrs} />`;
+    return h`<circle ...${attrs} ><title>${this._title}</title></circle>`;
   }
 }
 

@@ -3,7 +3,7 @@ const somehow = require('./src')
 
 let w = somehow({
   el: '#stage',
-  height: 200,
+  height: 300,
   // width: 600,
   aspect: 'widescreen',
 })
@@ -28,7 +28,9 @@ area.set([
 )
 
 let start = ['200px', '200px']
-w.arrow().set([start, ['200px', '100px']])
+let r = Math.random() * 700
+// r = 10
+w.arrow().set([start, [`${r}px`, '100px']])
 w.dot().radius(6).color('green').at(start[0], start[1])
 w.fit()
 
