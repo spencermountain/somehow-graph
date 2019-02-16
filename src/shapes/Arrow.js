@@ -38,17 +38,12 @@ class Arrow extends Shape {
     let points = this.points()
     return d3Shape.line().x(d => d[0]).y(d => d[1]).curve(this.curve)(points);
   }
-  getSlope(start, end) {
-    let xDiff = start[0] - end[0]
-    let yDiff = start[1] - end[1] //remember this is backwards
-    if (yDiff === 0) {
-      return 0
-    }
-    if (xDiff === 0) {
-      return null
-    }
-    let slope = xDiff / yDiff
-    return slope
+  getLength(start, end) {
+    let x = start[0] - end[0]
+    let y = start[1] - end[1]
+    let h = Math.pow(x, 2) + Math.pow(y, 2) //x^2 + y^2 = h^2
+    h = Math.sqrt(h)
+    return h
   }
   getAngle(start, end) {
     let p1 = {
@@ -60,29 +55,27 @@ class Arrow extends Shape {
       y: end[1],
     }
     var angleRadians = Math.atan2(p2.y - p1.y, p2.x - p1.x);
-    console.log('radian: ', angleRadians)
-    // angle in degrees
-    var angleDeg = angleRadians * 180 / Math.PI;
-    console.log('angle:', angleDeg)
-
     return angleRadians
   }
   head(start, end) {
     let h = this.world.html
     let radian = this.getAngle(start, end)
-    let length = 50
+    let leftAngle = radian - (Math.PI / 4)
+    let rightAngle = radian + (Math.PI / 4)
+    let length = this.getLength(start, end)
+    length = length * 0.2
     //---soh cah toa--
-    //sin(angle) = opp/hyp
-    //opp = sin(angle)*length
-    let opp = Math.sin(radian) * length
-    //cos(angle) = adj/length
-    //adj = cos(angle)*length
-    let adj = Math.cos(radian) * length
-    console.log(adj)
-    let x = start[0] - adj
-    let y = start[1] - opp
+    let left = {
+      opp: Math.sin(leftAngle) * length,
+      adj: Math.cos(leftAngle) * length
+    }
+    let right = {
+      opp: Math.sin(rightAngle) * length,
+      adj: Math.cos(rightAngle) * length
+    }
     return h`<g>
-      <line x1=${start[0]} y1=${start[1]} x2=${x} y2=${y} stroke="darkred" stroke-width="5"/>
+      <line x1=${start[0]} y1=${start[1]} x2=${start[0] + left.adj} y2=${start[1] + left.opp} ...${this.attrs}/>
+      <line x1=${start[0]} y1=${start[1]} x2=${start[0] + right.adj} y2=${start[1] + right.opp} ...${this.attrs}/>
     </g>`
   }
   build() {
