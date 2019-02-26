@@ -9,7 +9,9 @@ class YAxis extends Axis {
   drawTicks(x) {
     let h = this.world.html
     return this.ticks().map((o) => {
-      return h`<text x="${x}" y="${o.pos}" dy="0" dx="-6" fill="${this.attrs.stroke}" text-anchor="end" style="font-size:12px;">
+      let percent = o.value * 100
+      percent = 100 - percent
+      return h`<text x="${x}" y="${percent + '%'}" dy="0" dx="-6" fill="${this.attrs.stroke}" text-anchor="end" style="font-size:12px;">
         ${o.label}
       </text>`
     })

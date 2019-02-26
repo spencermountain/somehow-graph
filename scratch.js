@@ -28,12 +28,12 @@ area.set([
 )
 
 let start = ['200px', '200px']
-let r = Math.random() * 700
+// let r = Math.random() * 700
 w.arrow().set([start, [`260px`, '200px']])
 w.fit()
 
 w.y.fit(-9, 19);
-w.x.fit('Jan 1 2019', 'Dec 31 2019');
+w.x.fit('Jan 1 2019', 'June 28 2019');
 
 
 document.querySelector('#stage').innerHTML = w.build()
