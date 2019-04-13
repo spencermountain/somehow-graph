@@ -73,10 +73,20 @@ more to come
 - bind(fn)
 - xAxis
 - yAxis
-- fit()
+- fit(x, y)
+- fitX(x)
+- fitY(y)
 - build()
 - getShape(id)
 - redraw()
+
+#### Axis
+
+- color(c)
+- remove()
+- show()
+- format(str)
+- ticks(arr)
 
 #### Shape
 
