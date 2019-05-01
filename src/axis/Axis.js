@@ -40,7 +40,7 @@ class Axis {
       this._given = n
     }
     if (this._given) {
-      return this._given.map((o) => drawTick(o, this))
+      return this._given.map(o => drawTick(o, this))
     }
     if (this.scale.format() === 'date') {
       return ticks.date(this, this._tickCount)

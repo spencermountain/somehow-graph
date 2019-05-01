@@ -1,6 +1,6 @@
 const fitAspect = require('fit-aspect-ratio')
 const htm = require('htm')
-const vhtml = require('vhtml');
+const vhtml = require('vhtml')
 const methods = require('./methods')
 const YScale = require('./scales/YScale')
 const XScale = require('./scales/Scale')
@@ -36,17 +36,17 @@ class World {
     this.y = new YScale(obj, this)
     this.xAxis = new XAxis({}, this)
     this.yAxis = new YAxis({}, this)
-    this.html = htm.bind(vhtml);
+    this.html = htm.bind(vhtml)
     this.inputs = []
     this.state = {}
-    this.state.time = Date.now();
+    this.state.time = Date.now()
     this.el = obj.el || null
     if (typeof this.el === 'string') {
       this.el = document.querySelector(this.el)
     }
   }
   bind(fn) {
-    this.html = htm.bind(fn);
+    this.html = htm.bind(fn)
   }
   line(obj) {
     let line = new Line(obj, this)
@@ -104,7 +104,7 @@ class World {
     return shape
   }
   getShape(id) {
-    return this.shapes.find((shape) => shape.id === id || shape._id === id)
+    return this.shapes.find(shape => shape.id === id || shape._id === id)
   }
   redraw() {
     if (this.el) {
@@ -113,9 +113,31 @@ class World {
       console.log('must define world html element')
     }
   }
+  //remove shapes outside of boundaries
+  clipShapes(shapes) {
+    shapes = shapes.filter(s => {
+      let { x, y } = s.extent()
+      //clip according to x-axis
+      if (this.x._clip) {
+        if (x.min > this.x.max || x.max < this.x.min) {
+          return false
+        }
+      }
+      if (this.y._clip) {
+        if (y.min > this.y.max || y.max < this.y.min) {
+          return false
+        }
+      }
+      return true
+    })
+    return shapes
+  }
   build() {
     let h = this.html
-    let shapes = this.shapes.sort((a, b) => a._order > b._order ? 1 : -1)
+    let shapes = this.shapes.sort((a, b) => (a._order > b._order ? 1 : -1))
+    //remove shapes outside of max/mins
+    shapes = this.clipShapes(shapes)
+
     let elements = []
     if (this.xAxis) {
       elements.push(this.xAxis.build())
@@ -133,16 +155,16 @@ class World {
     }
     return h`<svg ...${attrs}>
       ${elements}
-    </svg>`;
+    </svg>`
   }
 }
-Object.keys(methods).forEach((k) => {
+Object.keys(methods).forEach(k => {
   World.prototype[k] = methods[k]
 })
 const aliases = {
   plusminus: 'plusMinus'
 }
-Object.keys(aliases).forEach((k) => {
+Object.keys(aliases).forEach(k => {
   World.prototype[k] = methods[aliases[k]]
 })
 module.exports = World

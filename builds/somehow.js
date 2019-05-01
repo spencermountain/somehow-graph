@@ -2107,7 +2107,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 },{}],5:[function(_dereq_,module,exports){
 (function (global){
-/* somehow v0.0.5
+/* somehow v0.0.6
    github.com/spencermountain/spacetime-ticks
    MIT
 */
@@ -10893,7 +10893,12 @@ module.exports={
   "main": "builds/somehow.js",
   "unpkg": "builds/somehow.min.js",
   "author": "Spencer Kelly (spencermountain)",
-  "homepage": "https://github.com/spencermountain/frown#readme",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spencermountain/somehow.git"
+  },
+  "homepage": "https://github.com/spencermountain/somehow#readme",
   "scripts": {
     "start": "budo scratch.js:assets/bundle.js --live",
     "watch": "npm run start",
@@ -10907,13 +10912,13 @@ module.exports={
     "fit-aspect-ratio": "2.0.0",
     "htm": "2.1.1",
     "spacetime": "5.7.0",
-    "spacetime-ticks": "0.0.5",
+    "spacetime-ticks": "0.0.6",
     "spencer-color": "0.1.0",
     "vhtml": "2.1.0"
   },
   "devDependencies": {
-    "@babel/core": "7.4.3",
-    "@babel/preset-env": "7.4.3",
+    "@babel/core": "7.4.4",
+    "@babel/preset-env": "7.4.4",
     "babelify": "10.0.0",
     "budo": "11.6.2",
     "derequire": "2.0.6",

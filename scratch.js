@@ -1,39 +1,32 @@
 const somehow = require('./src')
-// const somehow = require('./builds/somehow')
 
 let w = somehow({
   el: '#stage',
   height: 300,
-  // width: 600,
-  aspect: 'widescreen',
+  aspect: 'widescreen'
 })
 
-w.bar().color('purple').width(10).at("April 16 2019", 8).title('hello-bar')
+w.line()
+  .set([['Jan 21st 2019', '0%'], ['Jan 22nd 2019', '80']])
+  .color('blue')
 
-let area = w.midArea().title('hello-area!')
-area.set([
-  [
-    "April 6 2019",
-    2
-  ],
-  [
-    "June 13 2019",
-    4
-  ],
-  [
-    "July 13 2019",
-    9
-  ]
-]
-)
+w.line()
+  .set([['Feb 1st 2019', '0%'], ['Feb 1st 2019', '80']])
+  .color('red')
 
-let start = ['200px', '200px']
-// let r = Math.random() * 700
-w.arrow().set([start, [`260px`, '200px']])
+//horizontal
+w.line()
+  .set([['jan 2 2019', 7], ['jan 8 2019', 7]])
+  .color('blue')
+
+w.line()
+  .set([['jan 2 2019', -17], ['jan 8 2019', -17]])
+  .color('red')
+
 w.fit()
-
-w.y.fit(-9, 19);
-w.x.fit('Jan 1 2019', 'June 28 2019');
-
+w.y.fit(-9, 80)
+w.x.fit('Jan 1 2019', 'Jan 28 2019')
+w.x.clip()
+w.y.clip()
 
 document.querySelector('#stage').innerHTML = w.build()

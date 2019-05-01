@@ -1,6 +1,6 @@
 // const scaleLinear = require('d3-scale').scaleLinear
 const scaleLinear = require('./_linear')
-const {parseX} = require('../parse')
+const { parseX } = require('../parse')
 
 const has = function(x) {
   return x !== undefined && x !== null
@@ -18,6 +18,7 @@ class Scale {
     this._format = 'number'
     this.parse = parseX
     this.is_y = false
+    this._clip = false
     this.rescale()
   }
   rescale() {
@@ -66,7 +67,7 @@ class Scale {
   byPercent(num = 0) {
     num = num / 100
     let diff = this.max - this.min
-    return (diff * num) + this.min
+    return diff * num + this.min
   }
   format(format) {
     if (format === undefined) {
@@ -74,6 +75,12 @@ class Scale {
     }
     this._format = format
     return this
+  }
+  clip(bool) {
+    if (bool === undefined) {
+      bool = true
+    }
+    this._clip = bool
   }
 }
 

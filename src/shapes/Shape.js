@@ -2,7 +2,7 @@ const d3Shape = require('d3-shape')
 const colors = require('spencer-color').colors
 const fns = require('../_fns')
 const parseInput = require('./lib/parseInput')
-const {parseX, parseY} = require('../parse')
+const { parseX, parseY } = require('../parse')
 
 const defaults = {
   fill: colors.blue,
@@ -37,32 +37,24 @@ class Shape {
   }
   at(x, y) {
     if ((x || x === 0) && (y || y === 0)) {
-      this.set([
-        [x, y]
-      ])
+      this.set([[x, y]])
       return this
     }
     //vertical line
     if (x || x === 0) {
-      this.set([
-        [x, '0%'],
-        [x, '100%'],
-      ])
+      this.set([[x, '0%'], [x, '100%']])
       return this
     }
     //horizontal line
     if (y || y === 0) {
-      this.set([
-        ['0%', y],
-        ['100%', y],
-      ])
+      this.set([['0%', y], ['100%', y]])
     }
     return this
   }
   extent() {
     let xArr = []
     let yArr = []
-    this.data.forEach((o) => {
+    this.data.forEach(o => {
       if (o.x.type !== 'pixel') {
         xArr.push(o.x.value)
       }
@@ -75,7 +67,7 @@ class Shape {
     })
     return {
       x: fns.extent(xArr),
-      y: fns.extent(yArr),
+      y: fns.extent(yArr)
     }
   }
   color(color) {
@@ -141,8 +133,8 @@ class Shape {
   }
   //x,y coordinates
   points() {
-    let {x, y} = this.world
-    let points = this.data.map((o) => {
+    let { x, y } = this.world
+    let points = this.data.map(o => {
       let arr = [x.place(o.x), y.place(o.y)]
       if (o.y2 !== undefined) {
         arr.push(y.place(o.y2))
@@ -154,20 +146,27 @@ class Shape {
   path() {
     let zero = this.world.y.place(parseY(0))
     let points = this.points()
-    return d3Shape.area().x0(d => d[0]).y0(d => d[1]).y1(zero).curve(d3Shape.curveMonotoneX)(points);
+    return d3Shape
+      .area()
+      .x0(d => d[0])
+      .y0(d => d[1])
+      .y1(zero)
+      .curve(d3Shape.curveMonotoneX)(points)
   }
   drawSyle() {
-    return Object.keys(this.style).map((k) => {
-      return `${k}:${this.style[k]};`
-    }).join(' ')
+    return Object.keys(this.style)
+      .map(k => {
+        return `${k}:${this.style[k]};`
+      })
+      .join(' ')
   }
   build() {
     let h = this.world.html
     this.onMount()
     let attrs = Object.assign({}, this.attrs, {
-      d: this.path(),
+      d: this.path()
     })
-    return h`<path ...${attrs} id=${this._id} style="${this.drawSyle()}"/>`;
+    return h`<path ...${attrs} id=${this._id} style="${this.drawSyle()}"/>`
   }
 }
 module.exports = Shape
