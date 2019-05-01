@@ -11,6 +11,14 @@ w.line()
   .color('blue')
 
 w.line()
+  .set([['Feb 1st 2019', '0%'], ['Feb 1st 2019', '80']])
+  .color('red')
+
+w.line()
+  .set([['jan 2 2019', -17], ['jan 8 2019', -17]])
+  .color('red')
+
+w.line()
   .set([['Jan 10th 2019', '10%'], ['Jan 10th 2019', '80%']])
   .color('lightgrey')
 

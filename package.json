@@ -1,7 +1,7 @@
 {
   "name": "somehow",
   "description": "make infographics without thinking",
-  "version": "0.0.17",
+  "version": "0.1.0",
   "main": "builds/somehow.js",
   "unpkg": "builds/somehow.min.js",
   "author": "Spencer Kelly (spencermountain)",

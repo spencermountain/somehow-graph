@@ -22,6 +22,9 @@ class Shape {
     this._title = ''
     this._click = obj.click
     this._hover = obj.hover
+    //nudge pixels
+    this._dx = 0
+    this._dy = 0
   }
   straight() {
     this.curve = d3Shape.curveLinear
@@ -33,6 +36,14 @@ class Shape {
   }
   soft() {
     this.curve = d3Shape.curveBasis
+    return this
+  }
+  dx(n) {
+    this._dx = n
+    return this
+  }
+  dy(n) {
+    this._dy = n
     return this
   }
   at(x, y) {
@@ -139,6 +150,8 @@ class Shape {
       if (o.y2 !== undefined) {
         arr.push(y.place(o.y2))
       }
+      arr[0] += this._dx
+      arr[1] += this._dy
       return arr
     })
     return points

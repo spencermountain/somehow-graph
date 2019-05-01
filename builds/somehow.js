@@ -1,4 +1,4 @@
-/* somehow v0.0.17
+/* somehow v0.1.0
    github.com/spencermountain/somehow
    MIT
 */
@@ -2153,6 +2153,15 @@ const chooseMethod = function(start, end, n = 6) {
   return methods.months(start, end, n)
 }
 
+//flip it around backwards
+const reverseTicks = function(ticks) {
+  ticks = ticks.map(o => {
+    o.value = 1 - o.value
+    return o
+  })
+  return ticks.reverse()
+}
+
 const spacetimeTicks = function(start, end, n = 6) {
   let reverse = false
   start = spacetime(start)
@@ -2167,7 +2176,7 @@ const spacetimeTicks = function(start, end, n = 6) {
   let ticks = chooseMethod(start, end, n)
   //support backwards ticks
   if (reverse === true) {
-    ticks = ticks.reverse()
+    ticks = reverseTicks(ticks)
   }
   return ticks
 }
@@ -6596,7 +6605,7 @@ return h;
 module.exports={
   "name": "somehow",
   "description": "make infographics without thinking",
-  "version": "0.0.17",
+  "version": "0.1.0",
   "main": "builds/somehow.js",
   "unpkg": "builds/somehow.min.js",
   "author": "Spencer Kelly (spencermountain)",
@@ -6614,12 +6623,19 @@ module.exports={
   "files": [
     "builds"
   ],
+  "prettier": {
+    "trailingComma": "none",
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": true,
+    "printWidth": 100
+  },
   "dependencies": {
     "d3-shape": "1.3.5",
     "fit-aspect-ratio": "2.0.0",
     "htm": "2.1.1",
     "spacetime": "5.7.0",
-    "spacetime-ticks": "0.1.0",
+    "spacetime-ticks": "0.1.1",
     "spencer-color": "0.1.0",
     "vhtml": "2.1.0"
   },
@@ -6662,6 +6678,8 @@ var htm = _dereq_('htm');
 var vhtml = _dereq_('vhtml');
 
 var methods = _dereq_('./methods');
+
+var clipShapes = _dereq_('./_clip');
 
 var YScale = _dereq_('./scales/YScale');
 
@@ -6826,34 +6844,6 @@ function () {
       } else {
         console.log('must define world html element');
       }
-    } //remove shapes outside of boundaries
-
-  }, {
-    key: "clipShapes",
-    value: function clipShapes(shapes) {
-      var _this = this;
-
-      shapes = shapes.filter(function (s) {
-        var _s$extent = s.extent(),
-            x = _s$extent.x,
-            y = _s$extent.y; //clip according to x-axis
-
-
-        if (_this.x._clip) {
-          if (x.min > _this.x.max || x.max < _this.x.min) {
-            return false;
-          }
-        }
-
-        if (_this.y._clip) {
-          if (y.min > _this.y.max || y.max < _this.y.min) {
-            return false;
-          }
-        }
-
-        return true;
-      });
-      return shapes;
     }
   }, {
     key: "clip",
@@ -6870,7 +6860,7 @@ function () {
         return a._order > b._order ? 1 : -1;
       }); //remove shapes outside of max/mins
 
-      shapes = this.clipShapes(shapes);
+      shapes = clipShapes(shapes, this.x, this.y);
       var elements = [];
 
       if (this.xAxis) {
@@ -6910,7 +6900,57 @@ Object.keys(aliases).forEach(function (k) {
 });
 module.exports = World;
 
-},{"./axis/XAxis":15,"./axis/YAxis":16,"./methods":21,"./scales/Scale":23,"./scales/YScale":24,"./shapes/Annotation":26,"./shapes/Area":27,"./shapes/Arrow":28,"./shapes/Bar":29,"./shapes/Dot":30,"./shapes/Image":31,"./shapes/Line":32,"./shapes/MidArea":33,"./shapes/Rect":34,"./shapes/Shape":35,"./shapes/Text":36,"fit-aspect-ratio":3,"htm":4,"vhtml":10}],13:[function(_dereq_,module,exports){
+},{"./_clip":13,"./axis/XAxis":16,"./axis/YAxis":17,"./methods":22,"./scales/Scale":24,"./scales/YScale":25,"./shapes/Annotation":27,"./shapes/Area":28,"./shapes/Arrow":29,"./shapes/Bar":30,"./shapes/Dot":31,"./shapes/Image":32,"./shapes/Line":33,"./shapes/MidArea":34,"./shapes/Rect":35,"./shapes/Shape":36,"./shapes/Text":37,"fit-aspect-ratio":3,"htm":4,"vhtml":10}],13:[function(_dereq_,module,exports){
+"use strict";
+
+//remove shapes outside of boundaries
+var clipShapes = function clipShapes(shapes, xScale, yScale) {
+  shapes = shapes.filter(function (s) {
+    var _s$extent = s.extent(),
+        x = _s$extent.x,
+        y = _s$extent.y; //clip according to x-axis
+
+
+    if (xScale._clip) {
+      //support reversed min/max values
+      var min = xScale.min;
+      var max = xScale.max;
+
+      if (min > max) {
+        var tmp = min;
+        min = max;
+        max = tmp;
+      }
+
+      if (x.min > max || x.max < min) {
+        return false;
+      }
+    }
+
+    if (yScale._clip) {
+      //support reversed min/max values
+      var _min = yScale.min;
+      var _max = yScale.max;
+
+      if (_min > _max) {
+        var _tmp = _min;
+        _min = _max;
+        _max = _tmp;
+      }
+
+      if (y.min > _max || y.max < _min) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+  return shapes;
+};
+
+module.exports = clipShapes;
+
+},{}],14:[function(_dereq_,module,exports){
 "use strict";
 
 var extent = function extent(arr) {
@@ -6949,7 +6989,7 @@ module.exports = {
   uid: uid
 };
 
-},{}],14:[function(_dereq_,module,exports){
+},{}],15:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -7043,7 +7083,7 @@ function () {
 
 module.exports = Axis;
 
-},{"./_custom":17,"./_ticks":19,"spencer-color":9}],15:[function(_dereq_,module,exports){
+},{"./_custom":18,"./_ticks":20,"spencer-color":9}],16:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -7138,7 +7178,7 @@ function (_Axis) {
 
 module.exports = XAxis;
 
-},{"./Axis":14}],16:[function(_dereq_,module,exports){
+},{"./Axis":15}],17:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -7235,7 +7275,7 @@ function (_Axis) {
 
 module.exports = YAxis;
 
-},{"./Axis":14}],17:[function(_dereq_,module,exports){
+},{"./Axis":15}],18:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -7277,15 +7317,21 @@ var drawTick = function drawTick(s, axis) {
 
 module.exports = drawTick;
 
-},{"./_prettyNum":18,"spacetime":8}],18:[function(_dereq_,module,exports){
+},{"./_prettyNum":19,"spacetime":8}],19:[function(_dereq_,module,exports){
 "use strict";
 
+var bil = 1000000000;
 var mil = 1000000;
 var tenThou = 10000;
 var thou = 1000;
 
 var prettyNum = function prettyNum(num) {
   num = parseFloat(num);
+
+  if (num >= bil) {
+    num = parseInt(num / 100000000, 10) * 100000000;
+    return num / mil + 'b';
+  }
 
   if (num >= mil) {
     num = parseInt(num / 100000, 10) * 100000;
@@ -7307,7 +7353,7 @@ var prettyNum = function prettyNum(num) {
 
 module.exports = prettyNum;
 
-},{}],19:[function(_dereq_,module,exports){
+},{}],20:[function(_dereq_,module,exports){
 "use strict";
 
 var spacetimeTicks = _dereq_('spacetime-ticks');
@@ -7357,12 +7403,12 @@ module.exports = {
   date: date
 };
 
-},{"./_prettyNum":18,"spacetime-ticks":6}],20:[function(_dereq_,module,exports){
+},{"./_prettyNum":19,"spacetime-ticks":6}],21:[function(_dereq_,module,exports){
 "use strict";
 
 var World = _dereq_('./World');
 
-var pkg = _dereq_('../package.json'); //
+var pkg = _dereq_('../package.json'); // ...people call this a 'factory'
 
 
 var somehow = function somehow(obj) {
@@ -7372,7 +7418,7 @@ var somehow = function somehow(obj) {
 somehow.version = pkg.version;
 module.exports = somehow;
 
-},{"../package.json":11,"./World":12}],21:[function(_dereq_,module,exports){
+},{"../package.json":11,"./World":12}],22:[function(_dereq_,module,exports){
 "use strict";
 
 var _require = _dereq_('./parse'),
@@ -7503,7 +7549,7 @@ var methods = {
 };
 module.exports = methods;
 
-},{"./_fns":13,"./parse":22}],22:[function(_dereq_,module,exports){
+},{"./_fns":14,"./parse":23}],23:[function(_dereq_,module,exports){
 "use strict";
 
 var spacetime = _dereq_('spacetime'); //
@@ -7555,7 +7601,7 @@ var parse = function parse(str) {
     };
   }
 
-  console.warn('Counldn\'t parse: ' + str);
+  console.warn("Counldn't parse: " + str);
   return {
     type: 'unknown',
     value: null
@@ -7587,7 +7633,7 @@ module.exports = {
   parseY: parseY
 };
 
-},{"spacetime":8}],23:[function(_dereq_,module,exports){
+},{"spacetime":8}],24:[function(_dereq_,module,exports){
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -7707,6 +7753,15 @@ function () {
 
       this._clip = bool;
     }
+  }, {
+    key: "reverse",
+    value: function reverse() {
+      var tmp = this.min;
+      this.min = this.max;
+      this.max = tmp;
+      this.rescale();
+      return tmp;
+    }
   }]);
 
   return Scale;
@@ -7714,7 +7769,7 @@ function () {
 
 module.exports = Scale;
 
-},{"../parse":22,"./_linear":25}],24:[function(_dereq_,module,exports){
+},{"../parse":23,"./_linear":26}],25:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -7779,7 +7834,7 @@ function (_Scale) {
 
 module.exports = YScale;
 
-},{"../parse":22,"./Scale":23,"./_linear":25}],25:[function(_dereq_,module,exports){
+},{"../parse":23,"./Scale":24,"./_linear":26}],26:[function(_dereq_,module,exports){
 "use strict";
 
 //a very-tiny version of d3-scale's scaleLinear
@@ -7803,7 +7858,7 @@ module.exports = scaleLinear; // let scale = scaleLinear({
 // })
 // console.log(scale(107))
 
-},{}],26:[function(_dereq_,module,exports){
+},{}],27:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -7901,7 +7956,7 @@ var colors = _dereq_('spencer-color').colors;
 var Text = _dereq_('./Text');
 
 var defaults = {
-  'text-anchor': "start"
+  'text-anchor': 'start'
 };
 
 var Annotation =
@@ -8043,7 +8098,7 @@ function (_Text) {
 
 module.exports = Annotation;
 
-},{"./Text":36,"spencer-color":9}],27:[function(_dereq_,module,exports){
+},{"./Text":37,"spencer-color":9}],28:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8098,7 +8153,7 @@ var _require = _dereq_('../parse'),
 var defaults = {
   fill: colors.green,
   stroke: colors.green,
-  'fill-opacity': .25,
+  'fill-opacity': 0.25,
   'stroke-width': 2
 };
 
@@ -8132,6 +8187,12 @@ function (_Shape) {
     key: "line",
     value: function line(num) {
       this._line = num;
+    }
+  }, {
+    key: "opacity",
+    value: function opacity(n) {
+      this.attrs['fill-opacity'] = n;
+      return this;
     }
   }, {
     key: "areaPath",
@@ -8207,7 +8268,7 @@ function (_Shape) {
 
 module.exports = Area;
 
-},{"../parse":22,"./Shape":35,"d3-shape":2,"spencer-color":9}],28:[function(_dereq_,module,exports){
+},{"../parse":23,"./Shape":36,"d3-shape":2,"spencer-color":9}],29:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8382,7 +8443,7 @@ function (_Shape) {
 
 module.exports = Arrow;
 
-},{"./Shape":35,"d3-shape":2,"spencer-color":9}],29:[function(_dereq_,module,exports){
+},{"./Shape":36,"d3-shape":2,"spencer-color":9}],30:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8462,6 +8523,12 @@ function (_Rect) {
       return this;
     }
   }, {
+    key: "opacity",
+    value: function opacity(n) {
+      this.attrs['fill-opacity'] = n;
+      return this;
+    }
+  }, {
     key: "at",
     value: function at(x, y) {
       this.data = [{
@@ -8503,7 +8570,7 @@ function (_Rect) {
 
 module.exports = Bar;
 
-},{"../parse":22,"./Rect":34,"spencer-color":9}],30:[function(_dereq_,module,exports){
+},{"../parse":23,"./Rect":35,"spencer-color":9}],31:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8591,7 +8658,7 @@ function (_Shape) {
 
 module.exports = Dot;
 
-},{"./Shape":35,"spencer-color":9}],31:[function(_dereq_,module,exports){
+},{"./Shape":36,"spencer-color":9}],32:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8714,7 +8781,7 @@ function (_Shape) {
 
 module.exports = Image;
 
-},{"./Shape":35,"spencer-color":9}],32:[function(_dereq_,module,exports){
+},{"./Shape":36,"spencer-color":9}],33:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8802,7 +8869,7 @@ function (_Shape) {
 
 module.exports = Line;
 
-},{"./Shape":35,"d3-shape":2,"spencer-color":9}],33:[function(_dereq_,module,exports){
+},{"./Shape":36,"d3-shape":2,"spencer-color":9}],34:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8885,6 +8952,12 @@ function (_Area) {
       this._zero = y;
     }
   }, {
+    key: "opacity",
+    value: function opacity(n) {
+      this.attrs['fill-opacity'] = n;
+      return this;
+    }
+  }, {
     key: "set",
     value: function set(str) {
       this.data = parseInput(str, this.world); //add the bottom part, to data
@@ -8952,7 +9025,7 @@ function (_Area) {
 
 module.exports = Midarea;
 
-},{"../parse":22,"./Area":27,"./lib/parseInput":37,"d3-shape":2}],34:[function(_dereq_,module,exports){
+},{"../parse":23,"./Area":28,"./lib/parseInput":38,"d3-shape":2}],35:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8992,7 +9065,7 @@ var Shape = _dereq_('./Shape');
 var defaults = {
   fill: colors.green,
   stroke: colors.green,
-  'fill-opacity': .25,
+  'fill-opacity': 0.25,
   'stroke-width': 1
 };
 
@@ -9022,6 +9095,18 @@ function (_Shape) {
     value: function color(_color) {
       this.attrs.stroke = colors[_color] || _color;
       this.attrs.fill = colors[_color] || _color;
+      return this;
+    }
+  }, {
+    key: "border",
+    value: function border(n) {
+      this.attrs['stroke-width'] = n;
+      return this;
+    }
+  }, {
+    key: "opacity",
+    value: function opacity(n) {
+      this.attrs['fill-opacity'] = n;
       return this;
     }
   }, {
@@ -9076,7 +9161,7 @@ function (_Shape) {
 
 module.exports = Rect;
 
-},{"./Shape":35,"spencer-color":9}],35:[function(_dereq_,module,exports){
+},{"./Shape":36,"spencer-color":9}],36:[function(_dereq_,module,exports){
 "use strict";
 
 function _templateObject() {
@@ -9133,7 +9218,10 @@ function () {
     this._shape = 1;
     this._title = '';
     this._click = obj.click;
-    this._hover = obj.hover;
+    this._hover = obj.hover; //nudge pixels
+
+    this._dx = 0;
+    this._dy = 0;
   }
 
   _createClass(Shape, [{
@@ -9152,6 +9240,18 @@ function () {
     key: "soft",
     value: function soft() {
       this.curve = d3Shape.curveBasis;
+      return this;
+    }
+  }, {
+    key: "dx",
+    value: function dx(n) {
+      this._dx = n;
+      return this;
+    }
+  }, {
+    key: "dy",
+    value: function dy(n) {
+      this._dy = n;
       return this;
     }
   }, {
@@ -9288,6 +9388,8 @@ function () {
   }, {
     key: "points",
     value: function points() {
+      var _this2 = this;
+
       var _this$world = this.world,
           x = _this$world.x,
           y = _this$world.y;
@@ -9298,6 +9400,8 @@ function () {
           arr.push(y.place(o.y2));
         }
 
+        arr[0] += _this2._dx;
+        arr[1] += _this2._dy;
         return arr;
       });
       return points;
@@ -9316,10 +9420,10 @@ function () {
   }, {
     key: "drawSyle",
     value: function drawSyle() {
-      var _this2 = this;
+      var _this3 = this;
 
       return Object.keys(this.style).map(function (k) {
-        return "".concat(k, ":").concat(_this2.style[k], ";");
+        return "".concat(k, ":").concat(_this3.style[k], ";");
       }).join(' ');
     }
   }, {
@@ -9339,7 +9443,7 @@ function () {
 
 module.exports = Shape;
 
-},{"../_fns":13,"../parse":22,"./lib/parseInput":37,"d3-shape":2,"spencer-color":9}],36:[function(_dereq_,module,exports){
+},{"../_fns":14,"../parse":23,"./lib/parseInput":38,"d3-shape":2,"spencer-color":9}],37:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -9451,21 +9555,21 @@ function (_Shape) {
   _createClass(Text, [{
     key: "before",
     value: function before(x, y) {
-      this.attrs['text-anchor'] = "end";
+      this.attrs['text-anchor'] = 'end';
       this.set([[x, y]]);
       return this;
     }
   }, {
     key: "after",
     value: function after(x, y) {
-      this.attrs['text-anchor'] = "start";
+      this.attrs['text-anchor'] = 'start';
       this.set([[x, y]]);
       return this;
     }
   }, {
     key: "center",
     value: function center(x, y) {
-      this.attrs['text-anchor'] = "middle";
+      this.attrs['text-anchor'] = 'middle';
       this.set([[x, y]]);
       return this;
     }
@@ -9638,7 +9742,7 @@ function (_Shape) {
 
 module.exports = Text;
 
-},{"./Shape":35,"spencer-color":9}],37:[function(_dereq_,module,exports){
+},{"./Shape":36,"spencer-color":9}],38:[function(_dereq_,module,exports){
 "use strict";
 
 var _require = _dereq_('../../parse'),
@@ -9698,5 +9802,5 @@ var parseInput = function parseInput(set, world) {
 
 module.exports = parseInput;
 
-},{"../../parse":22}]},{},[20])(20)
+},{"../../parse":23}]},{},[21])(21)
 });
