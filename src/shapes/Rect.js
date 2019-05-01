@@ -4,14 +4,14 @@ const Shape = require('./Shape')
 const defaults = {
   fill: colors.green,
   stroke: colors.green,
-  'fill-opacity': .25,
+  'fill-opacity': 0.25,
   'stroke-width': 1
 }
 
 class Rect extends Shape {
   constructor(obj = {}, world) {
     obj = Object.assign({}, defaults, obj)
-    super(obj, world);
+    super(obj, world)
     this._rounded = 3
     this._width = undefined
     this._height = undefined
@@ -19,6 +19,14 @@ class Rect extends Shape {
   color(color) {
     this.attrs.stroke = colors[color] || color
     this.attrs.fill = colors[color] || color
+    return this
+  }
+  border(n) {
+    this.attrs['stroke-width'] = n
+    return this
+  }
+  opacity(n) {
+    this.attrs['fill-opacity'] = n
     return this
   }
   width(n) {
@@ -51,11 +59,11 @@ class Rect extends Shape {
       y: a[1] - height,
       width: width,
       height: height,
-      rx: this._rounded,
+      rx: this._rounded
     })
     return h`<rect ...${attrs} >
       <title>${this._title}</title>
-    </rect>`; //<rect x="120" y="0" width="100" height="100" rx="15" ry="15" />
+    </rect>` //<rect x="120" y="0" width="100" height="100" rx="15" ry="15" />
   }
 }
 

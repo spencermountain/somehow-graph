@@ -115,6 +115,7 @@ more to come
 - width(n)
 - height(n)
 - rounded(n)
+- border(n)
 
 #### Line
 

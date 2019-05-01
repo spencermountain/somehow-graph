@@ -1,6 +1,6 @@
 const colors = require('spencer-color').colors
 const Rect = require('./Rect')
-const {parseX, parseY} = require('../parse')
+const { parseX, parseY } = require('../parse')
 
 const defaults = {
   fill: colors.green,
@@ -12,7 +12,7 @@ const defaults = {
 class Bar extends Rect {
   constructor(obj, world) {
     obj = Object.assign({}, defaults, obj)
-    super(obj, world);
+    super(obj, world)
     this._rounded = 1
     this._width = 5
     this._zero = 0
@@ -24,6 +24,10 @@ class Bar extends Rect {
   //point that it flips on
   zero(w) {
     this._zero = w
+    return this
+  }
+  opacity(n) {
+    this.attrs['fill-opacity'] = n
     return this
   }
   at(x, y) {
@@ -58,7 +62,7 @@ class Bar extends Rect {
     })
     return h`<rect ...${attrs} >
         <title>${this._title}</title>
-      </rect>`;
+      </rect>`
   }
 }
 module.exports = Bar
