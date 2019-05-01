@@ -17,6 +17,7 @@
     "build": "node ./scripts/build.js"
   },
   "files": [
+    "src",
     "builds"
   ],
   "prettier": {
