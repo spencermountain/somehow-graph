@@ -2,6 +2,7 @@ const fitAspect = require('fit-aspect-ratio')
 const htm = require('htm')
 const vhtml = require('vhtml')
 const methods = require('./methods')
+const clipShapes = require('./_clip')
 const YScale = require('./scales/YScale')
 const XScale = require('./scales/Scale')
 const XAxis = require('./axis/XAxis')
@@ -113,31 +114,17 @@ class World {
       console.log('must define world html element')
     }
   }
-  //remove shapes outside of boundaries
-  clipShapes(shapes) {
-    shapes = shapes.filter(s => {
-      let { x, y } = s.extent()
-      //clip according to x-axis
-      if (this.x._clip) {
-        if (x.min > this.x.max || x.max < this.x.min) {
-          return false
-        }
-      }
-      if (this.y._clip) {
-        if (y.min > this.y.max || y.max < this.y.min) {
-          return false
-        }
-      }
-      return true
-    })
-    return shapes
+
+  clip() {
+    this.x.clip()
+    this.y.clip()
+    return this
   }
   build() {
     let h = this.html
     let shapes = this.shapes.sort((a, b) => (a._order > b._order ? 1 : -1))
     //remove shapes outside of max/mins
-    shapes = this.clipShapes(shapes)
-
+    shapes = clipShapes(shapes, this.x, this.y)
     let elements = []
     if (this.xAxis) {
       elements.push(this.xAxis.build())

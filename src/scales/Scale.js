@@ -82,6 +82,13 @@ class Scale {
     }
     this._clip = bool
   }
+  reverse() {
+    let tmp = this.min
+    this.min = this.max
+    this.max = tmp
+    this.rescale()
+    return tmp
+  }
 }
 
 module.exports = Scale

@@ -13,7 +13,7 @@ const generic = function(axis, n = 5) {
   let ticks = []
   for (let i = 0; i <= n; i += 1) {
     let dec = i / n
-    let num = (dec * total) + (scale.min || 0)
+    let num = dec * total + (scale.min || 0)
     let tmp = num - (scale.min || 0)
     let percent = tmp / total
     ticks.push({
@@ -27,12 +27,12 @@ const generic = function(axis, n = 5) {
 
 const date = function(axis, n = 5) {
   let scale = axis.scale
-  let start = (scale.min || 0)
-  let end = (scale.max || 0)
+  let start = scale.min || 0
+  let end = scale.max || 0
   let ticks = spacetimeTicks(start, end, n)
   return ticks
 }
 module.exports = {
   generic: generic,
-  date: date,
+  date: date
 }

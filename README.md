@@ -56,7 +56,7 @@ it's essentially a wrapper for [d3-path](https://github.com/d3/d3-path), [d3-sha
 
 more to come
 
-## Current API:
+### Current API:
 
 - line(obj)
 - dot(obj)
@@ -79,6 +79,7 @@ more to come
 - build()
 - getShape(id)
 - redraw()
+- clip()
 
 #### Axis
 
@@ -87,6 +88,7 @@ more to come
 - show()
 - format(str)
 - ticks(arr)
+- clip(bool)
 
 #### Shape
 

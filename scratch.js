@@ -14,19 +14,20 @@ w.line()
   .set([['Feb 1st 2019', '0%'], ['Feb 1st 2019', '80']])
   .color('red')
 
-//horizontal
 w.line()
-  .set([['jan 2 2019', 7], ['jan 8 2019', 7]])
+  .set([['jan 2 2019', -17], ['jan 8 2019', -17]])
   .color('blue')
 
 w.line()
-  .set([['jan 2 2019', -17], ['jan 8 2019', -17]])
-  .color('red')
+  .set([['Jan 10th 2019', '10%'], ['Jan 10th 2019', '80%']])
+  .color('lightgrey')
 
 w.fit()
 w.y.fit(-9, 80)
 w.x.fit('Jan 1 2019', 'Jan 28 2019')
-w.x.clip()
-w.y.clip()
+// w.x.fit('Jan 28 2019', 'Jan 1 2019')
+w.clip()
+w.x.reverse()
+// w.y.reverse()
 
 document.querySelector('#stage').innerHTML = w.build()
