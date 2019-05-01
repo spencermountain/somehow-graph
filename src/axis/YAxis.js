@@ -1,6 +1,5 @@
 const Axis = require('./Axis')
 
-
 class YAxis extends Axis {
   constructor(obj = {}, world) {
     super(obj, world)
@@ -8,10 +7,12 @@ class YAxis extends Axis {
   }
   drawTicks(x) {
     let h = this.world.html
-    return this.ticks().map((o) => {
+    return this.ticks().map(o => {
       let percent = o.value * 100
       percent = 100 - percent
-      return h`<text x="${x}" y="${percent + '%'}" dy="0" dx="-6" fill="${this.attrs.stroke}" text-anchor="end" style="font-size:12px;">
+      return h`<text x="${x}" y="${percent + '%'}" dy="0" dx="-6" fill="${
+        this.attrs.stroke
+      }" text-anchor="end" style="font-size:12px;">
         ${o.label}
       </text>`
     })

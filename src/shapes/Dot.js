@@ -9,7 +9,7 @@ const defaults = {
 class Dot extends Shape {
   constructor(obj = {}, world) {
     obj = Object.assign({}, defaults, obj)
-    super(obj, world);
+    super(obj, world)
     this._radius = obj.radius || 5
   }
   radius(r) {
@@ -24,9 +24,9 @@ class Dot extends Shape {
       id: this._id,
       cx: point[0],
       cy: point[1],
-      r: this._radius,
+      r: this._radius
     })
-    return h`<circle ...${attrs} ><title>${this._title}</title></circle>`;
+    return h`<circle ...${attrs} ><title>${this._title}</title></circle>`
   }
 }
 

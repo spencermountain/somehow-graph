@@ -3,7 +3,7 @@ const colors = require('spencer-color').colors
 
 class Image extends Shape {
   constructor(obj, world) {
-    super(obj, world);
+    super(obj, world)
     this._src = ''
     this._width = 100
     this._height = 200
@@ -40,14 +40,18 @@ class Image extends Shape {
     let caption = ''
     if (this._caption) {
       let y = point[1] + this._height + 15
-      caption = h`<text x="${point[0]}" y="${y}" stroke="none" fill="${colors.grey}">${this._caption}</text>`
+      caption = h`<text x="${point[0]}" y="${y}" stroke="none" fill="${colors.grey}">${
+        this._caption
+      }</text>`
     }
     return h`<g>
-      <image xlink:href="${this._src}" x="${point[0]}" y="${point[1]}" height="${this._width}" width="${this._height}" />
+      <image xlink:href="${this._src}" x="${point[0]}" y="${point[1]}" height="${
+      this._width
+    }" width="${this._height}" />
       ${caption}
     </g>
     `
-  //preserveAspectRatio="slice"
+    //preserveAspectRatio="slice"
   }
 }
 module.exports = Image

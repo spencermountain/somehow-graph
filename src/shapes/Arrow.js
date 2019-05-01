@@ -13,7 +13,7 @@ const defaults = {
 class Arrow extends Shape {
   constructor(obj = {}, world) {
     obj = Object.assign({}, defaults, obj)
-    super(obj, world);
+    super(obj, world)
     this._length = 35
   }
   color(color) {
@@ -21,10 +21,7 @@ class Arrow extends Shape {
     return this
   }
   from(x, y) {
-    this.set([
-      this._data[0],
-      [x, y]
-    ])
+    this.set([this._data[0], [x, y]])
   }
   length(num) {
     this._length = num
@@ -36,7 +33,11 @@ class Arrow extends Shape {
   }
   path() {
     let points = this.points()
-    return d3Shape.line().x(d => d[0]).y(d => d[1]).curve(this.curve)(points);
+    return d3Shape
+      .line()
+      .x(d => d[0])
+      .y(d => d[1])
+      .curve(this.curve)(points)
   }
   getLength(start, end) {
     let x = start[0] - end[0]
@@ -48,20 +49,20 @@ class Arrow extends Shape {
   getAngle(start, end) {
     let p1 = {
       x: start[0],
-      y: start[1],
+      y: start[1]
     }
     let p2 = {
       x: end[0],
-      y: end[1],
+      y: end[1]
     }
-    var angleRadians = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+    var angleRadians = Math.atan2(p2.y - p1.y, p2.x - p1.x)
     return angleRadians
   }
   head(start, end) {
     let h = this.world.html
     let radian = this.getAngle(start, end)
-    let leftAngle = radian - (Math.PI / 4)
-    let rightAngle = radian + (Math.PI / 4)
+    let leftAngle = radian - Math.PI / 4
+    let rightAngle = radian + Math.PI / 4
     let length = this.getLength(start, end)
     length = length * 0.2
     //---soh cah toa--
@@ -74,8 +75,11 @@ class Arrow extends Shape {
       adj: Math.cos(rightAngle) * length
     }
     return h`<g>
-      <line x1=${start[0]} y1=${start[1]} x2=${start[0] + left.adj} y2=${start[1] + left.opp} ...${this.attrs}/>
-      <line x1=${start[0]} y1=${start[1]} x2=${start[0] + right.adj} y2=${start[1] + right.opp} ...${this.attrs}/>
+      <line x1=${start[0]} y1=${start[1]} x2=${start[0] + left.adj} y2=${start[1] + left.opp} ...${
+      this.attrs
+    }/>
+      <line x1=${start[0]} y1=${start[1]} x2=${start[0] + right.adj} y2=${start[1] +
+      right.opp} ...${this.attrs}/>
     </g>`
   }
   build() {
@@ -90,7 +94,7 @@ class Arrow extends Shape {
     return h`<g>
       <line x1=${start[0]} y1=${start[1]} x2=${end[0]} y2=${end[1]} ...${this.attrs}/>
       ${this.head(start, end)}
-    </g>`;
+    </g>`
   }
 }
 

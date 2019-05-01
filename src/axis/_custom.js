@@ -15,7 +15,7 @@ const drawTick = function(s, axis) {
     return {
       num: s.epoch, //val
       pos: parseInt(scale(s.epoch), 10), //x/y
-      label: label || s.format(axis._fmt || '{month} {year}'), //text
+      label: label || s.format(axis._fmt || '{month} {year}') //text
     }
   }
   //support '52'

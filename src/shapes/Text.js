@@ -23,48 +23,44 @@ class Text extends Shape {
       obj = []
     }
     obj = Object.assign({}, defaults, obj)
-    super(obj, world);
+    super(obj, world)
     this.textLines = text || obj.text || []
     this.textFn = textFn
     if (typeof this.textLines === 'string') {
       this.textLines = [this.textLines]
     }
     this._order = 0
-    this.data = [{
-      x: {
-        value: 50,
-        type: 'percent'
-      },
-      y: {
-        value: 50,
-        type: 'percent'
-      },
-    }]
+    this.data = [
+      {
+        x: {
+          value: 50,
+          type: 'percent'
+        },
+        y: {
+          value: 50,
+          type: 'percent'
+        }
+      }
+    ]
     this._dodge = {
       x: 0,
-      y: 4,
+      y: 4
     }
     this._underline = ''
   }
   before(x, y) {
-    this.attrs['text-anchor'] = "end"
-    this.set([
-      [x, y]
-    ])
+    this.attrs['text-anchor'] = 'end'
+    this.set([[x, y]])
     return this
   }
   after(x, y) {
-    this.attrs['text-anchor'] = "start"
-    this.set([
-      [x, y]
-    ])
+    this.attrs['text-anchor'] = 'start'
+    this.set([[x, y]])
     return this
   }
   center(x, y) {
-    this.attrs['text-anchor'] = "middle"
-    this.set([
-      [x, y]
-    ])
+    this.attrs['text-anchor'] = 'middle'
+    this.set([[x, y]])
     return this
   }
   color(color) {
@@ -109,7 +105,7 @@ class Text extends Shape {
       y: {
         min: d.y, // - height,
         max: d.y
-      },
+      }
     }
   }
   text(text) {
@@ -142,7 +138,7 @@ class Text extends Shape {
     height *= textArr.length
     //calculate width
     let width = 0
-    textArr.forEach((str) => {
+    textArr.forEach(str => {
       let w = str.length * 8
       if (w > width) {
         width = w
@@ -157,15 +153,15 @@ class Text extends Shape {
     let point = this.points()[0]
     let res = {
       x: 0,
-      y: 0,
+      y: 0
     }
     if (!point) {
       return res
     }
-    let {height, width} = this.estimate()
+    let { height, width } = this.estimate()
     res.height = height
     res.width = width
-    res.y = (point[1] + this._dodge.y) - height
+    res.y = point[1] + this._dodge.y - height
     res.x = point[0] + 2 + this._dodge.x
     return res
   }
@@ -177,8 +173,8 @@ class Text extends Shape {
       textArr = this.textFn(this.world)
       textArr = typeof textArr === 'string' ? [textArr] : textArr
     }
-    let inside = textArr.map((str) => h`<tspan x="0" dy="1.2em">${String(str)}</tspan>`)
-    let {x, y} = this.position()
+    let inside = textArr.map(str => h`<tspan x="0" dy="1.2em">${String(str)}</tspan>`)
+    let { x, y } = this.position()
     let transform = `translate(${x} ${y})`
     return h`<g transform="${transform}" style="${this.drawSyle()}">
       <text ...${this.attrs}>

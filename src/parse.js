@@ -38,7 +38,7 @@ const parse = function(str) {
       value: s.epoch
     }
   }
-  console.warn('Counldn\'t parse: ' + str)
+  console.warn("Counldn't parse: " + str)
   return {
     type: 'unknown',
     value: null

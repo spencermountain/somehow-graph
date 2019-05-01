@@ -12,7 +12,7 @@ const defaults = {
 class Line extends Shape {
   constructor(obj = {}, world) {
     obj = Object.assign({}, defaults, obj)
-    super(obj, world);
+    super(obj, world)
   }
   color(color) {
     this.attrs.stroke = colors[color] || color
@@ -31,7 +31,11 @@ class Line extends Shape {
   }
   path() {
     let points = this.points()
-    return d3Shape.line().x(d => d[0]).y(d => d[1]).curve(this.curve)(points);
+    return d3Shape
+      .line()
+      .x(d => d[0])
+      .y(d => d[1])
+      .curve(this.curve)(points)
   }
 }
 
