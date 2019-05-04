@@ -1,4 +1,4 @@
-/* somehow v0.1.2
+/* somehow v0.1.3
    github.com/spencermountain/somehow
    MIT
 */
@@ -2106,6 +2106,302 @@ Object.defineProperty(exports, '__esModule', { value: true });
 !function(){var n=function(t,e,r,u){for(var o=1;o<e.length;o++){var f=e[o++],s="number"==typeof f?r[f]:f;1===e[o]?u[0]=s:2===e[o]?(u[1]=u[1]||{})[e[++o]]=s:3===e[o]?u[1]=Object.assign(u[1]||{},s):u.push(e[o]?t.apply(null,n(t,s,r,["",null])):s)}return u},t=function(n){for(var t,e,r=1,u="",o="",f=[0],s=function(n){1===r&&(n||(u=u.replace(/^\s*\n\s*|\s*\n\s*$/g,"")))?f.push(n||u,0):3===r&&(n||u)?(f.push(n||u,1),r=2):2===r&&"..."===u&&n?f.push(n,3):2===r&&u&&!n?f.push(!0,2,u):4===r&&e&&(f.push(n||u,2,e),e=""),u=""},p=0;p<n.length;p++){p&&(1===r&&s(),s(p));for(var h=0;h<n[p].length;h++)t=n[p][h],1===r?"<"===t?(s(),f=[f],r=3):u+=t:o?t===o?o="":u+=t:'"'===t||"'"===t?o=t:">"===t?(s(),r=1):r&&("="===t?(r=4,e=u,u=""):"/"===t?(s(),3===r&&(f=f[0]),r=f,(f=f[0]).push(r,4),r=0):" "===t||"\t"===t||"\n"===t||"\r"===t?(s(),r=2):u+=t)}return s(),f},e="function"==typeof Map,r=e?new Map:{},u=e?function(n){var e=r.get(n);return e||r.set(n,e=t(n)),e}:function(n){for(var e="",u=0;u<n.length;u++)e+=n[u].length+"-"+n[u];return r[e]||(r[e]=t(n))},o=function(t){var e=n(this,u(t),arguments,[]);return e.length>1?e:e[0]};"undefined"!=typeof module?module.exports=o:self.htm=o}();
 
 },{}],5:[function(_dereq_,module,exports){
+(function (global){
+/* somehow v0.0.3
+   github.com/spencermountain/somehow-ticks
+   MIT
+*/
+
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.somehowTicks = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof _dereq_&&_dereq_;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof _dereq_&&_dereq_,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(_dereq_,module,exports){
+"use strict";
+
+module.exports = {
+  trillion: 1000000000000,
+  billion: 1000000000,
+  million: 1000000,
+  hundredThousand: 100000,
+  tenThousand: 10000,
+  thousand: 1000,
+  hundred: 100,
+  ten: 10,
+  one: 1,
+  tenth: 0.1,
+  hundredth: 0.01,
+  thousandth: 0.01
+};
+
+},{}],2:[function(_dereq_,module,exports){
+"use strict";
+
+var n = _dereq_('./_constants');
+
+var prettyNum = function prettyNum(num) {
+  num = parseFloat(num);
+
+  if (num >= n.trillion) {
+    num = parseInt(num / 100000000000, 10) * 100000000000;
+    return num / n.trillion + 't';
+  }
+
+  if (num >= n.billion) {
+    num = parseInt(num / 100000000, 10) * 100000000;
+    return num / n.billion + 'b';
+  }
+
+  if (num >= n.million) {
+    num = parseInt(num / 100000, 10) * 100000;
+    return num / n.million + 'm';
+  }
+
+  if (num >= n.tenThousand) {
+    num = parseInt(num / n.thousand, 10) * n.thousand;
+    return num / n.thousand + 'k';
+  }
+
+  if (num >= n.thousand) {
+    num = parseInt(num / n.hundred, 10) * n.hundred;
+    return num / n.thousand + 'k';
+  }
+
+  return num.toLocaleString();
+};
+
+module.exports = prettyNum;
+
+},{"./_constants":1}],3:[function(_dereq_,module,exports){
+"use strict";
+
+// const zeroPad = (str, len = 2) => {
+//   let pad = '0'
+//   str = str + ''
+//   return str.length >= len
+//     ? str
+//     : new Array(len - str.length + 1).join(pad) + str
+// }
+//
+// const preferZeros = function(arr, ticks) {
+//   const max = String(arr[arr.length - 1] || '').length
+//   const zeroArr = arr.map(a => {
+//     let str = zeroPad(String(a), max)
+//     const zeros = (str.match(/0/g) || []).length
+//     return [a, zeros]
+//   })
+//   let ranked = zeroArr.sort((a, b) => (a[1] < b[1] ? 1 : -1))
+//   console.log(ranked)
+//   return ranked
+//     .map(a => a[0])
+//     .slice(0, ticks)
+//     .sort()
+// }
+var reduceTo = function reduceTo(arr, n) {
+  if (arr.length <= n || arr.length <= 5) {
+    return arr;
+  } //try filtering-down by # of non-zero digits used
+  // let tmp = preferZeros(arr, n)
+  // if (tmp.length > 0 && tmp.length <= n) {
+  //   return tmp
+  // }
+  //otherwise, remove every other selection (less good)
+
+
+  while (arr.length > n) {
+    arr = arr.filter(function (o, i) {
+      return i % 2 === 0;
+    });
+
+    if (arr.length <= n || arr.length <= 5) {
+      return arr;
+    }
+  }
+
+  return arr;
+};
+
+module.exports = reduceTo;
+
+},{}],4:[function(_dereq_,module,exports){
+"use strict";
+
+var methods = _dereq_('./methods');
+
+var chooseMethod = function chooseMethod(start, end) {
+  var n = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 6;
+  var diff = Math.abs(end - start);
+
+  if (diff === 0) {
+    return [];
+  } //1 million
+
+
+  if (diff > 3000000) {
+    return methods.millions(start, end, n);
+  } //100k
+
+
+  if (diff > 300000) {
+    return methods.hundredKs(start, end, n);
+  } //1k
+
+
+  if (diff > 3000) {
+    return methods.thousands(start, end, n);
+  } //100
+
+
+  if (diff > 300) {
+    return methods.hundreds(start, end, n);
+  } //10
+
+
+  if (diff > 30) {
+    return methods.tens(start, end, n);
+  } //1
+
+
+  if (diff > 3) {
+    return methods.ones(start, end, n);
+  } //.1
+
+
+  if (diff > 0.3) {
+    return methods.tenths(start, end, n);
+  } //.01
+
+
+  return methods.hundredths(start, end, n);
+}; //flip it around backwards
+
+
+var reverseTicks = function reverseTicks(ticks) {
+  ticks = ticks.map(function (o) {
+    o.value = 1 - o.value;
+    return o;
+  });
+  return ticks.reverse();
+}; //
+
+
+var somehowTicks = function somehowTicks(start, end, n) {
+  var reverse = false;
+  start = Number(start);
+  end = Number(end); //reverse them, if necessary
+
+  if (start > end) {
+    reverse = true;
+    var tmp = start;
+    start = end;
+    end = tmp;
+  }
+
+  var ticks = chooseMethod(start, end, n); //support backwards ticks
+
+  if (reverse === true) {
+    ticks = reverseTicks(ticks);
+  }
+
+  return ticks;
+};
+
+module.exports = somehowTicks;
+
+},{"./methods":5}],5:[function(_dereq_,module,exports){
+"use strict";
+
+var reduceTo = _dereq_('./_reduce');
+
+var prettyNum = _dereq_('./_prettyNum');
+
+var c = _dereq_('./_constants');
+
+var roundDown = function roundDown(n, unit) {
+  return Math.floor(n / unit) * unit;
+}; //increment by this unit
+
+
+var allTicks = function allTicks(start, end, unit) {
+  var inc = unit / 2; //increment by .5
+
+  var ticks = [];
+  start = start += unit;
+  start = roundDown(start, unit);
+
+  while (start < end) {
+    ticks.push(start);
+    start = start += inc;
+  }
+
+  return ticks;
+};
+
+var formatTicks = function formatTicks(arr, fmt, start, end) {
+  var delta = end - start;
+  return arr.map(function (s) {
+    var percent = (s - start) / delta;
+    return {
+      label: prettyNum(s),
+      number: s,
+      value: parseInt(percent * 1000, 10) / 1000
+    };
+  });
+};
+
+var methods = {
+  millions: function millions(start, end, n) {
+    var ticks = allTicks(start, end, c.million);
+    ticks = reduceTo(ticks, n);
+    ticks = formatTicks(ticks, 'm', start, end);
+    return ticks;
+  },
+  hundredKs: function hundredKs(start, end, n) {
+    var ticks = allTicks(start, end, c.hundredThousand);
+    ticks = reduceTo(ticks, n);
+    ticks = formatTicks(ticks, 'k', start, end);
+    return ticks;
+  },
+  thousands: function thousands(start, end, n) {
+    var ticks = allTicks(start, end, c.thousand);
+    ticks = reduceTo(ticks, n);
+    ticks = formatTicks(ticks, 'm', start, end);
+    return ticks;
+  },
+  hundreds: function hundreds(start, end, n) {
+    var ticks = allTicks(start, end, c.hundred);
+    ticks = reduceTo(ticks, n);
+    ticks = formatTicks(ticks, 'm', start, end);
+    return ticks;
+  },
+  tens: function tens(start, end, n) {
+    var ticks = allTicks(start, end, c.ten);
+    ticks = reduceTo(ticks, n);
+    ticks = formatTicks(ticks, '', start, end);
+    return ticks;
+  },
+  ones: function ones(start, end, n) {
+    var ticks = allTicks(start, end, c.one);
+    ticks = reduceTo(ticks, n);
+    ticks = formatTicks(ticks, '', start, end);
+    return ticks;
+  },
+  tenths: function tenths(start, end, n) {
+    var ticks = allTicks(start, end, c.tenth);
+    ticks = reduceTo(ticks, n);
+    ticks = formatTicks(ticks, '', start, end);
+    return ticks;
+  },
+  hundredths: function hundredths(start, end, n) {
+    var ticks = allTicks(start, end, c.hundredth);
+    ticks = reduceTo(ticks, n);
+    ticks = formatTicks(ticks, '', start, end);
+    return ticks;
+  }
+};
+module.exports = methods;
+
+},{"./_constants":1,"./_prettyNum":2,"./_reduce":3}]},{},[4])(4)
+});
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],6:[function(_dereq_,module,exports){
 const reduceTo = function(arr, n) {
   if (arr.length <= n || arr.length <= 5) {
     return arr
@@ -2123,7 +2419,7 @@ const reduceTo = function(arr, n) {
 }
 module.exports = reduceTo
 
-},{}],6:[function(_dereq_,module,exports){
+},{}],7:[function(_dereq_,module,exports){
 const spacetime = _dereq_('spacetime')
 const methods = _dereq_('./methods')
 
@@ -2182,7 +2478,7 @@ const spacetimeTicks = function(start, end, n = 6) {
 }
 module.exports = spacetimeTicks
 
-},{"./methods":7,"spacetime":8}],7:[function(_dereq_,module,exports){
+},{"./methods":8,"spacetime":9}],8:[function(_dereq_,module,exports){
 const reduceTo = _dereq_('./_reduce')
 
 //increment by this unit
@@ -2277,7 +2573,7 @@ const methods = {
 }
 module.exports = methods
 
-},{"./_reduce":5}],8:[function(_dereq_,module,exports){
+},{"./_reduce":6}],9:[function(_dereq_,module,exports){
 (function (global){
 /* spacetime v5.8.0
    github.com/spencermountain/spacetime
@@ -6574,12 +6870,12 @@ module.exports = all;
 });
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],9:[function(_dereq_,module,exports){
+},{}],10:[function(_dereq_,module,exports){
 (function (global){
 !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{("undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this).spencerColor=e()}}(function(){return function u(i,a,c){function f(r,e){if(!a[r]){if(!i[r]){var o="function"==typeof _dereq_&&_dereq_;if(!e&&o)return o(r,!0);if(d)return d(r,!0);var n=new Error("Cannot find module '"+r+"'");throw n.code="MODULE_NOT_FOUND",n}var t=a[r]={exports:{}};i[r][0].call(t.exports,function(e){return f(i[r][1][e]||e)},t,t.exports,u,i,a,c)}return a[r].exports}for(var d="function"==typeof _dereq_&&_dereq_,e=0;e<c.length;e++)f(c[e]);return f}({1:[function(e,r,o){"use strict";r.exports={blue:"#6699cc",green:"#6accb2",yellow:"#e1e6b3",red:"#cc7066",pink:"#F2C0BB",brown:"#705E5C",orange:"#cc8a66",purple:"#d8b3e6",navy:"#335799",olive:"#7f9c6c",fuscia:"#735873",beige:"#e6d7b3",slate:"#8C8C88",suede:"#9c896c",burnt:"#603a39",sea:"#50617A",sky:"#2D85A8",night:"#303b50",rouge:"#914045",grey:"#838B91",mud:"#C4ABAB",royal:"#275291",cherry:"#cc6966",tulip:"#e6b3bc",rose:"#D68881",fire:"#AB5850",greyblue:"#72697D",greygreen:"#8BA3A2",greypurple:"#978BA3",burn:"#6D5685",slategrey:"#bfb0b3",light:"#a3a5a5",lighter:"#d7d5d2",fudge:"#4d4d4d",lightgrey:"#949a9e",white:"#fbfbfb",dimgrey:"#606c74",softblack:"#463D4F",dark:"#443d3d",black:"#333333"}},{}],2:[function(e,r,o){"use strict";var n=e("./colors"),t={juno:["blue","mud","navy","slate","pink","burn"],barrow:["rouge","red","orange","burnt","brown","greygreen"],roma:["#8a849a","#b5b0bf","rose","lighter","greygreen","mud"],palmer:["red","navy","olive","pink","suede","sky"],mark:["#848f9a","#9aa4ac","slate","#b0b8bf","mud","grey"],salmon:["sky","sea","fuscia","slate","mud","fudge"],dupont:["green","brown","orange","red","olive","blue"],bloor:["night","navy","beige","rouge","mud","grey"],yukon:["mud","slate","brown","sky","beige","red"],david:["blue","green","yellow","red","pink","light"],neste:["mud","cherry","royal","rouge","greygreen","greypurple"],ken:["red","sky","#c67a53","greygreen","#dfb59f","mud"]};Object.keys(t).forEach(function(e){t[e]=t[e].map(function(e){return n[e]||e})}),r.exports=t},{"./colors":1}],3:[function(e,r,o){"use strict";var n=e("./colors"),t=e("./combos"),u={colors:n,list:Object.keys(n).map(function(e){return n[e]}),combos:t};r.exports=u},{"./colors":1,"./combos":2}]},{},[3])(3)});
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],10:[function(_dereq_,module,exports){
+},{}],11:[function(_dereq_,module,exports){
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
@@ -6645,11 +6941,11 @@ return h;
 })));
 
 
-},{}],11:[function(_dereq_,module,exports){
+},{}],12:[function(_dereq_,module,exports){
 module.exports={
   "name": "somehow",
   "description": "make infographics without thinking",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "main": "src/index.js",
   "unpkg": "builds/somehow.min.js",
   "author": "Spencer Kelly (spencermountain)",
@@ -6679,6 +6975,7 @@ module.exports={
     "d3-shape": "^1.3.5",
     "fit-aspect-ratio": "^2.0.0",
     "htm": "^2.1.1",
+    "somehow-ticks": "0.0.3",
     "spacetime": "^5.8.0",
     "spacetime-ticks": "^0.1.3",
     "spencer-color": "^0.1.0",
@@ -6695,7 +6992,7 @@ module.exports={
   }
 }
 
-},{}],12:[function(_dereq_,module,exports){
+},{}],13:[function(_dereq_,module,exports){
 "use strict";
 
 function _templateObject() {
@@ -6945,7 +7242,7 @@ Object.keys(aliases).forEach(function (k) {
 });
 module.exports = World;
 
-},{"./_clip":13,"./axis/XAxis":16,"./axis/YAxis":17,"./methods":22,"./scales/Scale":24,"./scales/YScale":25,"./shapes/Annotation":27,"./shapes/Area":28,"./shapes/Arrow":29,"./shapes/Bar":30,"./shapes/Dot":31,"./shapes/Image":32,"./shapes/Line":33,"./shapes/MidArea":34,"./shapes/Rect":35,"./shapes/Shape":36,"./shapes/Text":37,"fit-aspect-ratio":3,"htm":4,"vhtml":10}],13:[function(_dereq_,module,exports){
+},{"./_clip":14,"./axis/XAxis":17,"./axis/YAxis":18,"./methods":23,"./scales/Scale":25,"./scales/YScale":26,"./shapes/Annotation":28,"./shapes/Area":29,"./shapes/Arrow":30,"./shapes/Bar":31,"./shapes/Dot":32,"./shapes/Image":33,"./shapes/Line":34,"./shapes/MidArea":35,"./shapes/Rect":36,"./shapes/Shape":37,"./shapes/Text":38,"fit-aspect-ratio":3,"htm":4,"vhtml":11}],14:[function(_dereq_,module,exports){
 "use strict";
 
 //remove shapes outside of boundaries
@@ -6995,7 +7292,7 @@ var clipShapes = function clipShapes(shapes, xScale, yScale) {
 
 module.exports = clipShapes;
 
-},{}],14:[function(_dereq_,module,exports){
+},{}],15:[function(_dereq_,module,exports){
 "use strict";
 
 var extent = function extent(arr) {
@@ -7034,7 +7331,7 @@ module.exports = {
   uid: uid
 };
 
-},{}],15:[function(_dereq_,module,exports){
+},{}],16:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -7128,7 +7425,7 @@ function () {
 
 module.exports = Axis;
 
-},{"./_custom":18,"./_ticks":20,"spencer-color":9}],16:[function(_dereq_,module,exports){
+},{"./_custom":19,"./_ticks":21,"spencer-color":10}],17:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -7223,7 +7520,7 @@ function (_Axis) {
 
 module.exports = XAxis;
 
-},{"./Axis":15}],17:[function(_dereq_,module,exports){
+},{"./Axis":16}],18:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -7320,7 +7617,7 @@ function (_Axis) {
 
 module.exports = YAxis;
 
-},{"./Axis":15}],18:[function(_dereq_,module,exports){
+},{"./Axis":16}],19:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -7362,7 +7659,7 @@ var drawTick = function drawTick(s, axis) {
 
 module.exports = drawTick;
 
-},{"./_prettyNum":19,"spacetime":8}],19:[function(_dereq_,module,exports){
+},{"./_prettyNum":20,"spacetime":9}],20:[function(_dereq_,module,exports){
 "use strict";
 
 var bil = 1000000000;
@@ -7398,39 +7695,19 @@ var prettyNum = function prettyNum(num) {
 
 module.exports = prettyNum;
 
-},{}],20:[function(_dereq_,module,exports){
+},{}],21:[function(_dereq_,module,exports){
 "use strict";
 
 var spacetimeTicks = _dereq_('spacetime-ticks');
 
-var prettyNum = _dereq_('./_prettyNum');
+var somehowTicks = _dereq_('somehow-ticks');
 
 var generic = function generic(axis) {
   var n = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 5;
-  n = n === 0 ? 0 : n - 1;
   var scale = axis.scale;
-  var total = (scale.max || 0) - (scale.min || 0);
-
-  if (total === 0) {
-    total = 10;
-    scale.max = 10;
-    scale.min = 0;
-  }
-
-  var ticks = [];
-
-  for (var i = 0; i <= n; i += 1) {
-    var dec = i / n;
-    var num = dec * total + (scale.min || 0);
-    var tmp = num - (scale.min || 0);
-    var percent = tmp / total;
-    ticks.push({
-      value: percent,
-      pos: scale.scale(num),
-      label: prettyNum(num)
-    });
-  }
-
+  var start = scale.min || 0;
+  var end = scale.max || 0;
+  var ticks = somehowTicks(start, end, n);
   return ticks;
 };
 
@@ -7448,7 +7725,7 @@ module.exports = {
   date: date
 };
 
-},{"./_prettyNum":19,"spacetime-ticks":6}],21:[function(_dereq_,module,exports){
+},{"somehow-ticks":5,"spacetime-ticks":7}],22:[function(_dereq_,module,exports){
 "use strict";
 
 var World = _dereq_('./World');
@@ -7463,7 +7740,7 @@ var somehow = function somehow(obj) {
 somehow.version = pkg.version;
 module.exports = somehow;
 
-},{"../package.json":11,"./World":12}],22:[function(_dereq_,module,exports){
+},{"../package.json":12,"./World":13}],23:[function(_dereq_,module,exports){
 "use strict";
 
 var _require = _dereq_('./parse'),
@@ -7594,7 +7871,7 @@ var methods = {
 };
 module.exports = methods;
 
-},{"./_fns":14,"./parse":23}],23:[function(_dereq_,module,exports){
+},{"./_fns":15,"./parse":24}],24:[function(_dereq_,module,exports){
 "use strict";
 
 var spacetime = _dereq_('spacetime'); //
@@ -7678,7 +7955,7 @@ module.exports = {
   parseY: parseY
 };
 
-},{"spacetime":8}],24:[function(_dereq_,module,exports){
+},{"spacetime":9}],25:[function(_dereq_,module,exports){
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -7814,7 +8091,7 @@ function () {
 
 module.exports = Scale;
 
-},{"../parse":23,"./_linear":26}],25:[function(_dereq_,module,exports){
+},{"../parse":24,"./_linear":27}],26:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -7879,7 +8156,7 @@ function (_Scale) {
 
 module.exports = YScale;
 
-},{"../parse":23,"./Scale":24,"./_linear":26}],26:[function(_dereq_,module,exports){
+},{"../parse":24,"./Scale":25,"./_linear":27}],27:[function(_dereq_,module,exports){
 "use strict";
 
 //a very-tiny version of d3-scale's scaleLinear
@@ -7903,7 +8180,7 @@ module.exports = scaleLinear; // let scale = scaleLinear({
 // })
 // console.log(scale(107))
 
-},{}],27:[function(_dereq_,module,exports){
+},{}],28:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8143,7 +8420,7 @@ function (_Text) {
 
 module.exports = Annotation;
 
-},{"./Text":37,"spencer-color":9}],28:[function(_dereq_,module,exports){
+},{"./Text":38,"spencer-color":10}],29:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8313,7 +8590,7 @@ function (_Shape) {
 
 module.exports = Area;
 
-},{"../parse":23,"./Shape":36,"d3-shape":2,"spencer-color":9}],29:[function(_dereq_,module,exports){
+},{"../parse":24,"./Shape":37,"d3-shape":2,"spencer-color":10}],30:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8488,7 +8765,7 @@ function (_Shape) {
 
 module.exports = Arrow;
 
-},{"./Shape":36,"d3-shape":2,"spencer-color":9}],30:[function(_dereq_,module,exports){
+},{"./Shape":37,"d3-shape":2,"spencer-color":10}],31:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8615,7 +8892,7 @@ function (_Rect) {
 
 module.exports = Bar;
 
-},{"../parse":23,"./Rect":35,"spencer-color":9}],31:[function(_dereq_,module,exports){
+},{"../parse":24,"./Rect":36,"spencer-color":10}],32:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8703,7 +8980,7 @@ function (_Shape) {
 
 module.exports = Dot;
 
-},{"./Shape":36,"spencer-color":9}],32:[function(_dereq_,module,exports){
+},{"./Shape":37,"spencer-color":10}],33:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8826,7 +9103,7 @@ function (_Shape) {
 
 module.exports = Image;
 
-},{"./Shape":36,"spencer-color":9}],33:[function(_dereq_,module,exports){
+},{"./Shape":37,"spencer-color":10}],34:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8914,7 +9191,7 @@ function (_Shape) {
 
 module.exports = Line;
 
-},{"./Shape":36,"d3-shape":2,"spencer-color":9}],34:[function(_dereq_,module,exports){
+},{"./Shape":37,"d3-shape":2,"spencer-color":10}],35:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -9070,7 +9347,7 @@ function (_Area) {
 
 module.exports = Midarea;
 
-},{"../parse":23,"./Area":28,"./lib/parseInput":38,"d3-shape":2}],35:[function(_dereq_,module,exports){
+},{"../parse":24,"./Area":29,"./lib/parseInput":39,"d3-shape":2}],36:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -9206,7 +9483,7 @@ function (_Shape) {
 
 module.exports = Rect;
 
-},{"./Shape":36,"spencer-color":9}],36:[function(_dereq_,module,exports){
+},{"./Shape":37,"spencer-color":10}],37:[function(_dereq_,module,exports){
 "use strict";
 
 function _templateObject() {
@@ -9488,7 +9765,7 @@ function () {
 
 module.exports = Shape;
 
-},{"../_fns":14,"../parse":23,"./lib/parseInput":38,"d3-shape":2,"spencer-color":9}],37:[function(_dereq_,module,exports){
+},{"../_fns":15,"../parse":24,"./lib/parseInput":39,"d3-shape":2,"spencer-color":10}],38:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -9787,7 +10064,7 @@ function (_Shape) {
 
 module.exports = Text;
 
-},{"./Shape":36,"spencer-color":9}],38:[function(_dereq_,module,exports){
+},{"./Shape":37,"spencer-color":10}],39:[function(_dereq_,module,exports){
 "use strict";
 
 var _require = _dereq_('../../parse'),
@@ -9847,5 +10124,5 @@ var parseInput = function parseInput(set, world) {
 
 module.exports = parseInput;
 
-},{"../../parse":23}]},{},[21])(21)
+},{"../../parse":24}]},{},[22])(22)
 });
