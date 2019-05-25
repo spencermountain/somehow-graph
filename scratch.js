@@ -6,13 +6,23 @@ let w = somehow({
 })
 
 w.line()
-  .set([['Jan 21st 2019', '0%'], ['Jan 22nd 2019', '80%']])
+  .set([['Jan 12 2019', -900], ['Jan 28 2019', 5000]])
   .color('blue')
 
-w.fit()
+w.text('hello')
+  .set([['Jan 12 2019', 809]])
+  .center()
+  .color('blue')
+
+w.now()
+  .label('now')
+  .top()
+
+w.title('the end of times 🌎').bottom()
+// w.fit()
 w.y.fit(-9, 8000)
-w.x.fit('Jan 1 2019', 'Jan 28 2019')
+w.x.fit('Jan 12 2019', 'Dec 28 2019')
 w.clip()
-w.x.reverse()
+// w.x.reverse()
 
 document.querySelector('#stage').innerHTML = w.build()

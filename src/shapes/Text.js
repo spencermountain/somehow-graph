@@ -60,7 +60,17 @@ class Text extends Shape {
   }
   center(x, y) {
     this.attrs['text-anchor'] = 'middle'
-    this.set([[x, y]])
+    if (x !== undefined) {
+      this.set([[x, y]])
+    }
+    return this
+  }
+  left() {
+    this.attrs['text-anchor'] = 'start'
+    return this
+  }
+  right() {
+    this.attrs['text-anchor'] = 'end'
     return this
   }
   color(color) {
@@ -99,12 +109,12 @@ class Text extends Shape {
     let d = this.data[0] || {}
     return {
       x: {
-        min: d.x,
-        max: d.x
+        min: d.x.value,
+        max: d.x.value
       },
       y: {
-        min: d.y, // - height,
-        max: d.y
+        min: d.y.value, // - height,
+        max: d.y.value
       }
     }
   }

@@ -1,6 +1,10 @@
 //remove shapes outside of boundaries
 const clipShapes = function(shapes, xScale, yScale) {
   shapes = shapes.filter(s => {
+    //ignore
+    if (s.ignore_clip === true) {
+      return true
+    }
     let { x, y } = s.extent()
     //clip according to x-axis
     if (xScale._clip) {
@@ -11,6 +15,12 @@ const clipShapes = function(shapes, xScale, yScale) {
         let tmp = min
         min = max
         max = tmp
+      }
+      if (x.min < min) {
+        return false
+      }
+      if (x.max > max) {
+        return false
       }
       if (x.min > max || x.max < min) {
         return false
@@ -24,6 +34,12 @@ const clipShapes = function(shapes, xScale, yScale) {
         let tmp = min
         min = max
         max = tmp
+      }
+      if (y.min < min) {
+        return false
+      }
+      if (y.max > max) {
+        return false
       }
       if (y.min > max || y.max < min) {
         return false

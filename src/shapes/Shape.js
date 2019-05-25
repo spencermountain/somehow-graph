@@ -25,6 +25,12 @@ class Shape {
     //nudge pixels
     this._dx = 0
     this._dy = 0
+    this.ignore_clip = false
+  }
+  //don't clip some shapes
+  clip(bool) {
+    this.ignore_clip = bool
+    return this
   }
   straight() {
     this.curve = d3Shape.curveLinear
@@ -128,9 +134,7 @@ class Shape {
         })
       }
       if (this._hover) {
-        console.log('setting')
         el.addEventListener('mouseenter', () => {
-          console.log('hover')
           this._hover(this)
         })
       }

@@ -19,6 +19,8 @@ const MidArea = require('./shapes/MidArea')
 const Bar = require('./shapes/Bar')
 const Image = require('./shapes/Image')
 const Arrow = require('./shapes/Arrow')
+const Now = require('./shapes/Now')
+const Title = require('./shapes/Title')
 
 class World {
   constructor(obj = {}) {
@@ -41,6 +43,7 @@ class World {
     this.inputs = []
     this.state = {}
     this.state.time = Date.now()
+    this._title = ''
     this.el = obj.el || null
     if (typeof this.el === 'string') {
       this.el = document.querySelector(this.el)
@@ -99,6 +102,16 @@ class World {
     this.shapes.push(shape)
     return shape
   }
+  now(obj) {
+    let shape = new Now(obj, this)
+    this.shapes.push(shape)
+    return shape
+  }
+  title(obj) {
+    let shape = new Title(obj, this)
+    this.shapes.push(shape)
+    return shape
+  }
   shape(obj) {
     let shape = new Shape(obj, this)
     this.shapes.push(shape)
@@ -114,7 +127,6 @@ class World {
       console.log('must define world html element')
     }
   }
-
   clip() {
     this.x.clip()
     this.y.clip()
