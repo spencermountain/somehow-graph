@@ -26,9 +26,18 @@ class YAxis extends Axis {
     let height = this.world.height
     let x = 0
     let ticks = this.drawTicks(x)
+    let textAttrs = {
+      x: '-5%',
+      y: '50%',
+      fill: this.attrs.stroke,
+      style: 'text-anchor:end;'
+    }
     return h`<g>
       ${ticks}
       <line x1="${x}" y1="${0}" x2="${x}" y2="${height}" ...${attrs}/>
+      <text ...${textAttrs}>
+        ${this._label}
+      </text>
     </g>`
   }
 }

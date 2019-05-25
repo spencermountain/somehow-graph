@@ -18,11 +18,14 @@ w.now()
   .label('now')
   .top()
 
-w.title('the end of times 🌎').bottom()
+w.title('the end of times 🌎').top()
 // w.fit()
 w.y.fit(-9, 8000)
 w.x.fit('Jan 12 2019', 'Dec 28 2019')
 w.clip()
+
+w.xAxis.label('time')
+w.yAxis.label('health')
 // w.x.reverse()
 
 document.querySelector('#stage').innerHTML = w.build()

@@ -79,7 +79,8 @@ more to come
 - build()
 - getShape(id)
 - redraw()
-- clip()
+- clip(bool)
+- title(str)
 
 #### Axis
 
@@ -89,6 +90,7 @@ more to come
 - format(str)
 - ticks(arr)
 - clip(bool)
+- label()
 
 #### Shape
 
@@ -104,6 +106,7 @@ more to come
 - onMount(fn)
 - click(fn)
 - hover(fn)
+- clip(bool)
 
 #### Area
 
@@ -127,6 +130,9 @@ more to come
 - before(x, y)
 - after(x, y)
 - center(x, y)
+- left()
+- right()
+- middle()
 - color(c)
 - dy(num)
 - dx(num)
@@ -168,5 +174,18 @@ more to come
 - from(x,y)
 - length(num)
 - width(num)
+
+#### Now
+
+- top()
+- bottom()
+- label(str)
+
+#### Title
+
+- top()
+- bottom()
+- right()
+- left()
 
 MIT

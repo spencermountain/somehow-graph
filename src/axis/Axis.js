@@ -16,9 +16,14 @@ class Axis {
     this._fmt = undefined
     this._given = undefined
     this._show = true
+    this._label = ''
   }
   color(color) {
     this.attrs.stroke = colors[color] || color
+    return this
+  }
+  label(str) {
+    this._label = str
     return this
   }
   remove() {

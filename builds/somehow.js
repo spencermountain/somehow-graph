@@ -1,4 +1,4 @@
-/* somehow v0.1.3
+/* somehow v0.1.4
    github.com/spencermountain/somehow
    MIT
 */
@@ -2575,7 +2575,7 @@ module.exports = methods
 
 },{"./_reduce":6}],9:[function(_dereq_,module,exports){
 (function (global){
-/* spacetime v5.8.0
+/* spacetime v5.8.1
    github.com/spencermountain/spacetime
    MIT
 */
@@ -2583,7 +2583,7 @@ module.exports = methods
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.spacetime = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof _dereq_&&_dereq_;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof _dereq_&&_dereq_,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(_dereq_,module,exports){
 "use strict";
 
-module.exports = '5.8.0';
+module.exports = '5.8.1';
 
 },{}],2:[function(_dereq_,module,exports){
 "use strict";
@@ -2591,15 +2591,15 @@ module.exports = '5.8.0';
 var shortDays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 var longDays = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 module.exports = {
-  "short": function short() {
+  short: function short() {
     return shortDays;
   },
-  "long": function long() {
+  long: function long() {
     return longDays;
   },
   set: function set(i18n) {
-    shortDays = i18n["short"];
-    longDays = i18n["long"];
+    shortDays = i18n.short;
+    longDays = i18n.long;
   }
 };
 
@@ -2669,18 +2669,18 @@ function buildMapping() {
 }
 
 module.exports = {
-  "short": function short() {
+  short: function short() {
     return shortMonths;
   },
-  "long": function long() {
+  long: function long() {
     return longMonths;
   },
   mapping: function mapping() {
     return buildMapping();
   },
   set: function set(i18n) {
-    shortMonths = i18n["short"];
-    longMonths = i18n["long"];
+    shortMonths = i18n.short;
+    longMonths = i18n.long;
   }
 };
 
@@ -3543,7 +3543,7 @@ var methods = {
     return !isNaN(this.d.getTime());
   },
   //travel to this timezone
-  "goto": function goto(tz) {
+  goto: function goto(tz) {
     var s = this.clone();
     s.tz = findTz(tz, s.timezones); //science!
 
@@ -3946,13 +3946,13 @@ var days = _dereq_('../data/days'); //is it 'wednesday'?
 
 
 var isDay = function isDay(unit) {
-  if (days["short"]().find(function (s) {
+  if (days.short().find(function (s) {
     return s === unit;
   })) {
     return true;
   }
 
-  if (days["long"]().find(function (s) {
+  if (days.long().find(function (s) {
     return s === unit;
   })) {
     return true;
@@ -4065,7 +4065,7 @@ var format = {
     return fns.titleCase(s.dayName());
   },
   'day-short': function dayShort(s) {
-    return fns.titleCase(days["short"]()[s.day()]);
+    return fns.titleCase(days.short()[s.day()]);
   },
   'day-number': function dayNumber(s) {
     return s.day();
@@ -4089,7 +4089,7 @@ var format = {
     return fns.titleCase(s.monthName());
   },
   'month-short': function monthShort(s) {
-    return fns.titleCase(months["short"]()[s.month()]);
+    return fns.titleCase(months.short()[s.month()]);
   },
   'month-number': function monthNumber(s) {
     return s.month();
@@ -4219,13 +4219,13 @@ var format = {
   },
   //i made these up
   nice: function nice(s) {
-    return "".concat(months["short"]()[s.month()], " ").concat(fns.ordinal(s.date()), ", ").concat(s.time());
+    return "".concat(months.short()[s.month()], " ").concat(fns.ordinal(s.date()), ", ").concat(s.time());
   },
   'nice-year': function niceYear(s) {
-    return "".concat(months["short"]()[s.month()], " ").concat(fns.ordinal(s.date()), ", ").concat(s.year());
+    return "".concat(months.short()[s.month()], " ").concat(fns.ordinal(s.date()), ", ").concat(s.year());
   },
   'nice-day': function niceDay(s) {
-    return "".concat(days["short"]()[s.day()], " ").concat(fns.titleCase(months["short"]()[s.month()]), " ").concat(fns.ordinal(s.date()));
+    return "".concat(days.short()[s.day()], " ").concat(fns.titleCase(months.short()[s.month()]), " ").concat(fns.ordinal(s.date()));
   },
   'nice-full': function niceFull(s) {
     return "".concat(s.dayName(), " ").concat(fns.titleCase(s.monthName()), " ").concat(fns.ordinal(s.date()), ", ").concat(s.time());
@@ -4494,13 +4494,13 @@ var mapping = {
   }
 };
 
-var addAlias = function addAlias(_char, to, n) {
-  var name = _char;
+var addAlias = function addAlias(char, to, n) {
+  var name = char;
   var toName = to;
 
   for (var i = 0; i < n; i += 1) {
     mapping[name] = mapping[toName];
-    name += _char;
+    name += char;
     toName += to;
   }
 };
@@ -4566,7 +4566,7 @@ var months = _dereq_('../data/months');
 var addMethods = function addMethods(SpaceTime) {
   var methods = {
     i18n: function i18n(data) {
-      if (!fns.isObject(data) || !fns.isObject(data.days) || !fns.isObject(data.months) || !fns.isArray(data.days["short"]) || !fns.isArray(data.days["long"]) || !fns.isArray(data.months["short"]) || !fns.isArray(data.months["long"])) {
+      if (!fns.isObject(data) || !fns.isObject(data.days) || !fns.isObject(data.months) || !fns.isArray(data.days.short) || !fns.isArray(data.days.long) || !fns.isArray(data.months.short) || !fns.isArray(data.months.long)) {
         throw new Error('Invalid i18n payload passed.');
       }
 
@@ -5070,10 +5070,10 @@ module.exports = {
 
     if (typeof input === 'string') {
       input = input.toLowerCase();
-      want = days["short"]().indexOf(input);
+      want = days.short().indexOf(input);
 
       if (want === -1) {
-        want = days["long"]().indexOf(input);
+        want = days.long().indexOf(input);
       }
     } //move approx
 
@@ -5122,7 +5122,7 @@ module.exports = {
   //these are helpful name-wrappers
   dayName: function dayName(input) {
     if (input === undefined) {
-      return days["long"]()[this.day()];
+      return days.long()[this.day()];
     }
 
     var s = this.clone();
@@ -5131,7 +5131,7 @@ module.exports = {
   },
   monthName: function monthName(input) {
     if (input === undefined) {
-      return months["long"]()[this.month()];
+      return months.long()[this.month()];
     }
 
     var s = this.clone();
@@ -6945,7 +6945,7 @@ return h;
 module.exports={
   "name": "somehow",
   "description": "make infographics without thinking",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "main": "src/index.js",
   "unpkg": "builds/somehow.min.js",
   "author": "Spencer Kelly (spencermountain)",
@@ -6975,7 +6975,7 @@ module.exports={
     "d3-shape": "^1.3.5",
     "fit-aspect-ratio": "^2.0.0",
     "htm": "^2.1.1",
-    "somehow-ticks": "0.0.3",
+    "somehow-ticks": "^0.0.3",
     "spacetime": "^5.8.0",
     "spacetime-ticks": "^0.1.3",
     "spencer-color": "^0.1.0",
@@ -7053,6 +7053,10 @@ var Image = _dereq_('./shapes/Image');
 
 var Arrow = _dereq_('./shapes/Arrow');
 
+var Now = _dereq_('./shapes/Now');
+
+var Title = _dereq_('./shapes/Title');
+
 var World =
 /*#__PURE__*/
 function () {
@@ -7082,6 +7086,7 @@ function () {
     this.inputs = [];
     this.state = {};
     this.state.time = Date.now();
+    this._title = '';
     this.el = obj.el || null;
 
     if (typeof this.el === 'string') {
@@ -7165,6 +7170,20 @@ function () {
       return shape;
     }
   }, {
+    key: "now",
+    value: function now(obj) {
+      var shape = new Now(obj, this);
+      this.shapes.push(shape);
+      return shape;
+    }
+  }, {
+    key: "title",
+    value: function title(obj) {
+      var shape = new Title(obj, this);
+      this.shapes.push(shape);
+      return shape;
+    }
+  }, {
     key: "shape",
     value: function shape(obj) {
       var shape = new Shape(obj, this);
@@ -7242,12 +7261,17 @@ Object.keys(aliases).forEach(function (k) {
 });
 module.exports = World;
 
-},{"./_clip":14,"./axis/XAxis":17,"./axis/YAxis":18,"./methods":23,"./scales/Scale":25,"./scales/YScale":26,"./shapes/Annotation":28,"./shapes/Area":29,"./shapes/Arrow":30,"./shapes/Bar":31,"./shapes/Dot":32,"./shapes/Image":33,"./shapes/Line":34,"./shapes/MidArea":35,"./shapes/Rect":36,"./shapes/Shape":37,"./shapes/Text":38,"fit-aspect-ratio":3,"htm":4,"vhtml":11}],14:[function(_dereq_,module,exports){
+},{"./_clip":14,"./axis/XAxis":17,"./axis/YAxis":18,"./methods":23,"./scales/Scale":25,"./scales/YScale":26,"./shapes/Annotation":28,"./shapes/Area":29,"./shapes/Arrow":30,"./shapes/Bar":31,"./shapes/Dot":32,"./shapes/Image":33,"./shapes/Line":34,"./shapes/MidArea":35,"./shapes/Now":36,"./shapes/Rect":37,"./shapes/Shape":38,"./shapes/Text":39,"./shapes/Title":40,"fit-aspect-ratio":3,"htm":4,"vhtml":11}],14:[function(_dereq_,module,exports){
 "use strict";
 
 //remove shapes outside of boundaries
 var clipShapes = function clipShapes(shapes, xScale, yScale) {
   shapes = shapes.filter(function (s) {
+    //ignore
+    if (s.ignore_clip === true) {
+      return true;
+    }
+
     var _s$extent = s.extent(),
         x = _s$extent.x,
         y = _s$extent.y; //clip according to x-axis
@@ -7264,6 +7288,14 @@ var clipShapes = function clipShapes(shapes, xScale, yScale) {
         max = tmp;
       }
 
+      if (x.min < min) {
+        return false;
+      }
+
+      if (x.max > max) {
+        return false;
+      }
+
       if (x.min > max || x.max < min) {
         return false;
       }
@@ -7278,6 +7310,14 @@ var clipShapes = function clipShapes(shapes, xScale, yScale) {
         var _tmp = _min;
         _min = _max;
         _max = _tmp;
+      }
+
+      if (y.min < _min) {
+        return false;
+      }
+
+      if (y.max > _max) {
+        return false;
       }
 
       if (y.min > _max || y.max < _min) {
@@ -7369,12 +7409,19 @@ function () {
     this._fmt = undefined;
     this._given = undefined;
     this._show = true;
+    this._label = '';
   }
 
   _createClass(Axis, [{
     key: "color",
     value: function color(_color) {
       this.attrs.stroke = colors[_color] || _color;
+      return this;
+    }
+  }, {
+    key: "label",
+    value: function label(str) {
+      this._label = str;
       return this;
     }
   }, {
@@ -7431,7 +7478,7 @@ module.exports = Axis;
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _templateObject2() {
-  var data = _taggedTemplateLiteral(["<g>\n      ", "\n      <line x1=\"", "\" y1=\"", "\" x2=\"", "\" y2=\"", "\" ...", " stroke=\"#d7d5d2\"/>\n    </g>"]);
+  var data = _taggedTemplateLiteral(["<g>\n      ", "\n      <line x1=\"", "\" y1=\"", "\" x2=\"", "\" y2=\"", "\" ...", " stroke=\"#d7d5d2\"/>\n      <text ...", ">\n        ", "\n      </text>\n    </g>"]);
 
   _templateObject2 = function _templateObject2() {
     return data;
@@ -7511,7 +7558,13 @@ function (_Axis) {
       var width = this.world.width;
       var y = this.world.height;
       var ticks = this.drawTicks(y);
-      return h(_templateObject2(), ticks, 0, y, width, y, attrs);
+      var textAttrs = {
+        x: '50%',
+        y: '115%',
+        fill: this.attrs.stroke,
+        style: 'text-anchor:middle;'
+      };
+      return h(_templateObject2(), ticks, 0, y, width, y, attrs, textAttrs, this._label);
     }
   }]);
 
@@ -7526,7 +7579,7 @@ module.exports = XAxis;
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _templateObject2() {
-  var data = _taggedTemplateLiteral(["<g>\n      ", "\n      <line x1=\"", "\" y1=\"", "\" x2=\"", "\" y2=\"", "\" ...", "/>\n    </g>"]);
+  var data = _taggedTemplateLiteral(["<g>\n      ", "\n      <line x1=\"", "\" y1=\"", "\" x2=\"", "\" y2=\"", "\" ...", "/>\n      <text ...", ">\n        ", "\n      </text>\n    </g>"]);
 
   _templateObject2 = function _templateObject2() {
     return data;
@@ -7608,7 +7661,13 @@ function (_Axis) {
       var height = this.world.height;
       var x = 0;
       var ticks = this.drawTicks(x);
-      return h(_templateObject2(), ticks, x, 0, x, height, attrs);
+      var textAttrs = {
+        x: '-5%',
+        y: '50%',
+        fill: this.attrs.stroke,
+        style: 'text-anchor:end;'
+      };
+      return h(_templateObject2(), ticks, x, 0, x, height, attrs, textAttrs, this._label);
     }
   }]);
 
@@ -8420,7 +8479,7 @@ function (_Text) {
 
 module.exports = Annotation;
 
-},{"./Text":38,"spencer-color":10}],29:[function(_dereq_,module,exports){
+},{"./Text":39,"spencer-color":10}],29:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8590,7 +8649,7 @@ function (_Shape) {
 
 module.exports = Area;
 
-},{"../parse":24,"./Shape":37,"d3-shape":2,"spencer-color":10}],30:[function(_dereq_,module,exports){
+},{"../parse":24,"./Shape":38,"d3-shape":2,"spencer-color":10}],30:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8765,7 +8824,7 @@ function (_Shape) {
 
 module.exports = Arrow;
 
-},{"./Shape":37,"d3-shape":2,"spencer-color":10}],31:[function(_dereq_,module,exports){
+},{"./Shape":38,"d3-shape":2,"spencer-color":10}],31:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8892,7 +8951,7 @@ function (_Rect) {
 
 module.exports = Bar;
 
-},{"../parse":24,"./Rect":36,"spencer-color":10}],32:[function(_dereq_,module,exports){
+},{"../parse":24,"./Rect":37,"spencer-color":10}],32:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -8980,7 +9039,7 @@ function (_Shape) {
 
 module.exports = Dot;
 
-},{"./Shape":37,"spencer-color":10}],33:[function(_dereq_,module,exports){
+},{"./Shape":38,"spencer-color":10}],33:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -9103,7 +9162,7 @@ function (_Shape) {
 
 module.exports = Image;
 
-},{"./Shape":37,"spencer-color":10}],34:[function(_dereq_,module,exports){
+},{"./Shape":38,"spencer-color":10}],34:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -9191,7 +9250,7 @@ function (_Shape) {
 
 module.exports = Line;
 
-},{"./Shape":37,"d3-shape":2,"spencer-color":10}],35:[function(_dereq_,module,exports){
+},{"./Shape":38,"d3-shape":2,"spencer-color":10}],35:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -9347,7 +9406,118 @@ function (_Area) {
 
 module.exports = Midarea;
 
-},{"../parse":24,"./Area":29,"./lib/parseInput":39,"d3-shape":2}],36:[function(_dereq_,module,exports){
+},{"../parse":24,"./Area":29,"./lib/parseInput":41,"d3-shape":2}],36:[function(_dereq_,module,exports){
+"use strict";
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _templateObject() {
+  var data = _taggedTemplateLiteral(["\n      <g>\n        <text ...", ">\n          ", "\n        </text>\n        <path ...", " id=", " style=\"", "\"/>\n      </g>\n    "]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
+}
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var colors = _dereq_('spencer-color').colors;
+
+var Line = _dereq_('./Line');
+
+var defaults = {
+  fill: 'none',
+  stroke: colors.lighter,
+  'stroke-width': 2,
+  'stroke-linecap': 'round'
+};
+
+var Now =
+/*#__PURE__*/
+function (_Line) {
+  _inherits(Now, _Line);
+
+  function Now() {
+    var _this;
+
+    var obj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var world = arguments.length > 1 ? arguments[1] : undefined;
+
+    _classCallCheck(this, Now);
+
+    obj = Object.assign({}, defaults, obj);
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Now).call(this, obj, world));
+    _this._label = '';
+    _this._y = '-5%';
+
+    _this.dotted(true);
+
+    var d = Date.now();
+
+    _this.set([[d, '0%'], [d, '100%']]);
+
+    return _this;
+  }
+
+  _createClass(Now, [{
+    key: "label",
+    value: function label(str) {
+      this._label = str;
+      return this;
+    }
+  }, {
+    key: "top",
+    value: function top() {
+      this._y = '-5%';
+    }
+  }, {
+    key: "bottom",
+    value: function bottom() {
+      this._y = '105%';
+    }
+  }, {
+    key: "build",
+    value: function build() {
+      var h = this.world.html;
+      this.onMount();
+      var attrs = Object.assign({}, this.attrs, {
+        d: this.path()
+      });
+      var point = this.points()[0];
+      var textAttrs = {
+        x: point[0],
+        y: this._y,
+        fill: this.attrs.stroke,
+        style: 'text-anchor:middle;'
+      };
+      return h(_templateObject(), textAttrs, this._label, attrs, this._id, this.drawSyle());
+    }
+  }]);
+
+  return Now;
+}(Line);
+
+module.exports = Now;
+
+},{"./Line":34,"spencer-color":10}],37:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -9483,7 +9653,7 @@ function (_Shape) {
 
 module.exports = Rect;
 
-},{"./Shape":37,"spencer-color":10}],37:[function(_dereq_,module,exports){
+},{"./Shape":38,"spencer-color":10}],38:[function(_dereq_,module,exports){
 "use strict";
 
 function _templateObject() {
@@ -9544,9 +9714,17 @@ function () {
 
     this._dx = 0;
     this._dy = 0;
-  }
+    this.ignore_clip = false;
+  } //don't clip some shapes
+
 
   _createClass(Shape, [{
+    key: "clip",
+    value: function clip(bool) {
+      this.ignore_clip = bool;
+      return this;
+    }
+  }, {
     key: "straight",
     value: function straight() {
       this.curve = d3Shape.curveLinear;
@@ -9687,10 +9865,7 @@ function () {
         }
 
         if (_this._hover) {
-          console.log('setting');
           el.addEventListener('mouseenter', function () {
-            console.log('hover');
-
             _this._hover(_this);
           });
         }
@@ -9765,7 +9940,7 @@ function () {
 
 module.exports = Shape;
 
-},{"../_fns":15,"../parse":24,"./lib/parseInput":39,"d3-shape":2,"spencer-color":10}],38:[function(_dereq_,module,exports){
+},{"../_fns":15,"../parse":24,"./lib/parseInput":41,"d3-shape":2,"spencer-color":10}],39:[function(_dereq_,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -9892,7 +10067,23 @@ function (_Shape) {
     key: "center",
     value: function center(x, y) {
       this.attrs['text-anchor'] = 'middle';
-      this.set([[x, y]]);
+
+      if (x !== undefined) {
+        this.set([[x, y]]);
+      }
+
+      return this;
+    }
+  }, {
+    key: "left",
+    value: function left() {
+      this.attrs['text-anchor'] = 'start';
+      return this;
+    }
+  }, {
+    key: "right",
+    value: function right() {
+      this.attrs['text-anchor'] = 'end';
       return this;
     }
   }, {
@@ -9948,13 +10139,13 @@ function (_Shape) {
       var d = this.data[0] || {};
       return {
         x: {
-          min: d.x,
-          max: d.x
+          min: d.x.value,
+          max: d.x.value
         },
         y: {
-          min: d.y,
+          min: d.y.value,
           // - height,
-          max: d.y
+          max: d.y.value
         }
       };
     }
@@ -10064,7 +10255,136 @@ function (_Shape) {
 
 module.exports = Text;
 
-},{"./Shape":37,"spencer-color":10}],39:[function(_dereq_,module,exports){
+},{"./Shape":38,"spencer-color":10}],40:[function(_dereq_,module,exports){
+"use strict";
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _templateObject() {
+  var data = _taggedTemplateLiteral(["<text ...", ">\n          ", "\n        </text>"]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
+}
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+var colors = _dereq_('spencer-color').colors;
+
+var Text = _dereq_('./Text');
+
+var defaults = {
+  stroke: 'none',
+  fill: colors.grey,
+  'stroke-width': 2,
+  'stroke-linecap': 'round',
+  'text-anchor': 'middle'
+};
+
+var Title =
+/*#__PURE__*/
+function (_Text) {
+  _inherits(Title, _Text);
+
+  function Title() {
+    var _this;
+
+    var obj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var world = arguments.length > 1 ? arguments[1] : undefined;
+
+    _classCallCheck(this, Title);
+
+    var title = '';
+
+    if (typeof obj === 'string') {
+      title = obj;
+      obj = {};
+    }
+
+    obj = Object.assign({}, defaults, obj);
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Title).call(this, obj, world));
+    _this._title = title;
+    _this._y = '-15%';
+    _this._x = '50%';
+    _this.ignore_clip = true;
+    return _this;
+  }
+
+  _createClass(Title, [{
+    key: "label",
+    value: function label(str) {
+      this._label = str;
+      return this;
+    }
+  }, {
+    key: "color",
+    value: function color(c) {
+      this.attrs.fill = c;
+      return this;
+    }
+  }, {
+    key: "top",
+    value: function top() {
+      this._y = '-15%';
+      return this;
+    }
+  }, {
+    key: "bottom",
+    value: function bottom() {
+      this._y = '115%';
+      return this;
+    }
+  }, {
+    key: "left",
+    value: function left() {
+      this._x = '15%';
+      this.attrs['text-anchor'] = 'start';
+      return this;
+    }
+  }, {
+    key: "right",
+    value: function right() {
+      this._x = '95%';
+      this.attrs['text-anchor'] = 'end';
+      return this;
+    }
+  }, {
+    key: "build",
+    value: function build() {
+      var h = this.world.html;
+      var attrs = Object.assign({}, this.attrs, {
+        x: this._x,
+        y: this._y
+      });
+      return h(_templateObject(), attrs, this._title);
+    }
+  }]);
+
+  return Title;
+}(Text);
+
+module.exports = Title;
+
+},{"./Text":39,"spencer-color":10}],41:[function(_dereq_,module,exports){
 "use strict";
 
 var _require = _dereq_('../../parse'),

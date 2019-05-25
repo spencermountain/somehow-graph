@@ -51,7 +51,6 @@ class Title extends Text {
   }
   build() {
     let h = this.world.html
-    console.log(this._title + '!')
     let attrs = Object.assign({}, this.attrs, {
       x: this._x,
       y: this._y
