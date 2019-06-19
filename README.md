@@ -52,9 +52,14 @@ document.body.innerHTML = world.build()
 
 the idea is that you think (mostly) about the actual data, and not the layout.
 
-it's essentially a wrapper for [d3-path](https://github.com/d3/d3-path), [d3-shape](https://github.com/d3/d3-shape), and [spacetime](https://github.com/spencermountain/spacetime) -
+running `.build()` returns html-strings by default, but the library uses Jason Miller's [htm library](https://github.com/developit/htm) so can call `.bind(React.createElement)` and return React Components.
 
-more to come
+The joke is that D3 is easy, as long as you're an expert.
+
+This library is built for personal use, and is essentially a wrapper for [d3-path](https://github.com/d3/d3-path), [d3-shape](https://github.com/d3/d3-shape), and [spacetime](https://github.com/spencermountain/spacetime).
+
+
+more to come!
 
 ### Current API:
 
