@@ -31,6 +31,7 @@
 
 ```js
 let somehow = require('somehow')
+
 let world = somehow({
   height: 300,
   aspect: 'golden'
@@ -43,6 +44,7 @@ july 7 2019, 15
 july 7 2020, 18
 aug 8 2021, 50
 `)
+
 world.fit()
 
 document.body.innerHTML = world.build()
@@ -52,7 +54,12 @@ document.body.innerHTML = world.build()
 
 the idea is that you think (mostly) about the actual data, and not the layout.
 
+#### #1 - `.fit()`
+this scales, and fits the data for all given shapes, automatically. You don't have to manage d3Scale range & domain.
+
+#### #2 - `.build()`
 running `.build()` returns html-strings by default, but the library uses Jason Miller's [htm library](https://github.com/developit/htm) so can call `.bind(React.createElement)` and return React Components.
+
 
 The joke is that D3 is easy, as long as you're an expert.
 
@@ -62,7 +69,7 @@ This library is built for personal use, and is essentially a wrapper for [d3-pat
 more to come!
 
 ### Current API:
-
+```
 - line(obj)
 - dot(obj)
 - text(obj)
@@ -86,9 +93,9 @@ more to come!
 - redraw()
 - clip(bool)
 - title(str)
-
+```
 #### Axis
-
+```
 - color(c)
 - remove()
 - show()
@@ -96,9 +103,10 @@ more to come!
 - ticks(arr)
 - clip(bool)
 - label()
+```
 
 #### Shape
-
+```
 - set(str)
 - at(x, y)
 - from(x, y)
@@ -112,26 +120,26 @@ more to come!
 - click(fn)
 - hover(fn)
 - clip(bool)
-
+```
 #### Area
-
+```
 - line(n)
-
+```
 #### Rect
-
+```
 - color()
 - width(n)
 - height(n)
 - rounded(n)
 - border(n)
-
+```
 #### Line
-
+```
 - dotted()
 - width()
-
+```
 #### Text
-
+```
 - before(x, y)
 - after(x, y)
 - center(x, y)
@@ -145,52 +153,52 @@ more to come!
 - font(num)
 - extent()
 - text(str)
-
+```
 #### Dot
-
+```
 - radius(num)
-
+```
 #### Annotation
-
+```
 - on(x, y)
 - title(str)
 - nudge(x, y)
-
+```
 #### MidArea
-
+```
 - zero(y)
-
+```
 #### Bar
-
+```
 - width()
 - zero()
 - at(x, y)
-
+```
 #### Image
-
+```
 - src(txt)
 - caption(str)
 - size(w, h)
 - width(w)
 - height(h)
-
+```
 #### Arrow
-
+```
 - from(x,y)
 - length(num)
 - width(num)
-
+```
 #### Now
-
+```
 - top()
 - bottom()
 - label(str)
-
+```
 #### Title
-
+```
 - top()
 - bottom()
 - right()
 - left()
-
+```
 MIT
