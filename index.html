@@ -2,21 +2,30 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, shrink-to-fit=0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title></title>
     <link href="./assets/spencer.min.css" rel="stylesheet" />
+    <style>
+      text {
+        font-size: 10px;
+      }
+
+      @media (min-width: 500px) {
+        text {
+          font-size: 5px;
+        }
+      }
+      @media (min-width: 600px) {
+        text {
+          font-size: 3px;
+        }
+      }
+    </style>
   </head>
 
-  <body class="body">
-    <div class="p4 col m5">
-      <div id="control" class=""></div>
-      <div id="input" class=""></div>
-      <div id="select" class=""></div>
-      <div id="plusminus" class=""></div>
-      <div id="stage" class=""></div>
+  <body>
+    <div class="h8 m4 outline">
+      <div id="stage" class="outline"></div>
     </div>
     <script src="./assets/bundle.js"></script>
   </body>

@@ -5,7 +5,8 @@ const defaults = {
   fill: 'grey',
   stroke: 'none',
   'stroke-width': 1,
-  'stroke-linecap': 'round'
+  'stroke-linecap': 'round',
+  'font-size': 5
 }
 
 class Text extends Shape {
@@ -183,11 +184,12 @@ class Text extends Shape {
       textArr = this.textFn(this.world)
       textArr = typeof textArr === 'string' ? [textArr] : textArr
     }
-    let inside = textArr.map(str => h`<tspan x="0" dy="1.2em">${String(str)}</tspan>`)
+    console.log(this.attrs)
+    let inside = textArr.map(str => h`<tspan x="0" dy="1.2em" >${String(str)}</tspan>`)
     let { x, y } = this.position()
     let transform = `translate(${x} ${y})`
     return h`<g transform="${transform}" style="${this.drawSyle()}">
-      <text ...${this.attrs}>
+      <text ...${this.attrs} >
         ${inside}
       </text>
     </g>`

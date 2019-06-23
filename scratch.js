@@ -1,31 +1,17 @@
 const somehow = require('./src')
 
 let w = somehow({
-  height: 300,
   aspect: 'widescreen'
 })
 
+w.title('title')
+
 w.line()
-  .set([['Jan 12 2019', -900], ['Jan 28 2019', 5000]])
+  .set([['Jan 12 2019', 200], ['Jan 21 2019', 4200], ['Jan 28 2019', 5000]])
   .color('blue')
 
-w.text('hello')
-  .set([['Jan 12 2019', 809]])
-  .center()
-  .color('blue')
+w.text('hello').set([['Jan 20 2019', 900]])
 
-w.now()
-  .label('now')
-  .top()
-
-w.title('the end of times 🌎').top()
-// w.fit()
-w.y.fit(-9, 8000)
-w.x.fit('Jan 12 2019', 'Dec 28 2019')
-w.clip()
-
-w.xAxis.label('time')
-w.yAxis.label('health')
-// w.x.reverse()
+w.fit()
 
 document.querySelector('#stage').innerHTML = w.build()

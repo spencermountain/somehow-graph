@@ -7,7 +7,8 @@ const { parseX, parseY } = require('../parse')
 const defaults = {
   fill: colors.blue,
   stroke: 'none',
-  'shape-rendering': 'optimizeQuality'
+  'shape-rendering': 'optimizeQuality',
+  'vector-effect': 'non-scaling-stroke'
 }
 
 class Shape {

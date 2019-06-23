@@ -10,9 +10,9 @@ class YAxis extends Axis {
     return this.ticks().map(o => {
       let percent = o.value * 100
       percent = 100 - percent
-      return h`<text x="${x}" y="${percent + '%'}" dy="0" dx="-6" fill="${
+      return h`<text x="${x}" y="${percent + '%'}" dy="0" dx="-2px" fill="${
         this.attrs.stroke
-      }" text-anchor="end" style="font-size:12px;">
+      }" text-anchor="end" style="font-size:5px;">
         ${o.label}
       </text>`
     })

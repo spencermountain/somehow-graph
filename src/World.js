@@ -24,13 +24,17 @@ const Title = require('./shapes/Title')
 
 class World {
   constructor(obj = {}) {
-    this.width = obj.width || 600
-    this.height = obj.height || 400
+    this.width = 100
+    this.height = 100
     if (obj.aspect) {
       this.aspect = obj.aspect
-      let res = fitAspect(obj)
-      this.width = res.width || 600
-      this.height = res.height || 400
+      let res = fitAspect({
+        aspect: obj.aspect,
+        width: 100
+      })
+      console.log(res)
+      this.width = res.width || 100
+      this.height = res.height || 100
     }
     this.shapes = []
     //give the points a little bit of space.
@@ -146,8 +150,8 @@ class World {
     }
     elements = elements.concat(shapes.map(shape => shape.build()))
     let attrs = {
-      width: this.width,
-      height: this.height,
+      // width: this.width,
+      // height: this.height,
       viewBox: `0,0,${this.width},${this.height}`,
       preserveAspectRatio: 'xMidYMid meet',
       style: 'overflow:visible; margin: 10px 20px 25px 25px;' // border:1px solid lightgrey;

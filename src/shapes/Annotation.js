@@ -2,7 +2,8 @@ const colors = require('spencer-color').colors
 const Text = require('./Text')
 
 const defaults = {
-  'text-anchor': 'start'
+  'text-anchor': 'start',
+  'font-size': 5
 }
 
 class Annotation extends Text {
@@ -51,7 +52,9 @@ class Annotation extends Text {
       </text>
       <line x1="${-2}" y1="${estimate.height}" x2="${estimate.width}" y2="${
       estimate.height
-    }" style="stroke-width:1.5px; shapeRendering:optimizeQuality;"  stroke=${colors.grey}/>
+    }" style="stroke-width:1.5px; shapeRendering:optimizeQuality; vector-effect: non-scaling-stroke;"  stroke=${
+      colors.grey
+    }/>
     </g>`
   }
   drawRange() {
@@ -61,7 +64,8 @@ class Annotation extends Text {
       return null
     }
     let size = 4
-    let style = 'stroke-width:2px; shapeRendering:optimizeQuality;'
+    let style =
+      'stroke-width:2px; shapeRendering:optimizeQuality; vector-effect: non-scaling-stroke;'
     let top = points[0]
     let bottom = points[1]
     //for a vertical range...
@@ -117,7 +121,9 @@ class Annotation extends Text {
     }
     return h`<line id="line" x1="${textPoint.x}" y1="${textPoint.y}" x2="${point[0]}" y2="${
       point[1]
-    }" style="stroke-width:2px; shapeRendering:optimizeQuality;" stroke=${colors.grey}/>`
+    }" style="stroke-width:2px; shapeRendering:optimizeQuality;" vector-effect="non-scaling-stroke" stroke=${
+      colors.grey
+    }/>`
   }
   build() {
     let h = this.world.html

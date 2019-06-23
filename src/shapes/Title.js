@@ -19,7 +19,7 @@ class Title extends Text {
     obj = Object.assign({}, defaults, obj)
     super(obj, world)
     this._title = title
-    this._y = '-15%'
+    this._y = '-5%'
     this._x = '50%'
     this.ignore_clip = true
   }

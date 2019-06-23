@@ -4,7 +4,8 @@ const drawTick = require('./_custom')
 
 const defaults = {
   stroke: '#d7d5d2',
-  'stroke-width': 1
+  'stroke-width': 1,
+  'vector-effect': 'non-scaling-stroke'
 }
 
 class Axis {

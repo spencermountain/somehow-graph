@@ -8,9 +8,9 @@ class XAxis extends Axis {
   drawTicks(y) {
     let h = this.world.html
     return this.ticks().map(o => {
-      return h`<text x="${o.value * 100 + '%'}" y="${y + 15}" fill="${
+      return h`<text x="${o.value * 100 + '%'}" y="${y + 5}" fill="${
         this.attrs.stroke
-      }" text-anchor="middle" style="font-size:12px;">
+      }" text-anchor="middle" style="font-size:5px;">
         ${o.label}
       </text>`
     })
@@ -32,7 +32,7 @@ class XAxis extends Axis {
     }
     return h`<g>
       ${ticks}
-      <line x1="${0}" y1="${y}" x2="${width}" y2="${y}" ...${attrs} stroke="#d7d5d2"/>
+      <line x1="${0}" y1="${y}" x2="${width}" y2="${y}" ...${attrs} stroke="#d7d5d2" />
       <text ...${textAttrs}>
         ${this._label}
       </text>
