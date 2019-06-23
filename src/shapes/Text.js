@@ -189,7 +189,7 @@ class Text extends Shape {
     let { x, y } = this.position()
     let transform = `translate(${x} ${y})`
     return h`<g transform="${transform}" style="${this.drawSyle()}">
-      <text ...${this.attrs} >
+      <text ...${this.attrs} class="somehow-legible">
         ${inside}
       </text>
     </g>`

@@ -26,13 +26,13 @@ class World {
   constructor(obj = {}) {
     this.width = 100
     this.height = 100
+    obj.aspect = obj.aspect || 'widescreen'
     if (obj.aspect) {
       this.aspect = obj.aspect
       let res = fitAspect({
         aspect: obj.aspect,
         width: 100
       })
-      console.log(res)
       this.width = res.width || 100
       this.height = res.height || 100
     }
@@ -131,6 +131,38 @@ class World {
       console.log('must define world html element')
     }
   }
+  breakpoints() {
+    return this.html`<style scoped>
+      .somehow-legible {
+        font-size: 14px;
+      }
+      @media (min-width: 300px) {
+        .somehow-legible {
+          font-size: 7px;
+        }
+      }
+      @media (min-width: 500px) {
+        .somehow-legible {
+          font-size: 5px;
+        }
+      }
+      @media (min-width: 600px) {
+        .somehow-legible {
+          font-size: 4px;
+        }
+      }
+      @media (min-width: 800px) {
+        .somehow-legible {
+          font-size: 3px;
+        }
+      }
+      @media (min-width: 1000px) {
+        .somehow-legible {
+          font-size: 2px;
+        }
+      }
+    </style>`
+  }
   clip() {
     this.x.clip()
     this.y.clip()
@@ -157,6 +189,7 @@ class World {
       style: 'overflow:visible; margin: 10px 20px 25px 25px;' // border:1px solid lightgrey;
     }
     return h`<svg ...${attrs}>
+      ${this.breakpoints()}
       ${elements}
     </svg>`
   }

@@ -1,7 +1,8 @@
 const somehow = require('./src')
 
 let w = somehow({
-  aspect: 'widescreen'
+  aspect: 'widescreen',
+  height: 100
 })
 
 w.title('title')

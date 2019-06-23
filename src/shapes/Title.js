@@ -6,7 +6,8 @@ const defaults = {
   fill: colors.grey,
   'stroke-width': 2,
   'stroke-linecap': 'round',
-  'text-anchor': 'middle'
+  'text-anchor': 'middle',
+  class: 'somehow-legible'
 }
 
 class Title extends Text {
@@ -22,6 +23,9 @@ class Title extends Text {
     this._y = '-5%'
     this._x = '50%'
     this.ignore_clip = true
+  }
+  extent() {
+    return null
   }
   label(str) {
     this._label = str

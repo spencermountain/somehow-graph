@@ -3,7 +3,8 @@ const Text = require('./Text')
 
 const defaults = {
   'text-anchor': 'start',
-  'font-size': 5
+  'font-size': 5,
+  class: 'somehow-legible'
 }
 
 class Annotation extends Text {

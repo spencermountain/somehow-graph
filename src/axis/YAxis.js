@@ -12,7 +12,7 @@ class YAxis extends Axis {
       percent = 100 - percent
       return h`<text x="${x}" y="${percent + '%'}" dy="0" dx="-2px" fill="${
         this.attrs.stroke
-      }" text-anchor="end" style="font-size:5px;">
+      }" text-anchor="end" class="somehow-legible">
         ${o.label}
       </text>`
     })
