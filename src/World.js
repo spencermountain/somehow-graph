@@ -134,32 +134,13 @@ class World {
   breakpoints() {
     return this.html`<style scoped>
       .somehow-legible {
-        font-size: 14px;
+        font-size: 2px;
       }
-      @media (min-width: 300px) {
-        .somehow-legible {
-          font-size: 7px;
-        }
-      }
-      @media (min-width: 500px) {
-        .somehow-legible {
-          font-size: 5px;
-        }
-      }
-      @media (min-width: 600px) {
+      @media (max-width: 600px) {
         .somehow-legible {
           font-size: 4px;
         }
       }
-      @media (min-width: 800px) {
-        .somehow-legible {
-          font-size: 3px;
-        }
-      }
-      @media (min-width: 1000px) {
-        .somehow-legible {
-          font-size: 2px;
-        }
       }
     </style>`
   }

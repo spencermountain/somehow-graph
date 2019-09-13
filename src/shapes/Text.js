@@ -184,7 +184,6 @@ class Text extends Shape {
       textArr = this.textFn(this.world)
       textArr = typeof textArr === 'string' ? [textArr] : textArr
     }
-    console.log(this.attrs)
     let inside = textArr.map(str => h`<tspan x="0" dy="1.2em" >${String(str)}</tspan>`)
     let { x, y } = this.position()
     let transform = `translate(${x} ${y})`

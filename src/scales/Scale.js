@@ -60,7 +60,12 @@ class Scale {
     }
     if (obj.type === 'percent') {
       let num = this.byPercent(obj.value)
-      return this.scale(num)
+      let val = this.scale.backward(num)
+      if (this.is_y) {
+        console.log(num, val)
+        return this.to - val
+      }
+      return val
     }
     return this.scale(obj.value)
   }
