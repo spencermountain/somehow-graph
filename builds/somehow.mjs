@@ -8432,7 +8432,7 @@ Object.keys(aliases).forEach(k => {
 });
 var World_1 = World;
 
-var _version$1 = '0.3.0';
+var _version$1 = '0.3.1';
 
 // ...people call this a 'factory'
 const somehow = function(obj) {

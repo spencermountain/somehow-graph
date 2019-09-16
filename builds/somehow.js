@@ -10104,7 +10104,7 @@
   });
   var World_1 = World;
 
-  var _version$1 = '0.3.0';
+  var _version$1 = '0.3.1';
 
   var somehow = function somehow(obj) {
     return new World_1(obj);
