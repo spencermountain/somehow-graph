@@ -86,7 +86,7 @@ const somehow = require('./src')
 //   }
 // ]
 let w = somehow({
-  // height: 200,
+  height: 200
   // width: 700
 })
 
@@ -152,9 +152,8 @@ let w = somehow({
 // w.x.fit('Jan 1 1825', Date.now())
 
 // w.text('=========').center('20%', '75%')
-w.line()
-  .from('0%', '5%')
-  .to(50, 50)
-w.fit(100, 100)
+let line = w.line()
+line.set([['june 5 2019', 10], ['july 7 2019', 15], ['july 7 2020', 18], ['aug 8 2021', 50]])
+w.fit()
 
 document.querySelector('#stage').innerHTML = w.build()

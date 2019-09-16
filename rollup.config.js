@@ -3,7 +3,7 @@ import json from 'rollup-plugin-json'
 import { terser } from 'rollup-plugin-terser'
 import resolve from 'rollup-plugin-node-resolve'
 import babel from 'rollup-plugin-babel'
-import visualizer from 'rollup-plugin-visualizer'
+// import visualizer from 'rollup-plugin-visualizer'
 
 export default [
   {
@@ -64,8 +64,8 @@ export default [
         babelrc: false,
         presets: ['@babel/preset-env']
       }),
-      terser(),
-      visualizer()
+      terser()
+      // visualizer()
     ]
   }
 ]

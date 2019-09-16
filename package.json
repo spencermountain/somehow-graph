@@ -1,7 +1,7 @@
 {
   "name": "somehow",
   "description": "make infographics without thinking",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "main": "src/index.js",
   "unpkg": "builds/somehow.min.js",
   "module": "builds/somehow.mjs",
@@ -44,7 +44,7 @@
     "@babel/core": "7.6.0",
     "@babel/preset-env": "7.6.0",
     "budo": "^11.6.3",
-    "rollup": "1.21.2",
+    "rollup": "1.21.4",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-json": "^4.0.0",
