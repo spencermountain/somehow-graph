@@ -23,6 +23,7 @@ class Shape {
     this._title = ''
     this._click = obj.click
     this._hover = obj.hover
+    this._grow = false
     //nudge pixels
     this._dx = 0
     this._dy = 0
@@ -39,6 +40,10 @@ class Shape {
   }
   soft() {
     this.curve = d3Shape.curveBasis
+    return this
+  }
+  grow(bool) {
+    this._grow = bool
     return this
   }
   id(str) {
@@ -184,7 +189,11 @@ class Shape {
     let attrs = Object.assign({}, this.attrs, {
       d: this.path()
     })
-    return h`<path ...${attrs} id=${this._id} style="${this.drawSyle()}"/>`
+    let classes = ''
+    if (this._grow) {
+      classes += 'grow'
+    }
+    return h`<path ...${attrs} id=${this._id} class=${classes} style="${this.drawSyle()}"/>`
   }
 }
 module.exports = Shape

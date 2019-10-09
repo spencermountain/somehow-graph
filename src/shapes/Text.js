@@ -177,7 +177,6 @@ class Text extends Shape {
       return res
     }
     let { height, width } = this.estimate()
-    console.log(this.estimate())
     res.height = height
     res.width = width
     res.y = point[1] + this._dodge.y - height

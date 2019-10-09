@@ -315,9 +315,9 @@ var spacetime = createCommonjsModule(function (module, exports) {
 		"3|n|03/31:02->10/27:03": "8/chisinau,8/tiraspol",
 		"3|n|03/31:00->10/26:24": "2/beirut",
 		"3|n|03/29:02->10/27:02": "2/jerusalem,2/tel_aviv",
+		"3|n|03/29:00->10/26:01": "2/gaza,2/hebron",
 		"3|n|03/29:00->10/25:01": "2/amman",
 		"3|n|03/29:00->10/24:24": "2/damascus",
-		"3|n|03/23:01->10/26:01": "2/gaza,2/hebron",
 		"3|n": "0/addis_ababa,0/asmara,0/asmera,0/dar_es_salaam,0/djibouti,0/juba,0/kampala,0/mogadishu,0/nairobi,2/aden,2/baghdad,2/bahrain,2/istanbul,2/kuwait,2/qatar,2/riyadh,8/istanbul,8/kirov,8/minsk,8/moscow,8/simferopol,9/comoro,9/mayotte",
 		"2|s|03/31:02->10/27:02": "12/troll",
 		"2|s": "0/gaborone,0/harare,0/johannesburg,0/lubumbashi,0/lusaka,0/maputo,0/maseru,0/mbabane",
@@ -417,11 +417,10 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	all['utc'] = {
 	  offset: 0,
 	  hem: 'n' //(sorry)
-	  //add etc/gmt+n
 
-	};
+	}; //add etc/gmt+n
 
-	for (var i = -13; i <= 13; i += 0.5) {
+	for (var i = -14; i <= 14; i += 0.5) {
 	  var num = i;
 
 	  if (num > 0) {
@@ -1249,9 +1248,8 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	var defaults = {
 	  year: new Date().getFullYear(),
 	  month: 0,
-	  date: 1 //support [2016, 03, 01] format
-
-	};
+	  date: 1
+	}; //support [2016, 03, 01] format
 
 	var handleArray = function handleArray(s, arr) {
 	  var order = ['year', 'month', 'date', 'hour', 'minute', 'second', 'millisecond'];
@@ -1597,9 +1595,9 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	  },
 	  'nice-full': function niceFull(s) {
 	    return "".concat(s.dayName(), " ").concat(fns.titleCase(s.monthName()), " ").concat(fns.ordinal(s.date()), ", ").concat(s.time());
-	  } //aliases
+	  }
+	}; //aliases
 
-	};
 	var aliases = {
 	  'day-name': 'day',
 	  'month-name': 'month',
@@ -2122,9 +2120,8 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	  seconds: {
 	    almost: 50,
 	    over: 20
-	  } //get number of hours/minutes... between the two dates
-
-	};
+	  }
+	}; //get number of hours/minutes... between the two dates
 
 	function getDiff(a, b) {
 	  var isBefore = a.isBefore(b);
@@ -2750,9 +2747,9 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	    }
 
 	    return this;
-	  } // aliases
+	  }
+	}; // aliases
 
-	};
 	methods.inDST = methods.isDST;
 	methods.round = methods.nearest;
 	methods.each = methods.every;
@@ -3449,10 +3446,9 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	  month: true,
 	  quarter: true,
 	  season: true,
-	  year: true //month is the only thing we 'model/compute'
-	  //- because ms-shifting can be off by enough
-
-	};
+	  year: true
+	}; //month is the only thing we 'model/compute'
+	//- because ms-shifting can be off by enough
 
 	var rollMonth = function rollMonth(want, old) {
 	  //increment year
@@ -3682,9 +3678,9 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	      }
 
 	      return startEpoch < this.epoch && this.epoch < endEpoch;
-	    } //hook them into proto
+	    }
+	  }; //hook them into proto
 
-	  };
 	  Object.keys(methods).forEach(function (k) {
 	    SpaceTime.prototype[k] = methods[k];
 	  });
@@ -3704,9 +3700,9 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	      if (fns.isObject(data.months)) {
 	        months.set(data.months);
 	      }
-	    } //hook them into proto
+	    }
+	  }; //hook them into proto
 
-	  };
 	  Object.keys(methods).forEach(function (k) {
 	    SpaceTime.prototype[k] = methods[k];
 	  });
@@ -3827,7 +3823,7 @@ var spacetime = createCommonjsModule(function (module, exports) {
 
 	var whereIts_1 = whereIts;
 
-	var _version = '6.0.1';
+	var _version = '6.1.0';
 
 	var main$1 = function main(input, tz, options) {
 	  return new spacetime(input, tz, options);
@@ -4374,7 +4370,7 @@ const methods$1 = {
 };
 var methods_1$1 = methods$1;
 
-var _version = '0.2.0';
+var _version = '0.2.1';
 
 const chooseMethod = function(start, end, n = 6) {
   let diff = start.diff(end);
@@ -4421,6 +4417,10 @@ const spacetimeTicks = function(start, end, n = 6) {
     let tmp = start.epoch;
     start.epoch = end.epoch;
     end.epoch = tmp;
+  }
+  // nudge first one back 1 minute
+  if (start.time() === '12:00am') {
+    start = start.minus(1, 'minute');
   }
   let ticks = chooseMethod(start, end, n);
   //support backwards ticks
@@ -4728,6 +4728,12 @@ const generic = function(axis, n = 5) {
   let start = scale.min || 0;
   let end = scale.max || 0;
   let ticks = somehowTicks(start, end, n);
+  if (axis._suffix) {
+    ticks.forEach(tick => (tick.label += axis._suffix));
+  }
+  if (axis._prefix) {
+    ticks.forEach(tick => (tick.label = axis._prefix + tick.label));
+  }
   return ticks
 };
 
@@ -4790,7 +4796,7 @@ const drawTick = function(s, axis) {
   //support '52'
   let num = Number(s);
   return {
-    num: num,
+    value: num / 100,
     pos: parseInt(scale(num), 10),
     label: label || _prettyNum(num)
   }
@@ -4813,6 +4819,8 @@ class Axis {
     this._given = undefined;
     this._show = true;
     this._label = '';
+    this._suffix = '';
+    this._prefix = '';
   }
   color(color) {
     this.attrs.stroke = spencerColor[color] || color;
@@ -4820,6 +4828,14 @@ class Axis {
   }
   label(str) {
     this._label = str;
+    return this
+  }
+  suffix(str) {
+    this._suffix = str;
+    return this
+  }
+  prefix(str) {
+    this._prefix = str;
     return this
   }
   remove() {
@@ -7097,6 +7113,7 @@ class Shape {
     this._title = '';
     this._click = obj.click;
     this._hover = obj.hover;
+    this._grow = false;
     //nudge pixels
     this._dx = 0;
     this._dy = 0;
@@ -7111,12 +7128,16 @@ class Shape {
     this.curve = d3Shape.curveLinear;
     return this
   }
-  id(str) {
-    this._id = str;
-    return this
-  }
   soft() {
     this.curve = d3Shape.curveBasis;
+    return this
+  }
+  grow(bool) {
+    this._grow = bool;
+    return this
+  }
+  id(str) {
+    this._id = str;
     return this
   }
   dx(n) {
@@ -7258,7 +7279,11 @@ class Shape {
     let attrs = Object.assign({}, this.attrs, {
       d: this.path()
     });
-    return h`<path ...${attrs} id=${this._id} style="${this.drawSyle()}"/>`
+    let classes = '';
+    if (this._grow) {
+      classes += 'grow';
+    }
+    return h`<path ...${attrs} id=${this._id} class=${classes} style="${this.drawSyle()}"/>`
   }
 }
 var Shape_1 = Shape;
@@ -7501,6 +7526,7 @@ class Text extends Shape_1 {
       this.textLines = [this.textLines];
     }
     this._order = 0;
+    this._responsive = false;
     this.data = [
       {
         x: {
@@ -7518,6 +7544,8 @@ class Text extends Shape_1 {
       y: 4
     };
     this._underline = '';
+    this.style = this.style || {};
+    this.style['font-size'] = this.style['font-size'] || '4px';
   }
   before(x, y) {
     this.attrs['text-anchor'] = 'end';
@@ -7572,6 +7600,10 @@ class Text extends Shape_1 {
   }
   size(num) {
     return this.font(num)
+  }
+  responsive(bool) {
+    this._responsive = bool;
+    return this
   }
   extent() {
     // let longest = this.textLines.sort((a, b) => a.length < b.length ? 1 : -1)[0] || ''
@@ -7644,6 +7676,7 @@ class Text extends Shape_1 {
     res.width = width;
     res.y = point[1] + this._dodge.y - height;
     res.x = point[0] + 2 + this._dodge.x;
+    res.y -= 2;
     return res
   }
   build() {
@@ -7657,8 +7690,12 @@ class Text extends Shape_1 {
     let inside = textArr.map(str => h`<tspan x="0" dy="1.2em" >${String(str)}</tspan>`);
     let { x, y } = this.position();
     let transform = `translate(${x} ${y})`;
-    return h`<g transform="${transform}" style="${this.drawSyle()}">
-      <text ...${this.attrs} class="somehow-legible">
+    let classes = '';
+    if (this._responsive) {
+      classes = 'somehow-legible';
+    }
+    return h`<g transform="${transform}" >
+      <text ...${this.attrs} style="${this.drawSyle()}" class=${classes}>
         ${inside}
       </text>
     </g>`
@@ -8202,9 +8239,68 @@ var Now_1 = Now;
 const colors$b = spencerColor.colors;
 
 
+
+
 const defaults$b = {
+  fill: 'none',
+  stroke: colors$b.blue,
+  'stroke-width': 4,
+  'stroke-linecap': 'round'
+};
+
+class Snake extends Shape_1 {
+  constructor(obj = {}, world) {
+    obj = Object.assign({}, defaults$b, obj);
+    super(obj, world);
+  }
+  color(color) {
+    this.attrs.stroke = colors$b[color] || color;
+    return this
+  }
+  dotted(n) {
+    if (n === true) {
+      n = 4;
+    }
+    this.attrs['stroke-dasharray'] = n || 4;
+    return this
+  }
+  set(str) {
+    let data = parseInput_1(str, this.world);
+    let more = [];
+    // make it into a snake-form
+    data.forEach((obj, i) => {
+      more.push(obj);
+      if (data[i + 1]) {
+        more.push({
+          x: obj.x,
+          y: data[i + 1].y
+        });
+      }
+    });
+    this.data = more;
+    return this
+  }
+  width(num) {
+    this.attrs['stroke-width'] = num;
+    return this
+  }
+  path() {
+    let points = this.points();
+    return d3Shape
+      .line()
+      .x(d => d[0])
+      .y(d => d[1])(points)
+  }
+}
+
+var Snake_1 = Snake;
+
+const colors$c = spencerColor.colors;
+
+
+const defaults$c = {
   stroke: 'none',
-  fill: colors$b.grey,
+  fill: colors$c.grey,
   'stroke-width': 2,
   'stroke-linecap': 'round',
   'text-anchor': 'middle',
@@ -8218,7 +8314,7 @@ class Title extends Text_1 {
       title = obj;
       obj = {};
     }
-    obj = Object.assign({}, defaults$b, obj);
+    obj = Object.assign({}, defaults$c, obj);
     super(obj, world);
     this._title = title;
     this._y = '-5%';
@@ -8357,6 +8453,11 @@ class World {
     this.shapes.push(shape);
     return shape
   }
+  snake(obj) {
+    let shape = new Snake_1(obj, this);
+    this.shapes.push(shape);
+    return shape
+  }
   title(obj) {
     let shape = new Title_1(obj, this);
     this.shapes.push(shape);
@@ -8387,6 +8488,8 @@ class World {
           font-size: 4px;
         }
       }
+      .grow:hover {
+        stroke-width: 6px;
       }
     </style>`
   }
@@ -8432,7 +8535,7 @@ Object.keys(aliases).forEach(k => {
 });
 var World_1 = World;
 
-var _version$1 = '0.3.1';
+var _version$1 = '0.3.2';
 
 // ...people call this a 'factory'
 const somehow = function(obj) {

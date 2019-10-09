@@ -697,9 +697,9 @@
         "3|n|03/31:02->10/27:03": "8/chisinau,8/tiraspol",
         "3|n|03/31:00->10/26:24": "2/beirut",
         "3|n|03/29:02->10/27:02": "2/jerusalem,2/tel_aviv",
+        "3|n|03/29:00->10/26:01": "2/gaza,2/hebron",
         "3|n|03/29:00->10/25:01": "2/amman",
         "3|n|03/29:00->10/24:24": "2/damascus",
-        "3|n|03/23:01->10/26:01": "2/gaza,2/hebron",
         "3|n": "0/addis_ababa,0/asmara,0/asmera,0/dar_es_salaam,0/djibouti,0/juba,0/kampala,0/mogadishu,0/nairobi,2/aden,2/baghdad,2/bahrain,2/istanbul,2/kuwait,2/qatar,2/riyadh,8/istanbul,8/kirov,8/minsk,8/moscow,8/simferopol,9/comoro,9/mayotte",
         "2|s|03/31:02->10/27:02": "12/troll",
         "2|s": "0/gaborone,0/harare,0/johannesburg,0/lubumbashi,0/lusaka,0/maputo,0/maseru,0/mbabane",
@@ -799,11 +799,10 @@
       all['utc'] = {
         offset: 0,
         hem: 'n' //(sorry)
-        //add etc/gmt+n
 
-      };
+      }; //add etc/gmt+n
 
-      for (var i = -13; i <= 13; i += 0.5) {
+      for (var i = -14; i <= 14; i += 0.5) {
         var num = i;
 
         if (num > 0) {
@@ -1619,9 +1618,8 @@
       var defaults = {
         year: new Date().getFullYear(),
         month: 0,
-        date: 1 //support [2016, 03, 01] format
-
-      };
+        date: 1
+      }; //support [2016, 03, 01] format
 
       var handleArray = function handleArray(s, arr) {
         var order = ['year', 'month', 'date', 'hour', 'minute', 'second', 'millisecond'];
@@ -1965,9 +1963,9 @@
         },
         'nice-full': function niceFull(s) {
           return "".concat(s.dayName(), " ").concat(fns.titleCase(s.monthName()), " ").concat(fns.ordinal(s.date()), ", ").concat(s.time());
-        } //aliases
+        }
+      }; //aliases
 
-      };
       var aliases = {
         'day-name': 'day',
         'month-name': 'month',
@@ -2482,9 +2480,8 @@
         seconds: {
           almost: 50,
           over: 20
-        } //get number of hours/minutes... between the two dates
-
-      };
+        }
+      }; //get number of hours/minutes... between the two dates
 
       function getDiff(a, b) {
         var isBefore = a.isBefore(b);
@@ -3106,9 +3103,9 @@
           }
 
           return this;
-        } // aliases
+        }
+      }; // aliases
 
-      };
       methods.inDST = methods.isDST;
       methods.round = methods.nearest;
       methods.each = methods.every;
@@ -3799,10 +3796,9 @@
         month: true,
         quarter: true,
         season: true,
-        year: true //month is the only thing we 'model/compute'
-        //- because ms-shifting can be off by enough
-
-      };
+        year: true
+      }; //month is the only thing we 'model/compute'
+      //- because ms-shifting can be off by enough
 
       var rollMonth = function rollMonth(want, old) {
         //increment year
@@ -4031,9 +4027,9 @@
             }
 
             return startEpoch < this.epoch && this.epoch < endEpoch;
-          } //hook them into proto
+          }
+        }; //hook them into proto
 
-        };
         Object.keys(methods).forEach(function (k) {
           SpaceTime.prototype[k] = methods[k];
         });
@@ -4053,9 +4049,9 @@
             if (fns.isObject(data.months)) {
               months.set(data.months);
             }
-          } //hook them into proto
+          }
+        }; //hook them into proto
 
-        };
         Object.keys(methods).forEach(function (k) {
           SpaceTime.prototype[k] = methods[k];
         });
@@ -4174,7 +4170,7 @@
       };
 
       var whereIts_1 = whereIts;
-      var _version = '6.0.1';
+      var _version = '6.1.0';
 
       var main$1 = function main(input, tz, options) {
         return new spacetime(input, tz, options);
@@ -4967,7 +4963,7 @@
   };
   var methods_1$1 = methods$1;
 
-  var _version = '0.2.0';
+  var _version = '0.2.1';
 
   var chooseMethod = function chooseMethod(start, end) {
     var n = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 6;
@@ -5024,6 +5020,11 @@
       var tmp = start.epoch;
       start.epoch = end.epoch;
       end.epoch = tmp;
+    } // nudge first one back 1 minute
+
+
+    if (start.time() === '12:00am') {
+      start = start.minus(1, 'minute');
     }
 
     var ticks = chooseMethod(start, end, n); //support backwards ticks
@@ -5378,6 +5379,19 @@
     var start = scale.min || 0;
     var end = scale.max || 0;
     var ticks = somehowTicks(start, end, n);
+
+    if (axis._suffix) {
+      ticks.forEach(function (tick) {
+        return tick.label += axis._suffix;
+      });
+    }
+
+    if (axis._prefix) {
+      ticks.forEach(function (tick) {
+        return tick.label = axis._prefix + tick.label;
+      });
+    }
+
     return ticks;
   };
 
@@ -5453,7 +5467,7 @@
 
     var num = Number(s);
     return {
-      num: num,
+      value: num / 100,
       pos: parseInt(scale(num), 10),
       label: label || _prettyNum(num)
     };
@@ -5484,6 +5498,8 @@
       this._given = undefined;
       this._show = true;
       this._label = '';
+      this._suffix = '';
+      this._prefix = '';
     }
 
     _createClass(Axis, [{
@@ -5496,6 +5512,18 @@
       key: "label",
       value: function label(str) {
         this._label = str;
+        return this;
+      }
+    }, {
+      key: "suffix",
+      value: function suffix(str) {
+        this._suffix = str;
+        return this;
+      }
+    }, {
+      key: "prefix",
+      value: function prefix(str) {
+        this._prefix = str;
         return this;
       }
     }, {
@@ -8073,7 +8101,7 @@
   var parseInput_1 = parseInput;
 
   function _templateObject$2() {
-    var data = _taggedTemplateLiteral(["<path ...", " id=", " style=\"", "\"/>"]);
+    var data = _taggedTemplateLiteral(["<path ...", " id=", " class=", " style=\"", "\"/>"]);
 
     _templateObject$2 = function _templateObject() {
       return data;
@@ -8109,7 +8137,8 @@
       this._shape = 1;
       this._title = '';
       this._click = obj.click;
-      this._hover = obj.hover; //nudge pixels
+      this._hover = obj.hover;
+      this._grow = false; //nudge pixels
 
       this._dx = 0;
       this._dy = 0;
@@ -8130,15 +8159,21 @@
         return this;
       }
     }, {
-      key: "id",
-      value: function id(str) {
-        this._id = str;
-        return this;
-      }
-    }, {
       key: "soft",
       value: function soft() {
         this.curve = d3Shape.curveBasis;
+        return this;
+      }
+    }, {
+      key: "grow",
+      value: function grow(bool) {
+        this._grow = bool;
+        return this;
+      }
+    }, {
+      key: "id",
+      value: function id(str) {
+        this._id = str;
         return this;
       }
     }, {
@@ -8330,7 +8365,13 @@
         var attrs = Object.assign({}, this.attrs, {
           d: this.path()
         });
-        return h(_templateObject$2(), attrs, this._id, this.drawSyle());
+        var classes = '';
+
+        if (this._grow) {
+          classes += 'grow';
+        }
+
+        return h(_templateObject$2(), attrs, this._id, classes, this.drawSyle());
       }
     }]);
 
@@ -8650,7 +8691,7 @@
   var Line_1 = Line;
 
   function _templateObject2$3() {
-    var data = _taggedTemplateLiteral(["<g transform=\"", "\" style=\"", "\">\n      <text ...", " class=\"somehow-legible\">\n        ", "\n      </text>\n    </g>"]);
+    var data = _taggedTemplateLiteral(["<g transform=\"", "\" >\n      <text ...", " style=\"", "\" class=", ">\n        ", "\n      </text>\n    </g>"]);
 
     _templateObject2$3 = function _templateObject2() {
       return data;
@@ -8714,6 +8755,7 @@
       }
 
       _this._order = 0;
+      _this._responsive = false;
       _this.data = [{
         x: {
           value: 50,
@@ -8729,6 +8771,8 @@
         y: 4
       };
       _this._underline = '';
+      _this.style = _this.style || {};
+      _this.style['font-size'] = _this.style['font-size'] || '4px';
       return _this;
     }
 
@@ -8812,6 +8856,12 @@
       key: "size",
       value: function size(num) {
         return this.font(num);
+      }
+    }, {
+      key: "responsive",
+      value: function responsive(bool) {
+        this._responsive = bool;
+        return this;
       }
     }, {
       key: "extent",
@@ -8906,6 +8956,7 @@
         res.width = width;
         res.y = point[1] + this._dodge.y - height;
         res.x = point[0] + 2 + this._dodge.x;
+        res.y -= 2;
         return res;
       }
     }, {
@@ -8929,7 +8980,13 @@
             y = _this$position.y;
 
         var transform = "translate(".concat(x, " ").concat(y, ")");
-        return h(_templateObject2$3(), transform, this.drawSyle(), this.attrs, inside);
+        var classes = '';
+
+        if (this._responsive) {
+          classes = 'somehow-legible';
+        }
+
+        return h(_templateObject2$3(), transform, this.attrs, this.drawSyle(), classes, inside);
       }
     }]);
 
@@ -9763,6 +9820,87 @@
 
   var Now_1 = Now;
 
+  var colors$b = spencerColor.colors;
+  var defaults$b = {
+    fill: 'none',
+    stroke: colors$b.blue,
+    'stroke-width': 4,
+    'stroke-linecap': 'round'
+  };
+
+  var Snake =
+  /*#__PURE__*/
+  function (_Shape) {
+    _inherits(Snake, _Shape);
+
+    function Snake() {
+      var obj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      var world = arguments.length > 1 ? arguments[1] : undefined;
+
+      _classCallCheck(this, Snake);
+
+      obj = Object.assign({}, defaults$b, obj);
+      return _possibleConstructorReturn(this, _getPrototypeOf(Snake).call(this, obj, world));
+    }
+
+    _createClass(Snake, [{
+      key: "color",
+      value: function color(_color) {
+        this.attrs.stroke = colors$b[_color] || _color;
+        return this;
+      }
+    }, {
+      key: "dotted",
+      value: function dotted(n) {
+        if (n === true) {
+          n = 4;
+        }
+
+        this.attrs['stroke-dasharray'] = n || 4;
+        return this;
+      }
+    }, {
+      key: "set",
+      value: function set(str) {
+        var data = parseInput_1(str, this.world);
+        var more = []; // make it into a snake-form
+
+        data.forEach(function (obj, i) {
+          more.push(obj);
+
+          if (data[i + 1]) {
+            more.push({
+              x: obj.x,
+              y: data[i + 1].y
+            });
+          }
+        });
+        this.data = more;
+        return this;
+      }
+    }, {
+      key: "width",
+      value: function width(num) {
+        this.attrs['stroke-width'] = num;
+        return this;
+      }
+    }, {
+      key: "path",
+      value: function path() {
+        var points = this.points();
+        return d3Shape.line().x(function (d) {
+          return d[0];
+        }).y(function (d) {
+          return d[1];
+        })(points);
+      }
+    }]);
+
+    return Snake;
+  }(Shape_1);
+
+  var Snake_1 = Snake;
+
   function _templateObject$d() {
     var data = _taggedTemplateLiteral(["<text ...", ">\n          ", "\n        </text>"]);
 
@@ -9772,10 +9910,10 @@
 
     return data;
   }
-  var colors$b = spencerColor.colors;
-  var defaults$b = {
+  var colors$c = spencerColor.colors;
+  var defaults$c = {
     stroke: 'none',
-    fill: colors$b.grey,
+    fill: colors$c.grey,
     'stroke-width': 2,
     'stroke-linecap': 'round',
     'text-anchor': 'middle',
@@ -9802,7 +9940,7 @@
         obj = {};
       }
 
-      obj = Object.assign({}, defaults$b, obj);
+      obj = Object.assign({}, defaults$c, obj);
       _this = _possibleConstructorReturn(this, _getPrototypeOf(Title).call(this, obj, world));
       _this._title = title;
       _this._y = '-5%';
@@ -9882,7 +10020,7 @@
   }
 
   function _templateObject$e() {
-    var data = _taggedTemplateLiteral(["<style scoped>\n      .somehow-legible {\n        font-size: 2px;\n      }\n      @media (max-width: 600px) {\n        .somehow-legible {\n          font-size: 4px;\n        }\n      }\n      }\n    </style>"]);
+    var data = _taggedTemplateLiteral(["<style scoped>\n      .somehow-legible {\n        font-size: 2px;\n      }\n      @media (max-width: 600px) {\n        .somehow-legible {\n          font-size: 4px;\n        }\n      }\n      .grow:hover {\n        stroke-width: 6px;\n      }\n    </style>"]);
 
     _templateObject$e = function _templateObject() {
       return data;
@@ -10015,6 +10153,13 @@
         return shape;
       }
     }, {
+      key: "snake",
+      value: function snake(obj) {
+        var shape = new Snake_1(obj, this);
+        this.shapes.push(shape);
+        return shape;
+      }
+    }, {
       key: "title",
       value: function title(obj) {
         var shape = new Title_1(obj, this);
@@ -10104,7 +10249,7 @@
   });
   var World_1 = World;
 
-  var _version$1 = '0.3.1';
+  var _version$1 = '0.3.2';
 
   var somehow = function somehow(obj) {
     return new World_1(obj);

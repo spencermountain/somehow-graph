@@ -18,6 +18,8 @@ class Axis {
     this._given = undefined
     this._show = true
     this._label = ''
+    this._suffix = ''
+    this._prefix = ''
   }
   color(color) {
     this.attrs.stroke = colors[color] || color
@@ -25,6 +27,14 @@ class Axis {
   }
   label(str) {
     this._label = str
+    return this
+  }
+  suffix(str) {
+    this._suffix = str
+    return this
+  }
+  prefix(str) {
+    this._prefix = str
     return this
   }
   remove() {

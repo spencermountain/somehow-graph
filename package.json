@@ -1,7 +1,7 @@
 {
   "name": "somehow",
   "description": "make infographics without thinking",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "main": "src/index.js",
   "unpkg": "builds/somehow.min.js",
   "module": "builds/somehow.mjs",

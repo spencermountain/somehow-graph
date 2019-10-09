@@ -20,6 +20,7 @@ const Bar = require('./shapes/Bar')
 const Image = require('./shapes/Image')
 const Arrow = require('./shapes/Arrow')
 const Now = require('./shapes/Now')
+const Snake = require('./shapes/Snake')
 const Title = require('./shapes/Title')
 
 class World {
@@ -111,6 +112,11 @@ class World {
     this.shapes.push(shape)
     return shape
   }
+  snake(obj) {
+    let shape = new Snake(obj, this)
+    this.shapes.push(shape)
+    return shape
+  }
   title(obj) {
     let shape = new Title(obj, this)
     this.shapes.push(shape)
@@ -141,6 +147,8 @@ class World {
           font-size: 4px;
         }
       }
+      .grow:hover {
+        stroke-width: 6px;
       }
     </style>`
   }

@@ -21,7 +21,7 @@ const drawTick = function(s, axis) {
   //support '52'
   let num = Number(s)
   return {
-    num: num,
+    value: num / 100,
     pos: parseInt(scale(num), 10),
     label: label || prettyNum(num)
   }

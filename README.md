@@ -101,6 +101,8 @@ more to come!
 - show()
 - format(str)
 - ticks(arr)
+- prefix(str)
+- suffix(str)
 - clip(bool)
 - label()
 ```
@@ -188,6 +190,11 @@ more to come!
 - length(num)
 - width(num)
 ```
+#### Snake
+a line-chart that moves in right-angles
+```
+```
+
 #### Now
 ```
 - top()
