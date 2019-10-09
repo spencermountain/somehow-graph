@@ -31,6 +31,7 @@ class Text extends Shape {
       this.textLines = [this.textLines]
     }
     this._order = 0
+    this._responsive = false
     this.data = [
       {
         x: {
@@ -48,6 +49,8 @@ class Text extends Shape {
       y: 4
     }
     this._underline = ''
+    this.style = this.style || {}
+    this.style['font-size'] = this.style['font-size'] || '4px'
   }
   before(x, y) {
     this.attrs['text-anchor'] = 'end'
@@ -102,6 +105,10 @@ class Text extends Shape {
   }
   size(num) {
     return this.font(num)
+  }
+  responsive(bool) {
+    this._responsive = bool
+    return this
   }
   extent() {
     // let longest = this.textLines.sort((a, b) => a.length < b.length ? 1 : -1)[0] || ''
@@ -170,10 +177,12 @@ class Text extends Shape {
       return res
     }
     let { height, width } = this.estimate()
+    console.log(this.estimate())
     res.height = height
     res.width = width
     res.y = point[1] + this._dodge.y - height
     res.x = point[0] + 2 + this._dodge.x
+    res.y -= 2
     return res
   }
   build() {
@@ -187,8 +196,12 @@ class Text extends Shape {
     let inside = textArr.map(str => h`<tspan x="0" dy="1.2em" >${String(str)}</tspan>`)
     let { x, y } = this.position()
     let transform = `translate(${x} ${y})`
-    return h`<g transform="${transform}" style="${this.drawSyle()}">
-      <text ...${this.attrs} class="somehow-legible">
+    let classes = ''
+    if (this._responsive) {
+      classes = 'somehow-legible'
+    }
+    return h`<g transform="${transform}" >
+      <text ...${this.attrs} style="${this.drawSyle()}" class=${classes}>
         ${inside}
       </text>
     </g>`

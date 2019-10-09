@@ -37,12 +37,12 @@ class Shape {
     this.curve = d3Shape.curveLinear
     return this
   }
-  id(str) {
-    this._id = str
-    return this
-  }
   soft() {
     this.curve = d3Shape.curveBasis
+    return this
+  }
+  id(str) {
+    this._id = str
     return this
   }
   dx(n) {
