@@ -22,6 +22,17 @@
 <div align="center">
   <code>npm install somehow</code>
 </div>
+<div>
+    <a href="https://github.com/spencermountain/somehow-input">somehow-input</a>
+  • <a href="https://github.com/spencermountain/somehow-ticks">somehow-ticks</a>
+  • <a href="https://github.com/spencermountain/somehow-calendar">somehow-calendar</a>
+</div>
+<div>
+    <a href="https://github.com/spencermountain/somehow-3d">somehow-3d</a>
+  • <a href="https://github.com/spencermountain/somehow-maps">somehow-maps</a>
+  • <a href="https://github.com/spencermountain/somehow-circle">somehow-circle</a>
+</div>
+
 
 <div align="center">
 **work-in-progress**
