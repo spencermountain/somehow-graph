@@ -22,20 +22,19 @@
 <div align="center">
   <code>npm install somehow</code>
 </div>
-<div>
+<div align="center">
+**work-in-progress**
+</div>
+
+<div align="center">
     <a href="https://github.com/spencermountain/somehow-input">somehow-input</a>
   • <a href="https://github.com/spencermountain/somehow-ticks">somehow-ticks</a>
   • <a href="https://github.com/spencermountain/somehow-calendar">somehow-calendar</a>
 </div>
-<div>
+<div align="center">
     <a href="https://github.com/spencermountain/somehow-3d">somehow-3d</a>
   • <a href="https://github.com/spencermountain/somehow-maps">somehow-maps</a>
   • <a href="https://github.com/spencermountain/somehow-circle">somehow-circle</a>
-</div>
-
-
-<div align="center">
-**work-in-progress**
 </div>
 
 **somehow** creates SVG, using your data, that you can throw-into your webpage.
@@ -91,6 +90,7 @@ more to come!
 - annotation(obj)
 - image(obj)
 - arrow(obj)
+- snake(obj)
 - shape(obj)
 
 - bind(fn)
@@ -201,10 +201,6 @@ more to come!
 - length(num)
 - width(num)
 ```
-#### Snake
-a line-chart that moves in right-angles
-```
-```
 
 #### Now
 ```
@@ -219,4 +215,5 @@ a line-chart that moves in right-angles
 - right()
 - left()
 ```
+
 MIT
