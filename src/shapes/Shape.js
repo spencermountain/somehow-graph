@@ -39,6 +39,7 @@ class Shape {
     return this
   }
   soft() {
+    // this.curve = d3Shape.curveBundle.beta(0.5)
     this.curve = d3Shape.curveBasis
     return this
   }
@@ -174,7 +175,7 @@ class Shape {
       .x0(d => d[0])
       .y0(d => d[1])
       .y1(zero)
-      .curve(d3Shape.curveMonotoneX)(points)
+      .curve(this.curve)(points)
   }
   drawSyle() {
     return Object.keys(this.style)

@@ -28,6 +28,7 @@ class XAxis extends Axis {
       x: '50%',
       y: '115%',
       fill: this.attrs.stroke,
+      'font-size': '2px',
       style: 'text-anchor:middle;'
     }
     return h`<g>

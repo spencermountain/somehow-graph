@@ -29,6 +29,7 @@ class YAxis extends Axis {
     let textAttrs = {
       x: '-5%',
       y: '50%',
+      'font-size': '2px',
       fill: this.attrs.stroke,
       style: 'text-anchor:end;'
     }

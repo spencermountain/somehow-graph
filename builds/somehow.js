@@ -4627,7 +4627,6 @@
           var val = this.scale.backward(num);
 
           if (this.is_y) {
-            console.log(num, val);
             return this.to - val;
           }
 
@@ -5639,6 +5638,7 @@
           x: '50%',
           y: '115%',
           fill: this.attrs.stroke,
+          'font-size': '2px',
           style: 'text-anchor:middle;'
         };
         return h(_templateObject2(), ticks, 0, y, width, y, attrs, textAttrs, this._label);
@@ -5716,6 +5716,7 @@
         var textAttrs = {
           x: '-5%',
           y: '50%',
+          'font-size': '2px',
           fill: this.attrs.stroke,
           style: 'text-anchor:end;'
         };
@@ -8161,6 +8162,7 @@
     }, {
       key: "soft",
       value: function soft() {
+        // this.curve = d3Shape.curveBundle.beta(0.5)
         this.curve = d3Shape.curveBasis;
         return this;
       }
@@ -8346,7 +8348,7 @@
           return d[0];
         }).y0(function (d) {
           return d[1];
-        }).y1(zero).curve(d3Shape.curveMonotoneX)(points);
+        }).y1(zero).curve(this.curve)(points);
       }
     }, {
       key: "drawSyle",
@@ -10249,7 +10251,7 @@
   });
   var World_1 = World;
 
-  var _version$1 = '0.3.2';
+  var _version$1 = '0.3.3';
 
   var somehow = function somehow(obj) {
     return new World_1(obj);

@@ -4200,7 +4200,6 @@ class Scale {
       let num = this.byPercent(obj.value);
       let val = this.scale.backward(num);
       if (this.is_y) {
-        console.log(num, val);
         return this.to - val
       }
       return val
@@ -4895,6 +4894,7 @@ class XAxis extends Axis_1 {
       x: '50%',
       y: '115%',
       fill: this.attrs.stroke,
+      'font-size': '2px',
       style: 'text-anchor:middle;'
     };
     return h`<g>
@@ -4937,6 +4937,7 @@ class YAxis extends Axis_1 {
     let textAttrs = {
       x: '-5%',
       y: '50%',
+      'font-size': '2px',
       fill: this.attrs.stroke,
       style: 'text-anchor:end;'
     };
@@ -7129,6 +7130,7 @@ class Shape {
     return this
   }
   soft() {
+    // this.curve = d3Shape.curveBundle.beta(0.5)
     this.curve = d3Shape.curveBasis;
     return this
   }
@@ -7264,7 +7266,7 @@ class Shape {
       .x0(d => d[0])
       .y0(d => d[1])
       .y1(zero)
-      .curve(d3Shape.curveMonotoneX)(points)
+      .curve(this.curve)(points)
   }
   drawSyle() {
     return Object.keys(this.style)
@@ -8535,7 +8537,7 @@ Object.keys(aliases).forEach(k => {
 });
 var World_1 = World;
 
-var _version$1 = '0.3.2';
+var _version$1 = '0.3.3';
 
 // ...people call this a 'factory'
 const somehow = function(obj) {
