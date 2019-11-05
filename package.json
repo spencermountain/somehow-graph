@@ -1,7 +1,7 @@
 {
   "name": "somehow",
   "description": "make infographics without thinking",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "main": "src/index.js",
   "unpkg": "builds/somehow.min.js",
   "module": "builds/somehow.mjs",
@@ -36,16 +36,16 @@
     "fit-aspect-ratio": "^2.0.0",
     "htm": "2.2.1",
     "somehow-ticks": "^0.0.3",
-    "spacetime": "6.1.0",
+    "spacetime": "6.2.0",
     "spacetime-ticks": "0.2.1",
     "spencer-color": "^0.1.0",
     "vhtml": "^2.1.0"
   },
   "devDependencies": {
-    "@babel/core": "7.6.3",
+    "@babel/core": "7.6.4",
     "@babel/preset-env": "7.6.3",
     "budo": "^11.6.3",
-    "rollup": "1.23.1",
+    "rollup": "1.26.3",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-json": "^4.0.0",
