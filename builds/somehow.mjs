@@ -13,7 +13,285 @@ function createCommonjsModule(fn, module) {
 }
 
 var fitAspectRatio = createCommonjsModule(function (module, exports) {
-!function(e){module.exports=e();}(function(){return function a(o,s,d){function c(t,e){if(!s[t]){if(!o[t]){var i="function"==typeof commonjsRequire&&commonjsRequire;if(!e&&i)return i(t,!0);if(l)return l(t,!0);var n=new Error("Cannot find module '"+t+"'");throw n.code="MODULE_NOT_FOUND",n}var r=s[t]={exports:{}};o[t][0].call(r.exports,function(e){return c(o[t][1][e]||e)},r,r.exports,a,o,s,d);}return s[t].exports}for(var l="function"==typeof commonjsRequire&&commonjsRequire,e=0;e<d.length;e++)c(d[e]);return c}({1:[function(e,t,i){var n=[{names:["square","1:1","instagram"],description:"Square",decimal:1,orientation:"landscape"},{names:["4:3","fullscreen","four three","1.33:1","ipad","pythagorean"],description:"Traditional TVs",decimal:1.333333,orientation:"landscape"},{names:["a4","√2:1","paper","lichtenberg","1:1.41"],description:"A4 paper",decimal:1.41},{names:["imax","1.43:1"],description:"IMAX film",decimal:1.43,orientation:"landscape"},{names:["3:2","35mm","photo","1.5:1","1.5"],description:"35mm photos",decimal:1.5,orientation:"landscape"},{names:["business card","bank card","1.58:1"],description:"Bank Cards",decimal:1.58577,orientation:"landscape"},{names:["golden","kepler","1.618","1.6:1"],description:"Golden ratio",decimal:1.61803,orientation:"landscape"},{names:["16:9","hd","hdtv","fhd","tv","computer","iphone","4k","8k","1.78:1"],description:"HD video",decimal:1.77777,orientation:"landscape"},{names:["widescreen","1.85:1"],description:"Movie-theatres",decimal:1.85,orientation:"landscape"},{names:["2:1","univisium","mobile","18:9"],description:"2:1",decimal:2,orientation:"landscape"},{names:["cinemascope","widescreen","wide","2.35:1","2.39:1"],description:"Widescreen",decimal:2.35,orientation:"landscape"},{names:["silver","1 + √2","2.41:1"],description:"Silver ratio",decimal:2.41,orientation:"landscape"}],r=n.map(function(e){return (e=Object.assign({},e)).decimal=1/e.decimal,e.orientation="portrait",e}),a={};n.forEach(function(t){t.names.forEach(function(e){a[e]=t;});}),t.exports={lookup:a,portraits:r,list:n};},{}],2:[function(e,t,i){var n=e("./aspects");t.exports=function(e,t){var i=e/t;return (i=parseInt(100*i,10)/100)<1?function(e,t){for(var i=0;i<t.length;i+=1)if(e>t[i].decimal){if(t[i-1]){var n=Math.abs(e-t[i].decimal);if(Math.abs(e-t[i-1].decimal)<n)return t[i-1]}return t[i]}return t[t.length-1]}(i,n.portraits):function(e,t){for(var i=0;i<t.length;i+=1)if(e<=t[i].decimal){if(t[i-1]){var n=Math.abs(e-t[i].decimal);if(Math.abs(e-t[i-1].decimal)<n)return t[i-1]}return t[i]}return t[t.length-1]}(i,n.list)};},{"./aspects":1}],3:[function(e,t,i){var n=function(e,t){var i=1/t.decimal,n=e.orientation||"landscape";"portrait"===n&&(i=1/i);var r=e.width*i;return r=Math.round(r),{closest:t,width:e.width,height:r,orientation:n,original:e}},r=function(e,t){var i=t.decimal,n=e.orientation||"landscape";"portrait"===n&&(i=1/i);var r=e.height*i;return {closest:t,width:r=Math.round(r),height:e.height,orientation:n,original:e}};t.exports={both:function(e,t){var i=r(e,t);return i.width>e.width?n(e,t):i},width:r,height:n};},{}],4:[function(i,n,e){(function(e){var o=i("./find-best-ratio"),s=i("./parse-ratio"),d=i("./fit"),t=function(){var e=0<arguments.length&&void 0!==arguments[0]?arguments[0]:{};if(!e.aspect&&!e.ratio){var t=o(e.width,e.height),i=1/t.decimal,n=e.width*i,r=(n-e.height)/e.height;return r=parseInt(1e3*r,10)/10,n=Math.round(n),{closest:t,percent_change:r,width:e.width,height:n}}var a=s(e.aspect||e.ratio||"");return null===a?(console.error("find-aspect-ratio error: Could not find a given aspect ratio."),e):"number"==typeof e.width&&"number"==typeof e.height?d.both(e,a):"number"==typeof e.width?d.height(e,a):"number"==typeof e.height?d.width(e,a):(console.error("find-aspect-ratio error: Please supply a height, width, or ratio value."),e)};"undefined"!=typeof self?self.nlp=t:"undefined"!=typeof window?window.nlp=t:void 0!==e&&(e.nlp=t),void 0!==n&&(n.exports=t);}).call(this,"undefined"!=typeof commonjsGlobal?commonjsGlobal:"undefined"!=typeof self?self:"undefined"!=typeof window?window:{});},{"./find-best-ratio":2,"./fit":3,"./parse-ratio":5}],5:[function(e,t,i){var n=e("./aspects"),r=/^[0-9\.]+:[0-9\.]+$/;t.exports=function(e){if(e=(e=(e=(e=e.toLowerCase()).trim()).replace(" ratio","")).replace("-"," "),!0===n.lookup.hasOwnProperty(e))return n.lookup[e];if(!0!==r.test(e))return null;var t=e.split(":");return {description:"custom",decimal:parseFloat(t[0])/parseFloat(t[1])}};},{"./aspects":1}]},{},[4])(4)});
+(function (global, factory) {
+   module.exports = factory() ;
+}(commonjsGlobal, (function () {
+  //lists are stored in landscape orientation
+  const list = [{
+    names: ['square', '1:1', 'instagram'],
+    description: 'Square',
+    decimal: 1,
+    orientation: 'landscape'
+  }, {
+    names: ['4:3', 'fullscreen', 'four three', '1.33:1', 'ipad', 'pythagorean'],
+    description: 'Traditional TVs',
+    decimal: 1.333333,
+    orientation: 'landscape'
+  }, {
+    names: ['a4', '√2:1', 'paper', 'lichtenberg', '1:1.41'],
+    description: 'A4 paper',
+    decimal: 1.41
+  }, {
+    names: ['imax', '1.43:1'],
+    description: 'IMAX film',
+    decimal: 1.43,
+    orientation: 'landscape'
+  }, {
+    names: ['3:2', '35mm', 'photo', '1.5:1', '1.5'],
+    description: '35mm photos',
+    decimal: 1.5,
+    orientation: 'landscape'
+  }, {
+    names: ['business card', 'bank card', '1.58:1'],
+    description: 'Bank Cards',
+    decimal: 1.58577,
+    orientation: 'landscape'
+  }, {
+    names: ['golden', 'kepler', '1.618', '1.6:1'],
+    description: 'Golden ratio',
+    decimal: 1.61803,
+    orientation: 'landscape'
+  }, {
+    names: ['16:9', 'hd', 'hdtv', 'fhd', 'tv', 'computer', 'iphone', '4k', '8k', '1.78:1'],
+    description: 'HD video',
+    decimal: 1.77777,
+    orientation: 'landscape'
+  }, {
+    names: ['widescreen', '1.85:1'],
+    description: 'Movie-theatres',
+    decimal: 1.85,
+    orientation: 'landscape'
+  }, {
+    names: ['2:1', 'univisium', 'mobile', '18:9'],
+    description: '2:1',
+    decimal: 2,
+    orientation: 'landscape'
+  }, {
+    names: ['cinemascope', 'widescreen', 'wide', '2.35:1', '2.39:1'],
+    description: 'Widescreen',
+    decimal: 2.35,
+    orientation: 'landscape'
+  }, {
+    names: ['silver', '1 + √2', '2.41:1'],
+    description: 'Silver ratio',
+    decimal: 2.41,
+    orientation: 'landscape'
+  }]; //create portrait mode
+
+  let portraits = list.map(o => {
+    o = Object.assign({}, o);
+    o.decimal = 1 / o.decimal;
+    o.orientation = 'portrait';
+    return o;
+  }); // const list = portrait.concat(landscape)
+  //flip it into a nice lookup hash
+
+  let lookup = {};
+  list.forEach(o => {
+    o.names.forEach(name => {
+      lookup[name] = o;
+    });
+  });
+  var aspects = {
+    lookup: lookup,
+    portraits: portraits,
+    list: list
+  };
+
+  const findLandscape = function (decimal, list) {
+    for (let i = 0; i < list.length; i += 1) {
+      if (decimal <= list[i].decimal) {
+        //was the previous one even closer?
+        if (list[i - 1]) {
+          let diffThis = Math.abs(decimal - list[i].decimal);
+          let diffLast = Math.abs(decimal - list[i - 1].decimal);
+
+          if (diffLast < diffThis) {
+            return list[i - 1];
+          }
+        }
+
+        return list[i];
+      }
+    }
+
+    return list[list.length - 1];
+  }; //find the closest portrait ratio
+
+
+  const findPortrait = function (decimal, list) {
+    for (let i = 0; i < list.length; i += 1) {
+      if (decimal > list[i].decimal) {
+        //was the previous one even closer?
+        if (list[i - 1]) {
+          let diffThis = Math.abs(decimal - list[i].decimal);
+          let diffLast = Math.abs(decimal - list[i - 1].decimal);
+
+          if (diffLast < diffThis) {
+            return list[i - 1];
+          }
+        }
+
+        return list[i];
+      }
+    }
+
+    return list[list.length - 1];
+  }; //find the closest aspect ratio from width/height
+
+
+  const findBestRatio = function (width, height) {
+    let decimal = width / height; //round it to 2 decimals
+
+    decimal = parseInt(decimal * 100, 10) / 100; //do we want a portrait or landscape aspect ratio?
+
+    if (decimal < 1) {
+      return findPortrait(decimal, aspects.portraits);
+    }
+
+    return findLandscape(decimal, aspects.list);
+  };
+
+  var findBestRatio_1 = findBestRatio;
+
+  const isRatio = /^[0-9\.]+:[0-9\.]+$/; //determine aspect ratio from name
+
+  const parseRatio = function (name) {
+    name = name.toLowerCase();
+    name = name.trim();
+    name = name.replace(' ratio', '');
+    name = name.replace('-', ' '); //if we know it..
+
+    if (aspects.lookup.hasOwnProperty(name) === true) {
+      return aspects.lookup[name];
+    } //if it's numerical
+
+
+    if (isRatio.test(name) === true) {
+      let arr = name.split(':');
+      let width = parseFloat(arr[0]);
+      let height = parseFloat(arr[1]);
+      let aspect = {
+        description: 'custom',
+        decimal: width / height
+      };
+      return aspect;
+    }
+
+    return null;
+  };
+
+  var parseRatio_1 = parseRatio;
+
+  const fitHeight = function (obj, aspect) {
+    let decimal = 1 / aspect.decimal;
+    let orientation = obj.orientation || 'landscape'; //reverse it (again), if in portrait
+
+    if (orientation === 'portrait') {
+      decimal = 1 / decimal;
+    }
+
+    let height = obj.width * decimal;
+    height = Math.round(height);
+    return {
+      closest: aspect,
+      width: obj.width,
+      height: height,
+      orientation: orientation,
+      original: obj
+    };
+  };
+
+  const fitWidth = function (obj, aspect) {
+    let decimal = aspect.decimal;
+    let orientation = obj.orientation || 'landscape'; //reverse it, if in portrait
+
+    if (orientation === 'portrait') {
+      decimal = 1 / decimal;
+    }
+
+    let width = obj.height * decimal;
+    width = Math.round(width);
+    return {
+      closest: aspect,
+      width: width,
+      height: obj.height,
+      orientation: orientation,
+      original: obj
+    };
+  }; //shorten the side that's too long
+
+
+  const shrink = function (obj, aspect) {
+    let moveWidth = fitWidth(obj, aspect); //did this make our width longer?
+
+    if (moveWidth.width > obj.width) {
+      return fitHeight(obj, aspect);
+    }
+
+    return moveWidth;
+  };
+
+  var fit = {
+    both: shrink,
+    width: fitWidth,
+    height: fitHeight
+  };
+
+  //
+
+  const fitAspect = function (obj = {}) {
+    //for these numbers, calculate best ratio
+    if (!obj.aspect && !obj.ratio) {
+      let aspect = findBestRatio_1(obj.width, obj.height);
+      let inverse = 1 / aspect.decimal;
+      let height = obj.width * inverse; //calculate change %
+
+      let change = (height - obj.height) / obj.height;
+      change = parseInt(change * 1000, 10) / 10;
+      height = Math.round(height);
+      return {
+        closest: aspect,
+        percent_change: change,
+        width: obj.width,
+        height: height
+      };
+    } //lookup aspect ratio
+
+
+    let aspect = parseRatio_1(obj.aspect || obj.ratio || '');
+
+    if (aspect === null) {
+      console.error('find-aspect-ratio error: Could not find a given aspect ratio.');
+      return obj;
+    } //shrink both to fit
+
+
+    if (typeof obj.width === 'number' && typeof obj.height === 'number') {
+      return fit.both(obj, aspect);
+    } //determine missing height
+
+
+    if (typeof obj.width === 'number') {
+      return fit.height(obj, aspect);
+    } //determine missing width
+
+
+    if (typeof obj.height === 'number') {
+      return fit.width(obj, aspect);
+    } //doh
+
+
+    console.error('find-aspect-ratio error: Please supply a height, width, or ratio value.');
+    return obj;
+  };
+
+  var src = fitAspect;
+
+  return src;
+
+})));
+
 });
 
 var htm = createCommonjsModule(function (module) {
@@ -333,9 +611,9 @@ var spacetime = createCommonjsModule(function (module, exports) {
 		"13|s|01/15:02->11/05:03": "11/tongatapu",
 		"13|n": "11/enderbury,11/fakaofo",
 		"12|s|04/07:03->09/29:02": "12/mcmurdo,12/south_pole,11/auckland",
-		"12|s|01/13:03->11/03:02": "11/fiji",
+		"12|s|01/13:03->11/10:02": "11/fiji",
 		"12|n": "2/anadyr,2/kamchatka,2/srednekolymsk,11/funafuti,11/kwajalein,11/majuro,11/nauru,11/tarawa,11/wake,11/wallis",
-		"12.75|s|04/07:03->04/07:02": "11/chatham",
+		"12.75|s|04/07:03->09/29:02": "11/chatham",
 		"11|s": "12/macquarie,11/bougainville",
 		"11|n": "2/magadan,2/sakhalin,11/efate,11/guadalcanal,11/kosrae,11/noumea,11/pohnpei,11/ponape",
 		"11.5|n": "11/norfolk",
@@ -370,8 +648,7 @@ var spacetime = createCommonjsModule(function (module, exports) {
 		"-4|n|03/10:02->11/03:02": "1/detroit,1/fort_wayne,1/grand_turk,1/indianapolis,1/iqaluit,1/louisville,1/montreal,1/nassau,1/new_york,1/nipigon,1/pangnirtung,1/port-au-prince,1/thunder_bay,1/toronto,6/eastern",
 		"-4|n|03/10:00->11/03:01": "1/havana",
 		"-4|n": "1/anguilla,1/antigua,1/aruba,1/barbados,1/blanc-sablon,1/boa_vista,1/caracas,1/curacao,1/dominica,1/grenada,1/guadeloupe,1/guyana,1/kralendijk,1/lower_princes,1/marigot,1/martinique,1/montserrat,1/port_of_spain,1/porto_velho,1/puerto_rico,1/santo_domingo,1/st_barthelemy,1/st_kitts,1/st_lucia,1/st_thomas,1/st_vincent,1/tortola,1/virgin",
-		"-3|s|02/16:24->11/03:00": "1/sao_paulo,5/east",
-		"-3|s": "1/argentina,1/buenos_aires,1/cordoba,1/fortaleza,1/montevideo,1/punta_arenas,12/rothera,3/stanley",
+		"-3|s": "1/argentina,1/buenos_aires,1/cordoba,1/fortaleza,1/montevideo,1/punta_arenas,1/sao_paulo,12/rothera,3/stanley,5/east",
 		"-3|n|03/10:02->11/03:02": "1/glace_bay,1/goose_bay,1/halifax,1/moncton,1/thule,3/bermuda,6/atlantic",
 		"-3|n": "1/araguaina,1/bahia,1/belem,1/catamarca,1/cayenne,1/jujuy,1/maceio,1/mendoza,1/paramaribo,1/recife,1/rosario,1/santarem",
 		"-2|s": "5/denoronha",
@@ -661,7 +938,7 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	    // console.warn('spacetime warning: missed setting ' + unit)
 	    s.epoch = original; // i mean, but make it close...
 
-	    s.epoch += milliseconds[unit] * diff * 0.97; // i guess?
+	    s.epoch += milliseconds[unit] * diff * 0.89; // i guess?
 	  }
 	}; //find the desired date by a increment/check while loop
 
@@ -683,7 +960,7 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	      var d = s.d;
 	      var current = d.getMonth();
 	      var original = s.epoch;
-	      var startUnit = d.getYear();
+	      var startUnit = d.getFullYear();
 
 	      if (current === n) {
 	        return;
@@ -694,7 +971,7 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	      s.epoch += milliseconds.day * (diff * 28); //special case
 	      //oops, did we change the year? revert it.
 
-	      if (startUnit !== s.d.getYear()) {
+	      if (startUnit !== s.d.getFullYear()) {
 	        s.epoch = original;
 	      } //incriment by day
 
@@ -1021,9 +1298,9 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	    s = parseTime_1(s, arr[4]);
 	    return s;
 	  }
-	}, //iso "2015-03-25" or "2015/03/25" //0-based-months!
+	}, //iso "2015-03-25" or "2015/03/25" or "2015/03/25 12:26:14 PM"
 	{
-	  reg: /^([0-9]{4})[\-\/]([0-9]{1,2})[\-\/]([0-9]{1,2})$/,
+	  reg: /^([0-9]{4})[\-\/]([0-9]{1,2})[\-\/]([0-9]{1,2}),?( [0-9]{1,2}:[0-9]{2}:?[0-9]{0,2}? ?(am|pm|gmt))?$/i,
 	  parse: function parse(s, arr) {
 	    var obj = {
 	      year: arr[1],
@@ -1043,12 +1320,12 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	    }
 
 	    walk_1(s, obj);
-	    s = parseTime_1(s);
+	    s = parseTime_1(s, arr[4]);
 	    return s;
 	  }
-	}, //short - uk "03/25/2015"  //0-based-months!
+	}, //mm/dd/yyyy - uk/canada "6/28/2019, 12:26:14 PM"
 	{
-	  reg: /^([0-9]{1,2})[\-\/]([0-9]{1,2})[\-\/]?([0-9]{4})?$/,
+	  reg: /^([0-9]{1,2})[\-\/]([0-9]{1,2})[\-\/]?([0-9]{4})?,?( [0-9]{1,2}:[0-9]{2}:?[0-9]{0,2}? ?(am|pm|gmt))?$/i,
 	  parse: function parse(s, arr) {
 	    var month = parseInt(arr[1], 10) - 1;
 	    var date = parseInt(arr[2], 10); //support dd/mm/yyy
@@ -1071,7 +1348,7 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	    }
 
 	    walk_1(s, obj);
-	    s = parseTime_1(s);
+	    s = parseTime_1(s, arr[4]);
 	    return s;
 	  }
 	}, //common british format - "25-feb-2015"
@@ -1098,7 +1375,7 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	}, //Long "Mar 25 2015"
 	//February 22, 2017 15:30:00
 	{
-	  reg: /^([a-z]+) ([0-9]{1,2}(?:st|nd|rd|th)?),?( [0-9]{4})?( ([0-9:]+( ?am| ?pm)?))?$/i,
+	  reg: /^([a-z]+) ([0-9]{1,2}(?:st|nd|rd|th)?),?( [0-9]{4})?( ([0-9:]+( ?am| ?pm| ?gmt)?))?$/i,
 	  parse: function parse(s, arr) {
 	    var month = months$1[arr[1].toLowerCase()];
 	    var year = parseYear(arr[3]);
@@ -1140,9 +1417,14 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	  }
 	}, //Long "25 Mar 2015"
 	{
-	  reg: /^([0-9]{1,2}(?:st|nd|rd|th)?) ([a-z]+),?( [0-9]{4})?$/i,
+	  reg: /^([0-9]{1,2}(?:st|nd|rd|th)?) ([a-z]+),?( [0-9]{4})?,? ?([0-9]{1,2}:[0-9]{2}:?[0-9]{0,2}? ?(am|pm|gmt))?$/i,
 	  parse: function parse(s, arr) {
 	    var month = months$1[arr[2].toLowerCase()];
+
+	    if (!month) {
+	      return null;
+	    }
+
 	    var year = parseYear(arr[3]);
 	    var obj = {
 	      year: year,
@@ -1156,14 +1438,19 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	    }
 
 	    walk_1(s, obj);
-	    s = parseTime_1(s);
+	    s = parseTime_1(s, arr[4]);
 	    return s;
 	  }
 	}, {
-	  // '1992'
-	  reg: /^[0-9]{4}$/i,
+	  // '200bc'
+	  reg: /^[0-9,]+ ?b\.?c\.?$/i,
 	  parse: function parse(s, arr) {
-	    var year = parseYear(arr[0]);
+	    var str = arr[0] || ''; //make negative-year
+
+	    str = str.replace(/^([0-9,]+) ?b\.?c\.?$/i, '-$1'); //remove commas
+
+	    str = str.replace(/,/g, '');
+	    var year = parseInt(str.trim(), 10);
 	    var d = new Date();
 	    var obj = {
 	      year: year,
@@ -1181,15 +1468,34 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	    return s;
 	  }
 	}, {
-	  // '200bc'
-	  reg: /^[0-9,]+ ?b\.?c\.?$/i,
+	  // '200ad'
+	  reg: /^[0-9,]+ ?(a\.?d\.?|c\.?e\.?)$/i,
 	  parse: function parse(s, arr) {
-	    var str = arr[0] || ''; //make negative-year
-
-	    str = str.replace(/^([0-9,]+) ?b\.?c\.?$/i, '-$1'); //remove commas
+	    var str = arr[0] || ''; //remove commas
 
 	    str = str.replace(/,/g, '');
 	    var year = parseInt(str.trim(), 10);
+	    var d = new Date();
+	    var obj = {
+	      year: year,
+	      month: d.getMonth(),
+	      date: d.getDate()
+	    };
+
+	    if (hasDate_1(obj) === false) {
+	      s.epoch = null;
+	      return s;
+	    }
+
+	    walk_1(s, obj);
+	    s = parseTime_1(s);
+	    return s;
+	  }
+	}, {
+	  // '1992'
+	  reg: /^[0-9]{4}( ?a\.?d\.?)?$/i,
+	  parse: function parse(s, arr) {
+	    var year = parseYear(arr[0]);
 	    var d = new Date();
 	    var obj = {
 	      year: year,
@@ -1371,8 +1677,11 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	    var m = input.match(strParse[i].reg);
 
 	    if (m) {
-	      s = strParse[i].parse(s, m, givenTz);
-	      return s;
+	      var res = strParse[i].parse(s, m, givenTz);
+
+	      if (res !== null) {
+	        return res;
+	      }
 	    }
 	  }
 
@@ -1559,6 +1868,9 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	  era: function era(s) {
 	    return s.era();
 	  },
+	  json: function json(s) {
+	    return s.json();
+	  },
 	  timezone: function timezone(s) {
 	    return s.timezone().name;
 	  },
@@ -1655,10 +1967,14 @@ var spacetime = createCommonjsModule(function (module, exports) {
 
 
 	  if (format.hasOwnProperty(str)) {
-	    var out = String(format[str](s) || '');
+	    var out = format[str](s) || '';
 
-	    if (str !== 'ampm') {
-	      out = fns.titleCase(out);
+	    if (str !== 'json') {
+	      out = String(out);
+
+	      if (str !== 'ampm') {
+	        out = fns.titleCase(out);
+	      }
 	    }
 
 	    return out;
@@ -2422,7 +2738,8 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	  },
 	  century: function century(s) {
 	    s = s.startOf('year');
-	    var year = s.year();
+	    var year = s.year(); // near 0AD goes '-1 | +1'
+
 	    var decade = parseInt(year / 100, 10) * 100;
 	    s = s.year(decade);
 	    return s;
@@ -2616,6 +2933,8 @@ var spacetime = createCommonjsModule(function (module, exports) {
 
 	var timezone_1 = timezone;
 
+	var units$3 = ['century', 'decade', 'year', 'month', 'date', 'day', 'hour', 'minute', 'second', 'millisecond']; //the spacetime instance methods (also, the API)
+
 	var methods = {
 	  set: function set(input$1, tz) {
 	    var s = this.clone();
@@ -2724,6 +3043,14 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	    console.log('');
 	    console.log(format_1(this, 'full-short'));
 	    return this;
+	  },
+	  json: function json() {
+	    var _this = this;
+
+	    return units$3.reduce(function (h, unit) {
+	      h[unit] = _this[unit]();
+	      return h;
+	    }, {});
 	  },
 	  debug: function debug() {
 	    var tz = this.timezone();
@@ -3243,7 +3570,7 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	    for (var i = 1; i <= month; i++) {
 	      tmp = new Date();
 	      tmp.setDate(1);
-	      tmp.setYear(this.d.getFullYear()); //the year matters, because leap-years
+	      tmp.setFullYear(this.d.getFullYear()); //the year matters, because leap-years
 
 	      tmp.setHours(1);
 	      tmp.setMinutes(1);
@@ -3257,6 +3584,7 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	  },
 	  //since the start of the year
 	  week: function week(num) {
+	    // week-setter
 	    if (num !== undefined) {
 	      var s = this.clone();
 	      s = s.month(0);
@@ -3283,8 +3611,16 @@ var spacetime = createCommonjsModule(function (module, exports) {
 
 	    if (tmp.monthName() === 'december') {
 	      tmp = tmp.add(1, 'week');
+	    } // is first monday the 1st?
+
+
+	    var toAdd = 1;
+
+	    if (tmp.date() === 1) {
+	      toAdd = 0;
 	    }
 
+	    tmp = tmp.minus(1, 'second');
 	    var thisOne = this.epoch; //if the week technically hasn't started yet
 
 	    if (tmp.epoch > thisOne) {
@@ -3299,7 +3635,7 @@ var spacetime = createCommonjsModule(function (module, exports) {
 
 	    for (; i < 52; i++) {
 	      if (tmp.epoch > thisOne) {
-	        return i;
+	        return i + toAdd;
 	      }
 
 	      tmp = tmp.add(1, 'week');
@@ -3412,6 +3748,120 @@ var spacetime = createCommonjsModule(function (module, exports) {
 	    }
 
 	    return 'AD';
+	  },
+	  // 2019 -> 2010
+	  decade: function decade(input) {
+	    if (input !== undefined) {
+	      input = String(input);
+	      input = input.replace(/([0-9])'?s$/, '$1'); //1950's
+
+	      input = input.replace(/([0-9])(th|rd|st|nd)/, '$1'); //fix ordinals
+
+	      if (!input) {
+	        console.warn('Spacetime: Invalid decade input');
+	        return this;
+	      } // assume 20th century?? for '70s'.
+
+
+	      if (input.length === 2 && /[0-9][0-9]/.test(input)) {
+	        input = '19' + input;
+	      }
+
+	      var year = Number(input);
+
+	      if (isNaN(year)) {
+	        return this;
+	      } // round it down to the decade
+
+
+	      year = Math.floor(year / 10) * 10;
+	      return this.year(year); //.startOf('decade')
+	    }
+
+	    return this.startOf('decade').year();
+	  },
+	  // 1950 -> 19+1
+	  century: function century(input) {
+	    if (input !== undefined) {
+	      if (typeof input === 'string') {
+	        input = input.replace(/([0-9])(th|rd|st|nd)/, '$1'); //fix ordinals
+
+	        input = input.replace(/([0-9]+) ?(b\.?c\.?|a\.?d\.?)/i, function (a, b, c) {
+	          if (c.match(/b\.?c\.?/i)) {
+	            b = '-' + b;
+	          }
+
+	          return b;
+	        });
+	        input = input.replace(/c$/, ''); //20thC
+	      }
+
+	      var year = Number(input);
+
+	      if (isNaN(input)) {
+	        console.warn('Spacetime: Invalid century input');
+	        return this;
+	      } // there is no century 0
+
+
+	      if (year === 0) {
+	        year = 1;
+	      }
+
+	      if (year >= 0) {
+	        year = (year - 1) * 100;
+	      } else {
+	        year = (year + 1) * 100;
+	      }
+
+	      return this.year(year);
+	    } // century getter
+
+
+	    var num = this.startOf('century').year();
+	    num = Math.floor(num / 100);
+
+	    if (num < 0) {
+	      return num - 1;
+	    }
+
+	    return num + 1;
+	  },
+	  // 2019 -> 2+1
+	  millenium: function millenium(input) {
+	    if (input !== undefined) {
+	      if (typeof input === 'string') {
+	        input = input.replace(/([0-9])(th|rd|st|nd)/, '$1'); //fix ordinals
+
+	        input = Number(input);
+
+	        if (isNaN(input)) {
+	          console.warn('Spacetime: Invalid millenium input');
+	          return this;
+	        }
+	      }
+
+	      if (input > 0) {
+	        input -= 1;
+	      }
+
+	      var year = input * 1000; // there is no year 0
+
+	      if (year === 0) {
+	        year = 1;
+	      }
+
+	      return this.year(year);
+	    } // get the current millenium
+
+
+	    var num = Math.floor(this.year() / 1000);
+
+	    if (num >= 0) {
+	      num += 1;
+	    }
+
+	    return num;
 	  }
 	};
 	var _03Year = methods$3;
@@ -3845,7 +4295,7 @@ var spacetime = createCommonjsModule(function (module, exports) {
 
 	var whereIts_1 = whereIts;
 
-	var _version = '6.2.0';
+	var _version = '6.3.0';
 
 	var main$1 = function main(input, tz, options) {
 	  return new spacetime(input, tz, options);
@@ -4975,10 +5425,10 @@ class YAxis extends Axis_1 {
 var YAxis_1 = YAxis;
 
 var d3Path = createCommonjsModule(function (module, exports) {
-// https://d3js.org/d3-path/ v1.0.7 Copyright 2018 Mike Bostock
+// https://d3js.org/d3-path/ v1.0.9 Copyright 2019 Mike Bostock
 (function (global, factory) {
  factory(exports) ;
-}(commonjsGlobal, (function (exports) {
+}(commonjsGlobal, function (exports) {
 var pi = Math.PI,
     tau = 2 * pi,
     epsilon = 1e-6,
@@ -5063,7 +5513,7 @@ Path.prototype = path.prototype = {
     }
   },
   arc: function(x, y, r, a0, a1, ccw) {
-    x = +x, y = +y, r = +r;
+    x = +x, y = +y, r = +r, ccw = !!ccw;
     var dx = r * Math.cos(a0),
         dy = r * Math.sin(a0),
         x0 = x + dx,
@@ -5112,16 +5562,16 @@ exports.path = path;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));
 });
 
 unwrapExports(d3Path);
 
 var d3Shape = createCommonjsModule(function (module, exports) {
-// https://d3js.org/d3-shape/ v1.3.5 Copyright 2019 Mike Bostock
+// https://d3js.org/d3-shape/ v1.3.7 Copyright 2019 Mike Bostock
 (function (global, factory) {
  factory(exports, d3Path) ;
-}(commonjsGlobal, (function (exports,d3Path) {
+}(commonjsGlobal, function (exports, d3Path) {
 function constant(x) {
   return function constant() {
     return x;
@@ -5448,8 +5898,8 @@ function y(p) {
 }
 
 function line() {
-  var x$$1 = x,
-      y$$1 = y,
+  var x$1 = x,
+      y$1 = y,
       defined = constant(true),
       context = null,
       curve = curveLinear,
@@ -5469,18 +5919,18 @@ function line() {
         if (defined0 = !defined0) output.lineStart();
         else output.lineEnd();
       }
-      if (defined0) output.point(+x$$1(d, i, data), +y$$1(d, i, data));
+      if (defined0) output.point(+x$1(d, i, data), +y$1(d, i, data));
     }
 
     if (buffer) return output = null, buffer + "" || null;
   }
 
   line.x = function(_) {
-    return arguments.length ? (x$$1 = typeof _ === "function" ? _ : constant(+_), line) : x$$1;
+    return arguments.length ? (x$1 = typeof _ === "function" ? _ : constant(+_), line) : x$1;
   };
 
   line.y = function(_) {
-    return arguments.length ? (y$$1 = typeof _ === "function" ? _ : constant(+_), line) : y$$1;
+    return arguments.length ? (y$1 = typeof _ === "function" ? _ : constant(+_), line) : y$1;
   };
 
   line.defined = function(_) {
@@ -5780,14 +6230,14 @@ function linkTarget(d) {
 function link(curve) {
   var source = linkSource,
       target = linkTarget,
-      x$$1 = x,
-      y$$1 = y,
+      x$1 = x,
+      y$1 = y,
       context = null;
 
   function link() {
     var buffer, argv = slice.call(arguments), s = source.apply(this, argv), t = target.apply(this, argv);
     if (!context) context = buffer = d3Path.path();
-    curve(context, +x$$1.apply(this, (argv[0] = s, argv)), +y$$1.apply(this, argv), +x$$1.apply(this, (argv[0] = t, argv)), +y$$1.apply(this, argv));
+    curve(context, +x$1.apply(this, (argv[0] = s, argv)), +y$1.apply(this, argv), +x$1.apply(this, (argv[0] = t, argv)), +y$1.apply(this, argv));
     if (buffer) return context = null, buffer + "" || null;
   }
 
@@ -5800,11 +6250,11 @@ function link(curve) {
   };
 
   link.x = function(_) {
-    return arguments.length ? (x$$1 = typeof _ === "function" ? _ : constant(+_), link) : x$$1;
+    return arguments.length ? (x$1 = typeof _ === "function" ? _ : constant(+_), link) : x$1;
   };
 
   link.y = function(_) {
-    return arguments.length ? (y$$1 = typeof _ === "function" ? _ : constant(+_), link) : y$$1;
+    return arguments.length ? (y$1 = typeof _ === "function" ? _ : constant(+_), link) : y$1;
   };
 
   link.context = function(_) {
@@ -6304,15 +6754,15 @@ CardinalClosed.prototype = {
 
 var cardinalClosed = (function custom(tension) {
 
-  function cardinal$$1(context) {
+  function cardinal(context) {
     return new CardinalClosed(context, tension);
   }
 
-  cardinal$$1.tension = function(tension) {
+  cardinal.tension = function(tension) {
     return custom(+tension);
   };
 
-  return cardinal$$1;
+  return cardinal;
 })(0);
 
 function CardinalOpen(context, tension) {
@@ -6352,15 +6802,15 @@ CardinalOpen.prototype = {
 
 var cardinalOpen = (function custom(tension) {
 
-  function cardinal$$1(context) {
+  function cardinal(context) {
     return new CardinalOpen(context, tension);
   }
 
-  cardinal$$1.tension = function(tension) {
+  cardinal.tension = function(tension) {
     return custom(+tension);
   };
 
-  return cardinal$$1;
+  return cardinal;
 })(0);
 
 function point$2(that, x, y) {
@@ -6509,15 +6959,15 @@ CatmullRomClosed.prototype = {
 
 var catmullRomClosed = (function custom(alpha) {
 
-  function catmullRom$$1(context) {
+  function catmullRom(context) {
     return alpha ? new CatmullRomClosed(context, alpha) : new CardinalClosed(context, 0);
   }
 
-  catmullRom$$1.alpha = function(alpha) {
+  catmullRom.alpha = function(alpha) {
     return custom(+alpha);
   };
 
-  return catmullRom$$1;
+  return catmullRom;
 })(0.5);
 
 function CatmullRomOpen(context, alpha) {
@@ -6569,15 +7019,15 @@ CatmullRomOpen.prototype = {
 
 var catmullRomOpen = (function custom(alpha) {
 
-  function catmullRom$$1(context) {
+  function catmullRom(context) {
     return alpha ? new CatmullRomOpen(context, alpha) : new CardinalOpen(context, 0);
   }
 
-  catmullRom$$1.alpha = function(alpha) {
+  catmullRom.alpha = function(alpha) {
     return custom(+alpha);
   };
 
-  return catmullRom$$1;
+  return catmullRom;
 })(0.5);
 
 function LinearClosed(context) {
@@ -6911,12 +7361,12 @@ function diverging(series, order) {
   if (!((n = series.length) > 0)) return;
   for (var i, j = 0, d, dy, yp, yn, n, m = series[order[0]].length; j < m; ++j) {
     for (yp = yn = 0, i = 0; i < n; ++i) {
-      if ((dy = (d = series[order[i]][j])[1] - d[0]) >= 0) {
+      if ((dy = (d = series[order[i]][j])[1] - d[0]) > 0) {
         d[0] = yp, d[1] = yp += dy;
       } else if (dy < 0) {
         d[1] = yn, d[0] = yn += dy;
       } else {
-        d[0] = yp;
+        d[0] = 0, d[1] = dy;
       }
     }
   }
@@ -7011,46 +7461,37 @@ function reverse(series) {
 
 exports.arc = arc;
 exports.area = area;
-exports.line = line;
-exports.pie = pie;
 exports.areaRadial = areaRadial;
-exports.radialArea = areaRadial;
-exports.lineRadial = lineRadial$1;
-exports.radialLine = lineRadial$1;
-exports.pointRadial = pointRadial;
-exports.linkHorizontal = linkHorizontal;
-exports.linkVertical = linkVertical;
-exports.linkRadial = linkRadial;
-exports.symbol = symbol;
-exports.symbols = symbols;
-exports.symbolCircle = circle;
-exports.symbolCross = cross;
-exports.symbolDiamond = diamond;
-exports.symbolSquare = square;
-exports.symbolStar = star;
-exports.symbolTriangle = triangle;
-exports.symbolWye = wye;
+exports.curveBasis = basis;
 exports.curveBasisClosed = basisClosed;
 exports.curveBasisOpen = basisOpen;
-exports.curveBasis = basis;
 exports.curveBundle = bundle;
+exports.curveCardinal = cardinal;
 exports.curveCardinalClosed = cardinalClosed;
 exports.curveCardinalOpen = cardinalOpen;
-exports.curveCardinal = cardinal;
+exports.curveCatmullRom = catmullRom;
 exports.curveCatmullRomClosed = catmullRomClosed;
 exports.curveCatmullRomOpen = catmullRomOpen;
-exports.curveCatmullRom = catmullRom;
-exports.curveLinearClosed = linearClosed;
 exports.curveLinear = curveLinear;
+exports.curveLinearClosed = linearClosed;
 exports.curveMonotoneX = monotoneX;
 exports.curveMonotoneY = monotoneY;
 exports.curveNatural = natural;
 exports.curveStep = step;
 exports.curveStepAfter = stepAfter;
 exports.curveStepBefore = stepBefore;
+exports.line = line;
+exports.lineRadial = lineRadial$1;
+exports.linkHorizontal = linkHorizontal;
+exports.linkRadial = linkRadial;
+exports.linkVertical = linkVertical;
+exports.pie = pie;
+exports.pointRadial = pointRadial;
+exports.radialArea = areaRadial;
+exports.radialLine = lineRadial$1;
 exports.stack = stack;
-exports.stackOffsetExpand = expand;
 exports.stackOffsetDiverging = diverging;
+exports.stackOffsetExpand = expand;
 exports.stackOffsetNone = none;
 exports.stackOffsetSilhouette = silhouette;
 exports.stackOffsetWiggle = wiggle;
@@ -7060,10 +7501,19 @@ exports.stackOrderDescending = descending$1;
 exports.stackOrderInsideOut = insideOut;
 exports.stackOrderNone = none$1;
 exports.stackOrderReverse = reverse;
+exports.symbol = symbol;
+exports.symbolCircle = circle;
+exports.symbolCross = cross;
+exports.symbolDiamond = diamond;
+exports.symbolSquare = square;
+exports.symbolStar = star;
+exports.symbolTriangle = triangle;
+exports.symbolWye = wye;
+exports.symbols = symbols;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-})));
+}));
 });
 
 unwrapExports(d3Shape);
@@ -8559,7 +9009,7 @@ Object.keys(aliases).forEach(k => {
 });
 var World_1 = World;
 
-var _version$1 = '0.3.4';
+var _version$1 = '0.3.5';
 
 // ...people call this a 'factory'
 const somehow = function(obj) {
