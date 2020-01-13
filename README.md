@@ -13,9 +13,11 @@
 <div align="center">
   <code>npm install somehow-graph</code>
 </div>
+<p></p>
 <div align="center">
 **work-in-progress**
 </div>
+<p></p>
 
 <div align="center">
     <a href="https://github.com/spencermountain/somehow-input">somehow-input</a>
@@ -30,27 +32,31 @@
 <div align="center">
 <a href="https://github.com/spencermountain/somehow-script">somehow-script</a>
 </div>
+<p></p>
 
-**somehow** creates SVG, using your data, that you can throw-into your webpage.
+**somehow-graph** creates SVG, using your data, that you can throw-into your webpage.
 
 ```js
 let somehow = require('somehow-graph')
 
 let world = somehow({
-  height: 300,
-  aspect: 'golden'
+  aspect: 'golden' // set x/y ratio of svg
 })
 
+// create a shape
 let line = world.line()
-line.set(`
-june 5 2019, 10
-july 7 2019, 15
-july 7 2020, 18
-aug 8 2021, 50
-`)
+// feed it some data..
+line.set([
+  'june 5 2019', 10
+  'july 7 2019', 15
+  'july 7 2020', 18
+  'aug 8 2021', 50
+])
 
+//automatically set size of x/y axis
 world.fit()
 
+// throw it into the page
 document.body.innerHTML = world.build()
 ```
 
