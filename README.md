@@ -2,25 +2,16 @@
   <img src="https://cloud.githubusercontent.com/assets/399657/23590290/ede73772-01aa-11e7-8915-181ef21027bc.png" />
   <div>make infographics, without thinking</div>
 
-  <a href="https://npmjs.org/package/somehow">
-    <img src="https://img.shields.io/npm/v/somehow.svg?style=flat-square" />
+  <a href="https://npmjs.org/package/somehow-graph">
+    <img src="https://img.shields.io/npm/v/somehow-graph.svg?style=flat-square" />
   </a>
-  <a href="https://unpkg.com/somehow">
-    <img src="https://badge-size.herokuapp.com/spencermountain/somehow/master/builds/somehow.min.js" />
+  <a href="https://unpkg.com/somehow-graph">
+    <img src="https://badge-size.herokuapp.com/spencermountain/somehow-graph/master/builds/somehow.min.js" />
   </a>
-  <!-- <a href="https://nodejs.org/api/documentation.html#documentation_stability_index">
-    <img src="https://img.shields.io/badge/stability-stable-green.svg?style=flat-square" />
-  </a>
-  <a href="https://www.codacy.com/app/spencerkelly86/efrt">
-    <img src="https://api.codacy.com/project/badge/grade/fc03e2761c8c471c8f84141abf2704de" />
-  </a>
-  <a href="https://www.codacy.com/app/spencerkelly86/efrt">
-    <img src="https://api.codacy.com/project/badge/Coverage/fc03e2761c8c471c8f84141abf2704de" />
-  </a> -->
 </div>
 
 <div align="center">
-  <code>npm install somehow</code>
+  <code>npm install somehow-graph</code>
 </div>
 <div align="center">
 **work-in-progress**
@@ -36,11 +27,14 @@
   • <a href="https://github.com/spencermountain/somehow-maps">somehow-maps</a>
   • <a href="https://github.com/spencermountain/somehow-circle">somehow-circle</a>
 </div>
+<div align="center">
+<a href="https://github.com/spencermountain/somehow-script">somehow-script</a>
+</div>
 
 **somehow** creates SVG, using your data, that you can throw-into your webpage.
 
 ```js
-let somehow = require('somehow')
+let somehow = require('somehow-graph')
 
 let world = somehow({
   height: 300,
@@ -65,20 +59,21 @@ document.body.innerHTML = world.build()
 the idea is that you think (mostly) about the actual data, and not the layout.
 
 #### #1 - `.fit()`
+
 this scales, and fits the data for all given shapes, automatically. You don't have to manage d3Scale range & domain.
 
 #### #2 - `.build()`
-running `.build()` returns html-strings by default, but the library uses Jason Miller's [htm library](https://github.com/developit/htm) so can call `.bind(React.createElement)` and return React Components.
 
+running `.build()` returns html-strings by default, but the library uses Jason Miller's [htm library](https://github.com/developit/htm) so can call `.bind(React.createElement)` and return React Components.
 
 The joke is that D3 is easy, as long as you're an expert.
 
 This library is built for personal use, and is essentially a wrapper for [d3-path](https://github.com/d3/d3-path), [d3-shape](https://github.com/d3/d3-shape), and [spacetime](https://github.com/spencermountain/spacetime).
 
-
 more to come!
 
 ### Current API:
+
 ```
 - line(obj)
 - dot(obj)
@@ -105,7 +100,9 @@ more to come!
 - clip(bool)
 - title(str)
 ```
+
 #### Axis
+
 ```
 - color(c)
 - remove()
@@ -119,6 +116,7 @@ more to come!
 ```
 
 #### Shape
+
 ```
 - set(str)
 - at(x, y)
@@ -134,11 +132,15 @@ more to come!
 - hover(fn)
 - clip(bool)
 ```
+
 #### Area
+
 ```
 - line(n)
 ```
+
 #### Rect
+
 ```
 - color()
 - width(n)
@@ -146,12 +148,16 @@ more to come!
 - rounded(n)
 - border(n)
 ```
+
 #### Line
+
 ```
 - dotted()
 - width()
 ```
+
 #### Text
+
 ```
 - before(x, y)
 - after(x, y)
@@ -167,27 +173,37 @@ more to come!
 - extent()
 - text(str)
 ```
+
 #### Dot
+
 ```
 - radius(num)
 ```
+
 #### Annotation
+
 ```
 - on(x, y)
 - title(str)
 - nudge(x, y)
 ```
+
 #### MidArea
+
 ```
 - zero(y)
 ```
+
 #### Bar
+
 ```
 - width()
 - zero()
 - at(x, y)
 ```
+
 #### Image
+
 ```
 - src(txt)
 - caption(str)
@@ -195,7 +211,9 @@ more to come!
 - width(w)
 - height(h)
 ```
+
 #### Arrow
+
 ```
 - from(x,y)
 - length(num)
@@ -203,12 +221,15 @@ more to come!
 ```
 
 #### Now
+
 ```
 - top()
 - bottom()
 - label(str)
 ```
+
 #### Title
+
 ```
 - top()
 - bottom()

@@ -458,31 +458,41 @@
         '"': 'quot',
         "'": 'apos'
       };
+      var setInnerHTMLAttr = 'dangerouslySetInnerHTML';
+      var DOMAttributeNames = {
+        className: 'class',
+        htmlFor: 'for'
+      };
       var sanitized = {};
 
       function h(name, attrs) {
-        var stack = [];
+        var stack = [],
+            s = '';
+        attrs = attrs || {};
 
         for (var i = arguments.length; i-- > 2;) {
           stack.push(arguments[i]);
         }
 
         if (typeof name === 'function') {
-          (attrs || (attrs = {})).children = stack.reverse();
+          attrs.children = stack.reverse();
           return name(attrs);
         }
 
-        var s = '<' + name;
-        if (attrs) for (var _i in attrs) {
-          if (attrs[_i] !== false && attrs[_i] != null) {
-            s += ' ' + esc(_i) + '="' + esc(attrs[_i]) + '"';
+        if (name) {
+          s += '<' + name;
+          if (attrs) for (var _i in attrs) {
+            if (attrs[_i] !== false && attrs[_i] != null && _i !== setInnerHTMLAttr) {
+              s += ' ' + (DOMAttributeNames[_i] ? DOMAttributeNames[_i] : esc(_i)) + '="' + esc(attrs[_i]) + '"';
+            }
           }
+          s += '>';
         }
 
         if (emptyTags.indexOf(name) === -1) {
-          s += '>';
-
-          while (stack.length) {
+          if (attrs[setInnerHTMLAttr]) {
+            s += attrs[setInnerHTMLAttr].__html;
+          } else while (stack.length) {
             var child = stack.pop();
 
             if (child) {
@@ -496,9 +506,7 @@
             }
           }
 
-          s += '</' + name + '>';
-        } else {
-          s += '>';
+          s += name ? '</' + name + '>' : '';
         }
 
         sanitized[s] = true;
@@ -10487,7 +10495,7 @@
   });
   var World_1 = World;
 
-  var _version$1 = '0.3.5';
+  var _version$1 = '0.3.6';
 
   var somehow = function somehow(obj) {
     return new World_1(obj);

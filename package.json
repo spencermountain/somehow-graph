@@ -1,7 +1,7 @@
 {
-  "name": "somehow",
+  "name": "somehow-graph",
   "description": "make infographics without thinking",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "main": "src/index.js",
   "unpkg": "builds/somehow.min.js",
   "module": "builds/somehow.mjs",
@@ -17,7 +17,8 @@
     "watch": "npm run start",
     "version": "node ./scripts/version.js",
     "filesize": "node ./scripts/filesize.js",
-    "build": "npm run version && rollup -c && npm run filesize"
+    "build": "npm run version && rollup -c && npm run filesize",
+    "build:demo": "browserify scratch.js -t [ babelify --presets [ @babel/preset-env ] ] | derequire > ./assets/bundle.js"
   },
   "files": [
     "src",
@@ -39,17 +40,19 @@
     "spacetime": "6.3.0",
     "spacetime-ticks": "0.2.1",
     "spencer-color": "^0.1.0",
-    "vhtml": "^2.1.0"
+    "vhtml": "2.2.0"
   },
   "devDependencies": {
-    "@babel/core": "7.7.4",
-    "@babel/preset-env": "7.7.4",
+    "derequire": "^2.0.6",
+    "babelify": "^10.0.0",
+    "@babel/core": "7.8.3",
+    "@babel/preset-env": "7.8.3",
     "budo": "^11.6.3",
-    "rollup": "1.27.8",
+    "rollup": "1.29.0",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "5.2.0",
-    "rollup-plugin-terser": "5.1.2"
+    "rollup-plugin-terser": "5.2.0"
   }
 }
