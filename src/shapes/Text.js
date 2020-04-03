@@ -52,6 +52,10 @@ class Text extends Shape {
     this.style = this.style || {}
     this.style['font-size'] = this.style['font-size'] || '4px'
   }
+  bold() {
+    this.style['font-weight'] = 520
+    return this
+  }
   before(x, y) {
     this.attrs['text-anchor'] = 'end'
     this.set([[x, y]])
@@ -156,7 +160,7 @@ class Text extends Shape {
     height *= textArr.length
     //calculate width
     let width = 0
-    textArr.forEach(str => {
+    textArr.forEach((str) => {
       let w = str.length * 8
       if (w > width) {
         width = w
@@ -192,7 +196,7 @@ class Text extends Shape {
       textArr = this.textFn(this.world)
       textArr = typeof textArr === 'string' ? [textArr] : textArr
     }
-    let inside = textArr.map(str => h`<tspan x="0" dy="1.2em" >${String(str)}</tspan>`)
+    let inside = textArr.map((str) => h`<tspan x="0" dy="1.2em" >${String(str)}</tspan>`)
     let { x, y } = this.position()
     let transform = `translate(${x} ${y})`
     let classes = ''

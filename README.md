@@ -169,6 +169,7 @@ more to come!
 - after(x, y)
 - center(x, y)
 - left()
+- bold()
 - right()
 - middle()
 - color(c)
