@@ -39,6 +39,7 @@ class World {
       this.height = res.height || 100
     }
     this.shapes = []
+    this.htmls = []
     //give the points a little bit of space.
     this.wiggle_room = 1.05
     this.x = new XScale(obj, this)
@@ -64,8 +65,8 @@ class World {
     this.shapes.push(line)
     return line
   }
-  grid() {
-    this._grid = new Grid({}, this)
+  grid(opt) {
+    this._grid = new Grid(opt, this)
     return this
   }
   dot(obj) {
@@ -75,7 +76,7 @@ class World {
   }
   text(obj) {
     let text = new Text(obj, this)
-    this.shapes.push(text)
+    this.htmls.push(text)
     return text
   }
   area(obj) {
@@ -175,6 +176,7 @@ class World {
     let xAxis = this.xAxis ? this.xAxis.build() : null
     let yAxis = this.yAxis ? this.yAxis.build() : null
     elements = elements.concat(shapes.map((shape) => shape.build()))
+    let htmls = this.htmls.map((el) => el.build())
 
     let grid = null
     if (this._grid) {
@@ -201,6 +203,7 @@ class World {
         <div style="${s.col}">
           <div style="position:relative;">
             ${grid}
+            ${htmls}
             <svg ...${attrs}>
              ${this.breakpoints()}
              ${elements}

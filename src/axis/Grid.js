@@ -8,6 +8,14 @@ class Grid {
   constructor(obj = {}, world) {
     this.world = world
     this.attrs = {}
+    this._doX = true
+    this._doY = true
+    if (obj === 'x') {
+      this._doY = false
+    }
+    if (obj === 'y') {
+      this._doX = false
+    }
     this.attrs = Object.assign({}, defaults, obj)
   }
   ticks() {
@@ -17,6 +25,9 @@ class Grid {
     }
   }
   xTicks() {
+    if (!this._doX) {
+      return null
+    }
     let h = this.world.html
     return this.ticks().x.map((o) => {
       let left = o.value * 100
@@ -25,9 +36,11 @@ class Grid {
     })
   }
   yTicks() {
+    if (!this._doY) {
+      return null
+    }
     let h = this.world.html
     return this.ticks().y.map((o) => {
-      console.log(o)
       let top = o.value * 100
       let style = `position:absolute; height:1px; opacity:0.4; top:${top}%; width:100%; width:100%; border-bottom:1px dashed ${this.attrs.stroke}; text-align:left;`
       return h`<span style=${style}></span>`
