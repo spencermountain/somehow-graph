@@ -7,12 +7,10 @@ class XAxis extends Axis {
   }
   drawTicks(y) {
     let h = this.world.html
-    return this.ticks().map(o => {
-      return h`<text x="${o.value * 100 + '%'}" y="${y + 3}" fill="${
-        this.attrs.stroke
-      }" text-anchor="middle" class="somehow-legible">
-        ${o.label}
-      </text>`
+    return this.ticks().map((o) => {
+      let left = o.value * 100
+      let style = `position:absolute; left:${left}%; color:${this.attrs.stroke}; text-align:left;`
+      return h`<span style=${style}>${o.label}</span>`
     })
   }
   build() {
@@ -20,24 +18,17 @@ class XAxis extends Axis {
     if (this._show === false) {
       return ''
     }
-    let attrs = this.attrs
-    let width = this.world.width
     let y = this.world.height
     let ticks = this.drawTicks(y)
-    let textAttrs = {
-      x: '50%',
-      y: '115%',
-      fill: this.attrs.stroke,
-      'font-size': '2px',
-      style: 'text-anchor:middle;'
+    let s = {
+      container: `position:relative; padding-top:5px; width:100%; height:20px; border-top: 1px solid ${this.attrs.stroke};`,
+      label: `text-align:center; color:${this.attrs.stroke};`
     }
-    return h`<g>
+    return h`
+    <div style=${s.container}>
       ${ticks}
-      <line x1="${0}" y1="${y}" x2="${width}" y2="${y}" ...${attrs} stroke="#d7d5d2" />
-      <text ...${textAttrs}>
-        ${this._label}
-      </text>
-    </g>`
+      <div style=${s.label}>${this._label}</div>
+    </div>`
   }
 }
 module.exports = XAxis

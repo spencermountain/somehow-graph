@@ -128,7 +128,7 @@ class World {
     return shape
   }
   getShape(id) {
-    return this.shapes.find(shape => shape.id === id || shape._id === id)
+    return this.shapes.find((shape) => shape.id === id || shape._id === id)
   }
   redraw() {
     if (this.el) {
@@ -163,33 +163,47 @@ class World {
     //remove shapes outside of max/mins
     shapes = clipShapes(shapes, this.x, this.y)
     let elements = []
-    if (this.xAxis) {
-      elements.push(this.xAxis.build())
-    }
-    if (this.yAxis) {
-      elements.push(this.yAxis.build())
-    }
-    elements = elements.concat(shapes.map(shape => shape.build()))
+    // if (this.xAxis) {
+    //   elements.push(this.xAxis.build())
+    // }
+    let xAxis = this.xAxis ? this.xAxis.build() : null
+    let yAxis = this.yAxis ? this.yAxis.build() : null
+    elements = elements.concat(shapes.map((shape) => shape.build()))
     let attrs = {
       // width: this.width,
       // height: this.height,
       viewBox: `0,0,${this.width},${this.height}`,
-      preserveAspectRatio: 'xMidYMid meet',
-      style: 'overflow:visible; margin: 10px 20px 25px 25px;' // border:1px solid lightgrey;
+      preserveAspectRatio: 'xMidYMid meet'
     }
-    return h`<svg ...${attrs}>
-      ${this.breakpoints()}
-      ${elements}
-    </svg>`
+    const s = {
+      container: `position:relative; overflow:visible; border:1px solid grey;`,
+      row: `width:100%; display:flex; flex-direction: row; flex-wrap: nowrap;`,
+      col: `display:flex; flex-direction: column; flex-wrap: nowrap;`
+    }
+    return h`<div style=${s.container} class="outline">
+      <div style="${s.row}">
+        <div style="${s.col}">
+          ${yAxis}
+          <div style="width:100%; padding-top:5px; height:20px;"></div>
+        </div>
+        <div style="${s.col}">
+          <svg ...${attrs}>
+            ${this.breakpoints()}
+            ${elements}
+          </svg>
+          ${xAxis}
+        </div>
+      </div>
+    </div>`
   }
 }
-Object.keys(methods).forEach(k => {
+Object.keys(methods).forEach((k) => {
   World.prototype[k] = methods[k]
 })
 const aliases = {
   plusminus: 'plusMinus'
 }
-Object.keys(aliases).forEach(k => {
+Object.keys(aliases).forEach((k) => {
   World.prototype[k] = methods[aliases[k]]
 })
 module.exports = World
