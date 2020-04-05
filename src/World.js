@@ -7,6 +7,7 @@ const YScale = require('./scales/YScale')
 const XScale = require('./scales/Scale')
 const XAxis = require('./axis/XAxis')
 const YAxis = require('./axis/YAxis')
+const Grid = require('./axis/Grid')
 
 const Shape = require('./shapes/Shape')
 const Area = require('./shapes/Area')
@@ -44,6 +45,7 @@ class World {
     this.y = new YScale(obj, this)
     this.xAxis = new XAxis({}, this)
     this.yAxis = new YAxis({}, this)
+    this._grid = null
     this.html = htm.bind(vhtml)
     this.inputs = []
     this.state = {}
@@ -61,6 +63,10 @@ class World {
     let line = new Line(obj, this)
     this.shapes.push(line)
     return line
+  }
+  grid() {
+    this._grid = new Grid({}, this)
+    return this
   }
   dot(obj) {
     let dot = new Dot(obj, this)
@@ -169,9 +175,15 @@ class World {
     let xAxis = this.xAxis ? this.xAxis.build() : null
     let yAxis = this.yAxis ? this.yAxis.build() : null
     elements = elements.concat(shapes.map((shape) => shape.build()))
+
+    let grid = null
+    if (this._grid) {
+      grid = this._grid.build()
+    }
     let attrs = {
       // width: this.width,
       // height: this.height,
+      style: 'position:relative',
       viewBox: `0,0,${this.width},${this.height}`,
       preserveAspectRatio: 'xMidYMid meet'
     }
@@ -184,13 +196,16 @@ class World {
       <div style="${s.row}">
         <div style="${s.col}">
           ${yAxis}
-          <div style="width:100%; padding-top:5px; height:20px;"></div>
+          <div style="width:100%; height:20px;"></div>
         </div>
         <div style="${s.col}">
-          <svg ...${attrs}>
-            ${this.breakpoints()}
-            ${elements}
-          </svg>
+          <div style="position:relative;">
+            ${grid}
+            <svg ...${attrs}>
+             ${this.breakpoints()}
+             ${elements}
+            </svg>
+          </div>
           ${xAxis}
         </div>
       </div>

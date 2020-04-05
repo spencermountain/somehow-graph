@@ -196,18 +196,22 @@ class Text extends Shape {
       textArr = this.textFn(this.world)
       textArr = typeof textArr === 'string' ? [textArr] : textArr
     }
-    let inside = textArr.map((str) => h`<tspan x="0" dy="1.2em" >${String(str)}</tspan>`)
+    let inside = textArr.map((str) => h`<div >${String(str)}</div>`)
     let { x, y } = this.position()
     let transform = `translate(${x} ${y})`
-    let classes = ''
+    // let classes = ''
     if (this._responsive) {
       classes = 'somehow-legible'
     }
-    return h`<g transform="${transform}" >
-      <text ...${this.attrs} style="${this.drawSyle()}" class=${classes}>
-        ${inside}
-      </text>
-    </g>`
+    let s = {
+      container: `transform:${transform}`
+    }
+    return h`<div style="${s.container}" >${inside}</div>`
+    // return h`<g transform="${transform}" >
+    //   <text ...${this.attrs} style="${this.drawSyle()}" class=${classes}>
+    //     ${inside}
+    //   </text>
+    // </g>`
   }
 }
 

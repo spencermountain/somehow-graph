@@ -1,7 +1,7 @@
 const somehow = require('./src')
 let colors = require('spencer-color').combos.bloor
 let w = somehow({
-  aspect: 'square'
+  aspect: 'golden'
   // height: 200
   // width: 700
 })
@@ -41,12 +41,12 @@ let nums = [30, 60, 20, 30, 10]
 //     rect.opacity(1)
 //   })
 // }
-
+w.dot().set([[30, 7]])
 w.line().set([
   [0, 0],
   [105, 10]
 ])
-
+w.grid()
 w.text('oh hey, \ncool').at(5, 5)
 w.fit()
 // w.yAxis.label('lives\nstuff')

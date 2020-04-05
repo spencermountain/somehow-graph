@@ -9,7 +9,7 @@ class YAxis extends Axis {
     let h = this.world.html
     return this.ticks().map((o) => {
       let left = 100 - o.value * 100
-      let style = `position:absolute; top:${left}%; color:${this.attrs.stroke}; text-align:right; right:4px;`
+      let style = `position:absolute; top:${left}%; color:${this.attrs.stroke}; text-align:right; transform:translate(5px, -7px);`
       return h`<span style=${style}>${o.label}</span>`
     })
   }
