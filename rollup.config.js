@@ -1,71 +1,53 @@
-import commonjs from 'rollup-plugin-commonjs'
-import json from 'rollup-plugin-json'
+import svelte from 'rollup-plugin-svelte'
+import resolve from '@rollup/plugin-node-resolve'
+import commonjs from '@rollup/plugin-commonjs'
+import livereload from 'rollup-plugin-livereload'
 import { terser } from 'rollup-plugin-terser'
-import resolve from 'rollup-plugin-node-resolve'
-import babel from 'rollup-plugin-babel'
-// import visualizer from 'rollup-plugin-visualizer'
 
-export default [
-  {
-    input: 'src/index.js',
-    output: [
-      {
-        file: 'builds/somehow.mjs',
-        format: 'esm'
+// const example = 'history-of-toronto'
+const example = 'many-people'
+const production = false
+
+function serve() {
+  let started = false
+  return {
+    writeBundle() {
+      if (!started) {
+        started = true
+        require('child_process').spawn('npm', ['run', 'serve'], {
+          stdio: ['ignore', 'inherit', 'inherit'],
+          shell: true
+        })
       }
-    ],
-    plugins: [
-      resolve({
-        mainFields: ['main', 'module']
-      }),
-      ,
-      json(),
-      commonjs()
-    ]
-  },
-  {
-    input: 'src/index.js',
-    output: [
-      {
-        file: 'builds/somehow.js',
-        format: 'umd',
-        sourcemap: true,
-        name: 'somehow'
-      }
-    ],
-    plugins: [
-      resolve({
-        mainFields: ['main', 'module']
-      }),
-      json(),
-      commonjs(),
-      babel({
-        babelrc: false,
-        presets: ['@babel/preset-env']
-      })
-    ]
-  },
-  {
-    input: 'src/index.js',
-    output: [
-      {
-        file: 'builds/somehow.min.js',
-        format: 'umd',
-        name: 'somehow'
-      }
-    ],
-    plugins: [
-      resolve({
-        mainFields: ['main', 'module']
-      }),
-      json(),
-      commonjs(),
-      babel({
-        babelrc: false,
-        presets: ['@babel/preset-env']
-      }),
-      terser()
-      // visualizer()
-    ]
+    }
   }
-]
+}
+
+export default {
+  input: `./examples/${example}/app.js`,
+  output: {
+    sourcemap: false,
+    format: 'iife',
+    name: 'app',
+    file: 'build/bundle.js'
+  },
+  plugins: [
+    svelte({
+      dev: !production,
+      css: (css) => {
+        css.write('build/bundle.css', false)
+      }
+    }),
+    resolve({
+      browser: true,
+      dedupe: ['svelte']
+    }),
+    commonjs(),
+    !production && serve(),
+    !production && livereload('.'),
+    production && terser()
+  ],
+  watch: {
+    clearScreen: false
+  }
+}
